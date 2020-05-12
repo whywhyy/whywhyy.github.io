@@ -8,8 +8,6 @@
     "build": "gatsby build",
     "develop": "gatsby develop",
     "deploy": "gatsby build && gh-pages -d public -b master",
-    "initgit" : "git add . &&  git commit -m",
-    "postinitgit": "git checkout -b code && git push -u origin code",
     "git" : "git add . &&  git commit -m",
     "postgit": "git checkout code && git push -u origin code",
     "format": "prettier --write \"**/*.{js,jsx,json,md}\"",
