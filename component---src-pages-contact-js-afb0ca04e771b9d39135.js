@@ -1,2 +1,0 @@
-(window.webpackJsonp=window.webpackJsonp||[]).push([[5],{"Cuy+":function(e,t,n){"use strict";n.r(t),n.d(t,"default",(function(){return o}));n("q1tI");var l=n("qKvR");function o(){return Object(l.b)("div",null,Object(l.b)("h1",null,"I'd love to talk! Email me at the address below"),Object(l.b)("p",null,Object(l.b)("a",{href:"mailto:me@example.com"},"me@example.com")))}}}]);
-//# sourceMappingURL=component---src-pages-contact-js-afb0ca04e771b9d39135.js.map
