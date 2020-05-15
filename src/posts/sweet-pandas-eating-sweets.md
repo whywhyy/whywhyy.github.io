@@ -1,6 +1,9 @@
 ---
+publish: True
 title: "Sweet Pandas Eating Sweets"
 date: "2017-08-10"
+url_path : "/blog/my-first-post4"
+tags : ["a1"]
 ---
 
 Pandas are really sweet.

@@ -1,7 +1,9 @@
 ---
+publish: False
 title: "Pandas and Bananas"
 date: "2017-08-21"
-tags : ["abc","efg"]
+url_path : "/blog/한글도-가능한가"
+tags : ["abc","efg","abcd"]
 ---
 
 # r1

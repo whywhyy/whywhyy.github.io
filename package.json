@@ -1,14 +1,14 @@
 {
-  "name": "gatsby-starter-hello-world",
+  "name": "gatsby-blog",
   "private": true,
-  "description": "A simplified bare-bones starter for Gatsby",
+  "description": "whywhy Gatsby blog",
   "version": "0.1.0",
   "license": "MIT",
   "scripts": {
     "build": "gatsby build",
     "develop": "gatsby develop",
     "deploy": "gatsby build && gh-pages -d public -b master",
-    "git" : "git add . &&  git commit -m",
+    "git": "git add . &&  git commit -m",
     "postgit": "git checkout code && git push -u origin code",
     "format": "prettier --write \"**/*.{js,jsx,json,md}\"",
     "start": "npm run develop",
@@ -25,6 +25,7 @@
     "gatsby-transformer-remark": "^2.8.7",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
+    "react-helmet": "^6.0.0",
     "react-typography": "^0.16.19",
     "typography": "^0.16.19",
     "typography-theme-fairy-gates": "^0.16.19",
@@ -36,9 +37,9 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/gatsbyjs/gatsby-starter-hello-world"
+    "url": "https://github.com/whywhyy/whywhyy.github.io"
   },
   "bugs": {
-    "url": "https://github.com/gatsbyjs/gatsby/issues"
+    "url": "https://github.com/whywhyy/whywhyy.github.io/issues"
   }
 }

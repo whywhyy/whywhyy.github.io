@@ -1,6 +1,8 @@
 ---
-title: "Pandas and Bananas"
+publish: True
+title: "Pandas and Bananas copy"
 date: "2017-08-21"
+url_path : "/blog/2017-08-21/my-first-post"
 tags : 
     - a1
     - a2

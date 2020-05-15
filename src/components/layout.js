@@ -36,13 +36,33 @@ export default function Layout({ children }) {
         </h3>
       </Link>
       <Link
+        to={`/contact/`}
+        css={css`
+          float: right;
+          margin-right: 10px;
+        `}
+      >
+        Contact
+      </Link>
+      <Link
         to={`/about/`}
         css={css`
           float: right;
+          margin-right: 10px;
         `}
       >
         About
       </Link>
+      <Link
+        to={`/tags/`}
+        css={css`
+          float: right;
+          margin-right: 10px;
+        `}
+      >
+        Tags
+      </Link>
+
       {children}
     </div>
   )

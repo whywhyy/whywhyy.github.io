@@ -1,6 +1,8 @@
 ---
-title: "Sweet Pandas Eating Sweets"
+publish: False
+title: "Sweet Pandas Eating Sweets copy"
 date: "2017-08-10"
+url_path : "/blog/my-first-post3"
 ---
 
 Pandas are really sweet.
