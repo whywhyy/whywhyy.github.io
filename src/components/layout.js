@@ -28,6 +28,9 @@ export default function Layout({ children }) {
       flex: '1 0 auto',
       margin: theme.spacing(1),
     },
+    grid:{
+      marginTop: 15,
+    },
   }));
   const classes = useStyles();
 
@@ -44,7 +47,7 @@ export default function Layout({ children }) {
 
       <div className={classes.container}>
         <Hidden mdDown>
-          <Grid item lg={3}>
+          <Grid item lg={3} className={classes.grid}>
             <Paper className={classes.paper}>3Up_mdDown_L</Paper>
             <Paper className={classes.paper}>3Up_mdDown_LLLLLLLLLLLLLLLLLLLLLLL</Paper>
             <Paper className={classes.paper}>3Up_mdDown_L</Paper>
@@ -62,7 +65,7 @@ export default function Layout({ children }) {
         </Hidden>
         
         <Hidden mdDown>
-          <Grid item lg={3}>
+          <Grid item lg={3} className={classes.grid}>
             <Paper className={classes.paper}>3333333333</Paper>
           </Grid>
         </Hidden>

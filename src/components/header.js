@@ -38,7 +38,7 @@ export default function ButtonAppBar() {
   const useStyles = makeStyles((theme) => ({
     root: {
       flexGrow: 1,
-      margin: '32px'
+      margin: '32px',
     },
     menuButton: {
       color: 'white',
@@ -64,7 +64,7 @@ export default function ButtonAppBar() {
   }
   return (
     <div className={classes.root}>
-      <AppBar position="fixed">
+      <AppBar position="fixed" >
           <Toolbar>
             <Hidden mdDown>
               <Typography variant="h6" className={classes.title}>
