@@ -3,11 +3,14 @@ publish: True
 title: "image Pandas and Bananas copy"
 date: "2017-08-21"
 url_path : "/blog/2017-08-21/my-first-post11"
-featuredImage: ../images/rabbit-friend.jpg
+thumbnailImage : ../images/rabbit-friend.jpg
+description : "가나다라ㅈㅈ
+ㅈㅁㅁ
+ㅈㄱ"
 tags : 
-    - a1
-    - a2
-    - a3
+    - aa1
+    - aa2
+    - aa3
 ---
 
 # r1

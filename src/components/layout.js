@@ -51,6 +51,10 @@ export default function Layout({ children }) {
             <Paper className={classes.paper}>3Up_mdDown_L</Paper>
           </Grid>
         </Hidden>
+        
+        <Hidden lgUp>
+          <Grid item sm={1}/>
+        </Hidden>
 
 
         {children}
@@ -59,6 +63,10 @@ export default function Layout({ children }) {
           <Grid item lg={3}>
             <Paper className={classes.paper}>3Up_mdDown_R</Paper>
           </Grid>
+        </Hidden>
+
+        <Hidden lgUp>
+          <Grid item sm={1}/>
         </Hidden>
       </div>
 

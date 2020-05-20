@@ -2,6 +2,8 @@
 publish: False
 title: "Sweet Pandas Eating Sweets copy"
 date: "2017-08-10"
+description : "가나다라"
+thumbnailImage : ../images/rabbit-friend.jpg
 url_path : "/blog/my-first-post3"
 ---
 

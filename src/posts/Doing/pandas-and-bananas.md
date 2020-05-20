@@ -3,6 +3,8 @@ publish: False
 title: "Pandas and Bananas"
 date: "2017-08-21"
 url_path : "/blog/한글도-가능한가"
+description : "가나다라"
+thumbnailImage : ../images/rabbit-friend.jpg
 tags : ["abc","efg","abcd"]
 ---
 

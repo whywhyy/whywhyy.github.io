@@ -3,10 +3,12 @@ publish: True
 title: "Pandas and Bananas copy"
 date: "2017-08-21"
 url_path : "/blog/2017-08-21/my-first-post"
+thumbnailImage : ../images/pass.jpg
+description : "가나다라aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
 tags : 
-    - a1
-    - a2
-    - a3
+    - av1
+    - av2
+    - av3
 ---
 
 # r1

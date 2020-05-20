@@ -1,63 +1,83 @@
 import React from "react"
 import { graphql, Link } from "gatsby"
+import { Helmet } from "react-helmet"
 
 import { css } from "@emotion/core"
 
+import Hidden from '@material-ui/core/Hidden';
+
+import { makeStyles } from '@material-ui/core/styles';
+import Card from '@material-ui/core/Card';
+import CardActionArea from '@material-ui/core/CardActionArea';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import CardMedia from '@material-ui/core/CardMedia';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+
+import Paper from '@material-ui/core/Paper';
+import Grid from '@material-ui/core/Grid';
+
+import EventNoteIcon from '@material-ui/icons/EventNote';
+import LocalOfferIcon from '@material-ui/icons/LocalOffer';
 //utils 
 import { rhythm } from "../utils/typography"
 
 import Layout from "../components/layout"
 
 export default function Home({ data }) {
-  console.log(data)
+  const useStyles = makeStyles({
+    root: {
+      margin: 10,
+      marginTop: 15,
+    },
+  });
+  const classes = useStyles();
   return (
     <Layout>
-      <div>
-        <h1
-          css={css`
-            display: inline-block;
-            border-bottom: 1px solid;
-          `}
-        >
-          Amazing Pandas Eating Things
-        </h1>
-        <h4>{data.allMarkdownRemark.totalCount} Posts</h4>
-        {data.allMarkdownRemark.edges.map(({ node }) => (
+      <Helmet title={data.site.siteMetadata.title} />
+      <Grid item xs={10} lg={6}>
+        {data.allMarkdownRemark.edges.map(({ node }) => (    
           <Link to={node.frontmatter.url_path} >
-          <div key={node.id}>
-            <h3
-              css={css`
-                margin-bottom: ${rhythm(1 / 4)};
-                display: inline-block;
-              `}
-            >
-              {node.frontmatter.title}{" "}
-              <span
-                css={css`
-                display: inline-block;
-                color: #bbb;
-                `}
-              >
-                — {node.frontmatter.date}
-              </span>
-            </h3>
-            <p 
-              css={css`
-              display: inline-block;
-              color: #787878;
-              `}>
-              {node.excerpt}
-            </p>
-          </div>
-          </Link>
+            <Card className={classes.root}>
+              <CardActionArea>  
+                <CardMedia
+                  component="img"
+                  alt="Contemplative Reptile"
+                  height="230"
+                  image= {node.frontmatter.thumbnailImage.childImageSharp.fixed.srcWebp} 
+                  title={node.frontmatter.title}
+                />
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="h2">
+                {node.frontmatter.title}
+                </Typography>
+
+                <Typography gutterBottom variant="h6" component="h3">
+                <EventNoteIcon/>{node.frontmatter.date}{" "}
+                {node.frontmatter.tags.map(tag => <a><LocalOfferIcon/>({tag})</a>
+                )}
+                </Typography>
+                <Typography variant="body2" color="textSecondary" component="p">
+                {node.frontmatter.description}
+                </Typography>
+              </CardContent>
+             </CardActionArea>
+            </Card>
+          </Link> 
         ))}
-      </div>
-    </Layout>
+      </Grid>
+  </Layout>
   )
 }
 
 export const query = graphql`
   query {
+    site {
+      siteMetadata {
+        title
+      }
+    }
     allMarkdownRemark (sort: {order: DESC, fields: frontmatter___date}, limit: 1000,
                         filter: {frontmatter: {publish: {eq: true}}}){
       totalCount
@@ -66,10 +86,18 @@ export const query = graphql`
           id
           frontmatter {
             title
-            date(formatString: "DD MMMM, YYYY")
+            date(formatString: "YYYY-MM-DD")
             url_path
+            description
+            tags
+            thumbnailImage {
+              childImageSharp {
+                fixed {
+                  srcWebp
+                }
+              }
+            }
           }
-          excerpt
         }
       }
     }

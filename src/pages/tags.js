@@ -51,11 +51,8 @@ export default function TagsPage ({
 
     return (    
       <Layout>
-      <Helmet title={title} />
+      <Helmet title={`tags | ${title}`} />
         <Grid item xs={12} lg={6}>
-          
-
-
           {group.map(tag => (
               <Link to={`/tags/${kebabCase(tag.fieldValue)}/`}>
                 <Paper className={classes.paper} elevation={2}>
@@ -63,8 +60,6 @@ export default function TagsPage ({
                 </Paper>
               </Link>
           ))}
-
-
         </Grid>
     </Layout>
     )
