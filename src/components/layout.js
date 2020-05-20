@@ -1,69 +1,67 @@
 import React from "react"
+
+import ButtonAppBar from "./header"
+
 import { css } from "@emotion/core"
-import { useStaticQuery, Link, graphql } from "gatsby"
+
+import { makeStyles } from '@material-ui/core/styles';
+import Paper from '@material-ui/core/Paper';
+import Hidden from '@material-ui/core/Hidden';
+import Grid from '@material-ui/core/Grid';
 
 import { rhythm } from "../utils/typography"
+
 export default function Layout({ children }) {
-  const data = useStaticQuery(
-    graphql`
-      query {
-        site {
-          siteMetadata {
-            title
-          }
-        }
-      }
-    `
-  )
+    
+  const useStyles = makeStyles((theme) => ({
+    root: {
+      flexGrow: 1,
+    },
+    container: {
+      display: 'flex',
+      flexWrap: 'wrap',
+    },
+    paper: {
+      padding: theme.spacing(2),
+      textAlign: 'center',
+      color: theme.palette.text.secondary,
+      flex: '1 0 auto',
+      margin: theme.spacing(1),
+    },
+  }));
+  const classes = useStyles();
+
   return (
     <div
       css={css`
         margin: 0 auto;
-        max-width: 700px;
+        max-width: 1300px;
         padding: ${rhythm(2)};
         padding-top: ${rhythm(1.5)};
       `}
     >
-      <Link to={`/`}>
-        <h3
-          css={css`
-            margin-bottom: ${rhythm(2)};
-            display: inline-block;
-            font-style: normal;
-          `}
-        >
-          {data.site.siteMetadata.title}
-        </h3>
-      </Link>
-      <Link
-        to={`/contact/`}
-        css={css`
-          float: right;
-          margin-right: 10px;
-        `}
-      >
-        Contact
-      </Link>
-      <Link
-        to={`/about/`}
-        css={css`
-          float: right;
-          margin-right: 10px;
-        `}
-      >
-        About
-      </Link>
-      <Link
-        to={`/tags/`}
-        css={css`
-          float: right;
-          margin-right: 10px;
-        `}
-      >
-        Tags
-      </Link>
+      <ButtonAppBar/>
 
-      {children}
+
+      <div className={classes.container}>
+        <Hidden mdDown>
+          <Grid item lg={3}>
+            <Paper className={classes.paper}>3Up_mdDown_L</Paper>
+            <Paper className={classes.paper}>3Up_mdDown_LLLLLLLLLLLLLLLLLLLLLLL</Paper>
+            <Paper className={classes.paper}>3Up_mdDown_L</Paper>
+          </Grid>
+        </Hidden>
+
+
+        {children}
+        
+        <Hidden mdDown>
+          <Grid item lg={3}>
+            <Paper className={classes.paper}>3Up_mdDown_R</Paper>
+          </Grid>
+        </Hidden>
+      </div>
+
     </div>
   )
 }

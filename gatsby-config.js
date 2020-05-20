@@ -6,12 +6,35 @@ module.exports = {
     {
       resolve: `gatsby-source-filesystem`,
       options: {
-        name: `src`,
-        path: `${__dirname}/src/`,
+        name: `posts`,
+        path: `${__dirname}/src/posts`,
       },
     },
-    `gatsby-transformer-remark`,
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        name: `images`,
+        path: `${__dirname}/src/images`,
+      },
+    },
+    `gatsby-plugin-sharp`,
+    `gatsby-transformer-sharp`,
+    {
+      resolve: `gatsby-transformer-remark`,
+      options: {
+        plugins: [
+          {
+            resolve: `gatsby-remark-images`,
+            options: {
+              maxWidth: 800,
+              maxHeight: 720
+            },
+          },
+        ],
+      },
+    },
     `gatsby-plugin-emotion`,
+    `gatsby-plugin-material-ui`,
     {
       resolve: `gatsby-plugin-typography`,
       options: {

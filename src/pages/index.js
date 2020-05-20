@@ -1,7 +1,11 @@
 import React from "react"
 import { graphql, Link } from "gatsby"
+
 import { css } from "@emotion/core"
+
+//utils 
 import { rhythm } from "../utils/typography"
+
 import Layout from "../components/layout"
 
 export default function Home({ data }) {
@@ -19,26 +23,33 @@ export default function Home({ data }) {
         </h1>
         <h4>{data.allMarkdownRemark.totalCount} Posts</h4>
         {data.allMarkdownRemark.edges.map(({ node }) => (
+          <Link to={node.frontmatter.url_path} >
           <div key={node.id}>
-            <Link 
-            to={node.frontmatter.url_path}>
             <h3
               css={css`
                 margin-bottom: ${rhythm(1 / 4)};
+                display: inline-block;
               `}
             >
               {node.frontmatter.title}{" "}
               <span
                 css={css`
-                  color: #bbb;
+                display: inline-block;
+                color: #bbb;
                 `}
               >
                 — {node.frontmatter.date}
               </span>
             </h3>
-            </Link>
-            <p>{node.excerpt}</p>
+            <p 
+              css={css`
+              display: inline-block;
+              color: #787878;
+              `}>
+              {node.excerpt}
+            </p>
           </div>
+          </Link>
         ))}
       </div>
     </Layout>

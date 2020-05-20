@@ -63,6 +63,23 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
     })
   })
 
+  // Create blog-list pages
+  const posts_list = result.data.postsRemark.edges
+  const postsPerPage = 6
+  const numPages = Math.ceil(posts_list.length / postsPerPage)
+  Array.from({ length: numPages }).forEach((_, i) => {
+    createPage({
+      path: i === 0 ? `/blog` : `/blog/${i + 1}`,
+      component: path.resolve("./src/templates/bloglist-template.js"),
+      context: {
+        limit: postsPerPage,
+        skip: i * postsPerPage,
+        numPages,
+        currentPage: i + 1,
+      },
+    })
+  })
+
   // Extract tag data from query
   const tags = result.data.tagsGroup.group
   // Make tag pages
