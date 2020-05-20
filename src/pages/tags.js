@@ -52,7 +52,7 @@ export default function TagsPage ({
     return (    
       <Layout>
       <Helmet title={`tags | ${title}`} />
-        <Grid item xs={12} lg={6}>
+        <Grid item xs={12} md={10} lg={6}>
           {group.map(tag => (
               <Link to={`/tags/${kebabCase(tag.fieldValue)}/`}>
                 <Paper className={classes.paper} elevation={2}>

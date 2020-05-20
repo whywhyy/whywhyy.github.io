@@ -26,13 +26,14 @@ export default function Home({ data }) {
     root: {
       margin: 10,
       marginTop: 15,
+      maxWidth: 650,
     },
   });
   const classes = useStyles();
   return (
     <Layout>
       <Helmet title={data.site.siteMetadata.title} />
-      <Grid item xs={10} lg={6}>
+      <Grid item xs={12} md={10} lg={6} >
         {data.allMarkdownRemark.edges.map(({ node }) => (    
           <Link to={node.frontmatter.url_path} >
             <Card className={classes.root}>
@@ -40,18 +41,18 @@ export default function Home({ data }) {
                 <CardMedia
                   component="img"
                   alt="Contemplative Reptile"
-                  height="230"
+                  height="200"
                   image= {node.frontmatter.thumbnailImage.childImageSharp.fixed.srcWebp} 
                   title={node.frontmatter.title}
                 />
               <CardContent>
-                <Typography gutterBottom variant="h5" component="h2">
+                <Typography variant="h5" component="h2">
                 {node.frontmatter.title}
                 </Typography>
 
                 <Typography gutterBottom variant="h6" component="h3">
                 <EventNoteIcon/>{node.frontmatter.date}{" "}
-                {node.frontmatter.tags.map(tag => <a><LocalOfferIcon/>({tag})</a>
+                {node.frontmatter.tags.map(tag => <a><LocalOfferIcon/>({tag}){" "}</a>
                 )}
                 </Typography>
                 <Typography variant="body2" color="textSecondary" component="p">

@@ -36,7 +36,6 @@ export default function Layout({ children }) {
       css={css`
         margin: 0 auto;
         max-width: 1300px;
-        padding: ${rhythm(2)};
         padding-top: ${rhythm(1.5)};
       `}
     >
@@ -53,20 +52,19 @@ export default function Layout({ children }) {
         </Hidden>
         
         <Hidden lgUp>
-          <Grid item sm={1}/>
+          <Grid item xs={1}/>
         </Hidden>
 
 
         {children}
+        <Hidden lgUp>
+          <Grid item xs={1}/>
+        </Hidden>
         
         <Hidden mdDown>
           <Grid item lg={3}>
-            <Paper className={classes.paper}>3Up_mdDown_R</Paper>
+            <Paper className={classes.paper}>3333333333</Paper>
           </Grid>
-        </Hidden>
-
-        <Hidden lgUp>
-          <Grid item sm={1}/>
         </Hidden>
       </div>
 
