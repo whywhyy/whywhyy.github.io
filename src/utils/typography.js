@@ -12,7 +12,7 @@ kirkhamTheme.overrideThemeStyles = () => ({
         "text-decoration": "none",
     },
     'a:hover': {
-        'color': 'white',
+        color: 'white',
     },
   })
 

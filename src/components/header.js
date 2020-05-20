@@ -14,7 +14,10 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 
+import Hidden from '@material-ui/core/Hidden';
+
 // material - icons
+import FormatQuoteIcon from '@material-ui/icons/FormatQuote';
 import HomeIcon from '@material-ui/icons/Home'; 
 import LocalOfferIcon from '@material-ui/icons/LocalOffer';
 import EmojiPeopleIcon from '@material-ui/icons/EmojiPeople';
@@ -40,12 +43,20 @@ export default function ButtonAppBar() {
       margin: '32px'
     },
     menuButton: {
-      marginRight: theme.spacing(2),
       color: 'white',
     },
     title: {
       flexGrow: 1,
       color: 'white',
+    },    
+    button: {
+      textTransform: 'none',
+    },
+    mbutton: {
+      textTransform: 'none',
+      background: 'black',
+      margin: "10px",
+      color: "white",
     },
   }));
   
@@ -55,39 +66,47 @@ export default function ButtonAppBar() {
   }
   return (
     <div className={classes.root}>
-            <Link to={`/`}>
-        <h3
-          css={css`
-            margin-bottom: ${rhythm(2)};
-            display: inline-block;
-            font-style: normal;
-          `}
-        >
-          {data.site.siteMetadata.title}
-        </h3>
-      </Link>
-
-
       <AppBar position="fixed">
-        <Toolbar>
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-            <HomeIcon />
-          </IconButton>
+          <Toolbar>
+            <Hidden mdDown>
+              <Typography variant="h6" className={classes.title}>
+                <Link to={`/`} >
+                  <Button color="inherit" className={classes.mbutton}>
+                    <FormatQuoteIcon color="white"/>
+                  </Button>
+                  <sapn
+                    css={css`
+                    color: white;
+                  `}
+                  >
+                  {data.site.siteMetadata.title}</sapn>
+                </Link>
+              </Typography>
+            </Hidden>
           
-          <Typography variant="h6" className={classes.title}>
-            News
-          </Typography>
+
+          <Link to={`/`} activeStyle={activateStyles}>
+            <Button color="inherit" className={classes.button}>
+              <HomeIcon fontSize="small"/>Home
+            </Button>
+          </Link>
 
           <Link to={`/tags/`} activeStyle={activateStyles}>
-            <Button color="inherit"><LocalOfferIcon fontSize="small"/>Tags</Button>
+            <Button color="inherit" className={classes.button}>
+              <LocalOfferIcon fontSize="small"/>Tags
+            </Button>
           </Link>
 
           <Link to={`/about/`} activeStyle={activateStyles}>
-            <Button color="inherit"><EmojiPeopleIcon />About</Button>
+            <Button color="inherit" className={classes.button}>
+              <EmojiPeopleIcon />About
+            </Button>
           </Link>
 
           <Link to={`/contact/`} activeStyle={activateStyles}>
-            <Button color="inherit"><ContactsIcon/>Contact</Button>
+            <Button color="inherit" className={classes.button}>
+              <ContactsIcon/>Contact
+            </Button>
           </Link>
 
         </Toolbar>
