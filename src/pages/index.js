@@ -2,26 +2,22 @@ import React from "react"
 import { graphql, Link } from "gatsby"
 import { Helmet } from "react-helmet"
 
-import { css } from "@emotion/core"
-
-import Hidden from '@material-ui/core/Hidden';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
-import CardActions from '@material-ui/core/CardActions';
+
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
-import Button from '@material-ui/core/Button';
+
 import Typography from '@material-ui/core/Typography';
 
-import Paper from '@material-ui/core/Paper';
+
 import Grid from '@material-ui/core/Grid';
 
 import EventNoteIcon from '@material-ui/icons/EventNote';
 import LocalOfferIcon from '@material-ui/icons/LocalOffer';
-//utils 
-import { rhythm } from "../utils/typography"
+
 
 import Layout from "../components/layout"
 
