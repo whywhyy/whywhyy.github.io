@@ -11,6 +11,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 
 import Typography from '@material-ui/core/Typography';
+import { createMuiTheme, responsiveFontSizes, ThemeProvider } from '@material-ui/core/styles';
 
 
 import Grid from '@material-ui/core/Grid';
@@ -30,27 +31,32 @@ export default function Home({ data }) {
     },
   });
   const classes = useStyles();
+  
+  let theme = createMuiTheme();
+  theme = responsiveFontSizes(theme);
+
   return (
     <Layout>
       <Helmet title={data.site.siteMetadata.title} />
       <Grid item xs={12} md={10} lg={6} >
         {data.allMarkdownRemark.edges.map(({ node }) => (    
           <Link to={node.frontmatter.url_path} >
+            <ThemeProvider theme={theme}>
             <Card className={classes.root}>
               <CardActionArea>  
                 <CardMedia
                   component="img"
-                  alt="Contemplative Reptile"
+                  alt="이미지를 불러오지 못했습니다..ㅠㅠ"
                   height="200"
-                  image= {node.frontmatter.thumbnailImage.childImageSharp.fixed.srcWebp} 
+                  image={node.frontmatter.thumbnailImage.childImageSharp.fixed.srcWebp} 
                   title={node.frontmatter.title}
                 />
               <CardContent>
-                <Typography variant="h5" component="h2">
+                <Typography variant="h5" component="h5">
                 {node.frontmatter.title}
                 </Typography>
 
-                <Typography gutterBottom variant="h6" component="h3">
+                <Typography gutterBottom variant="'body1" component="p">
                 <EventNoteIcon/>{node.frontmatter.date}{" "}
                 {node.frontmatter.tags.map(tag => <a><LocalOfferIcon/>({tag}){" "}</a>
                 )}
@@ -61,6 +67,7 @@ export default function Home({ data }) {
               </CardContent>
              </CardActionArea>
             </Card>
+            </ThemeProvider>
           </Link> 
         ))}
       </Grid>
