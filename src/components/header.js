@@ -3,7 +3,7 @@ import React from 'react';
 import { useStaticQuery, Link, graphql } from "gatsby"
 
 import { css } from "@emotion/core"
-
+import {Helmet} from "react-helmet";
 
 // material - core
 import { makeStyles } from '@material-ui/core/styles';
@@ -63,6 +63,9 @@ export default function ButtonAppBar() {
     color: "white", 
   }
   return (
+    <Helmet>
+    <meta name="theme-color" content="#3498DB"/>
+    </Helmet>
     <div className={classes.root}>
       <AppBar position="fixed" >
           <Toolbar>
