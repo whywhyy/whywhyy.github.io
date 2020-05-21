@@ -3,6 +3,7 @@ import React from "react"
 import ButtonAppBar from "./header"
 
 import { css } from "@emotion/core"
+import {Helmet} from "react-helmet";
 
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
@@ -44,7 +45,9 @@ export default function Layout({ children }) {
     >
       <ButtonAppBar/>
 
-
+    <Helmet>
+      <meta name="theme-color" content="#3498DB"/>
+    </Helmet>
       <div className={classes.container}>
         <Hidden mdDown>
           <Grid item lg={3} className={classes.grid}>
