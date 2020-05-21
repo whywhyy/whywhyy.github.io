@@ -28,7 +28,7 @@ module.exports = {
             options: {
               maxWidth: 800,
               maxHeight: 720,
-              tracedSVG: { color: "#f00e2e"}
+              tracedSVG: { color: "#3498DB"}
             },
           },
           `gatsby-remark-responsive-iframe`,
