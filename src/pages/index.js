@@ -74,7 +74,7 @@ export default function Home({ data }) {
                   component="img"
                   alt="이미지를 불러오지 못했습니다..ㅠㅠ"
                   height="280"
-                  image={node.frontmatter.thumbnailImage.childImageSharp.fixed.srcWebp} 
+                  image={node.frontmatter.thumbnailImage.childImageSharp.fluid.srcWebp} 
                   title={node.frontmatter.title}
                 />
               <CardContent 
@@ -130,7 +130,7 @@ export const query = graphql`
             tags
             thumbnailImage {
               childImageSharp {
-                fixed {
+                fluid {
                   srcWebp
                 }
               }

@@ -27,9 +27,11 @@ module.exports = {
             resolve: `gatsby-remark-images`,
             options: {
               maxWidth: 800,
-              maxHeight: 720
+              maxHeight: 720,
+              tracedSVG: { color: "#f00e2e"}
             },
           },
+          `gatsby-remark-responsive-iframe`,
         ],
       },
     },
