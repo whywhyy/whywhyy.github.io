@@ -1,6 +1,6 @@
 ---
 publish: True
-title: "Pandas and Bananas copy"
+title: "P2"
 date: "2017-08-21"
 url_path : "/blog/2017-08-21/my-first-post"
 thumbnailImage : ../images/rabbit-friend.jpg

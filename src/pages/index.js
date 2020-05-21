@@ -2,6 +2,8 @@ import React from "react"
 import { graphql, Link } from "gatsby"
 import { Helmet } from "react-helmet"
 
+// Utilities
+import kebabCase from "lodash/kebabCase"
 
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
@@ -29,6 +31,29 @@ export default function Home({ data }) {
       marginTop: 15,
       maxWidth: 650,
     },
+    cardmedia:{
+      margin: "0 10% 0 10",
+      borderRadius: "2%",
+      objectFit: "cover",
+    },
+    cardcontent:{
+      marginTop: "-5%",
+    },
+    textbody:{
+      display:"flex",
+      alignItems: "center",
+      justifyContent: "left",
+      flexFlow: "row wrap",
+    },
+    tags:{
+      display:"flex",
+      alignItems: "center",
+      justifyContent: "right",
+      color:"#1f4068",
+      '&:hover': {
+        color: '#6886c5',
+      },
+    },
   });
   const classes = useStyles();
   
@@ -45,21 +70,30 @@ export default function Home({ data }) {
             <Card className={classes.root}>
               <CardActionArea>  
                 <CardMedia
+                  className={classes.cardmedia}
                   component="img"
                   alt="이미지를 불러오지 못했습니다..ㅠㅠ"
-                  height="200"
+                  height="280"
                   image={node.frontmatter.thumbnailImage.childImageSharp.fixed.srcWebp} 
                   title={node.frontmatter.title}
                 />
-              <CardContent>
-                <Typography variant="h5" component="h5">
+              <CardContent 
+              className={classes.cardcontent}
+              >
+                <Typography className={classes.textbody} variant="h5" component="h2">
                 {node.frontmatter.title}
                 </Typography>
 
-                <Typography gutterBottom variant="'body1" component="p">
-                <EventNoteIcon/>{node.frontmatter.date}{" "}
-                {node.frontmatter.tags.map(tag => <a><LocalOfferIcon/>({tag}){" "}</a>
-                )}
+                <Typography gutterBottom paragraph className={classes.textbody} variant="body2" component="p">
+                 <EventNoteIcon  fontSize="small" />{node.frontmatter.date}{"  "}
+                {node.frontmatter.tags.map((tag) => (
+                  <Link to={`/tags/${kebabCase(tag)}/`}>
+                    <a className={classes.tags}>
+                      <LocalOfferIcon fontSize="small"/>
+                      {tag}{" "}
+                    </a>
+                  </Link>
+                ))}
                 </Typography>
                 <Typography variant="body2" color="textSecondary" component="p">
                 {node.frontmatter.description}
