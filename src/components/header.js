@@ -13,6 +13,8 @@ import Button from '@material-ui/core/Button';
 
 import Hidden from '@material-ui/core/Hidden';
 
+  import Grid from '@material-ui/core/Grid';
+
 // material - icons
 import FormatQuoteIcon from '@material-ui/icons/FormatQuote';
 import HomeIcon from '@material-ui/icons/Home'; 
@@ -51,7 +53,7 @@ export default function ButtonAppBar() {
     },
     mbutton: {
       textTransform: 'none',
-      background: 'black',
+      background: 'red',
       margin: "10px",
       color: "white",
     },
@@ -63,13 +65,19 @@ export default function ButtonAppBar() {
   }
   return (
     <div className={classes.root}>
-      <AppBar position="fixed" >
+      <AppBar position="fixed" style={{ background: '#040404' }}>
           <Toolbar>
+          <Grid
+            container
+            direction="row"
+            justify="center"
+            alignItems="center"
+          >
             <Hidden mdDown>
               <Typography variant="h6" className={classes.title}>
                 <Link to={`/`} >
                   <Button color="inherit" className={classes.mbutton}>
-                    <FormatQuoteIcon color="white"/>
+                    <FormatQuoteIcon color="white" />
                   </Button>
                   <sapn
                     css={css`
@@ -80,8 +88,6 @@ export default function ButtonAppBar() {
                 </Link>
               </Typography>
             </Hidden>
-          
-
           <Link to={`/`} activeStyle={activateStyles}>
             <Button color="inherit" className={classes.button}>
               <HomeIcon fontSize="small"/>Home
@@ -105,7 +111,7 @@ export default function ButtonAppBar() {
               <ContactsIcon/>Contact
             </Button>
           </Link>
-
+        </Grid>
         </Toolbar>
       </AppBar>
     </div>

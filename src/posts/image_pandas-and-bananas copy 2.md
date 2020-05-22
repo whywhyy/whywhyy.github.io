@@ -1,7 +1,7 @@
 ---
 publish: True
 title: "가 나다라하나다가라쟛한가리ㅈㄷㄹ거 ㅈㅈ ㅜㅈ댜거자"
-date: "2019-08-21"
+date: "2020-05-20"
 url_path : "/blog/2017-08-21/my-first-post11"
 thumbnailImage : ../images/rabbit-friend.jpg
 description : "가나다라ㅈㅈ

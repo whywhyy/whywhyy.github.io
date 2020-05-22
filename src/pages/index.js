@@ -30,11 +30,12 @@ export default function Home({ data }) {
       margin: 10,
       marginTop: 15,
       maxWidth: 650,
-      transform: "scale(0.95)",
+      transform: "scale(1)",
       transition: "transform .2s",
+      borderRadius: "2%",
       '&:hover': {
         borderRadius: "2%",
-        transform: "scale(1)",
+        transform: "scale(1.1)",
       },        
     },
     cardmedia:{
@@ -78,6 +79,7 @@ export default function Home({ data }) {
   let theme = createMuiTheme();
   theme = responsiveFontSizes(theme);
 
+    
   return (
     <Layout>
       <Helmet title={data.site.siteMetadata.title} />
@@ -111,6 +113,7 @@ export default function Home({ data }) {
 
                 <Typography gutterBottom paragraph className={classes.textbody} variant="body2" component="p">
                  <EventNoteIcon  fontSize="small" />{node.frontmatter.date}{"  "}
+                 
                 {node.frontmatter.tags.map((tag) => (
                   <Link to={`/tags/${kebabCase(tag)}/`}>
                     <a className={classes.tags}>
@@ -151,7 +154,7 @@ export const query = graphql`
           id
           frontmatter {
             title
-            date(formatString: "YYYY-MM-DD")
+            date(fromNow: true)
             url_path
             description
             tags

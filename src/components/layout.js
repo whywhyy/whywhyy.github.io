@@ -16,6 +16,10 @@ import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import CardActions from '@material-ui/core/CardActions';
 
+import GitHubIcon from '@material-ui/icons/GitHub';
+import LinkedInIcon from '@material-ui/icons/LinkedIn';
+import CodeIcon from '@material-ui/icons/Code';
+
 import Typography from '@material-ui/core/Typography';
 import { createMuiTheme, responsiveFontSizes, ThemeProvider } from '@material-ui/core/styles';
 
@@ -38,21 +42,28 @@ export default function Layout({ children }) {
           pro_subheader
         }
       }
+      allMarkdownRemark {
+        totalCount
+      }
     }
     `
   )
   const useStyles = makeStyles((theme) => ({
     root: {
-      flexGrow: 1,
-      marginTop:12,
-      marginLeft:10,
-      marginRight:-10,
+      flexGrow: 1,     
+      transition: "transform .2s",
+      '&:hover': {
+        borderRadius: "2%",
+        transform: "scale(1.1)",
+      },     
     },
     root_R: {
       flexGrow: 1,
-      marginTop:12,
-      marginLeft:-10,
-      marginRight:10,
+      transition: "transform .2s",
+      '&:hover': {
+        borderRadius: "2%",
+        transform: "scale(1.1)",
+      },     
     },
     container: {
       display: 'flex',
@@ -76,6 +87,13 @@ export default function Layout({ children }) {
     },
   }));
   const classes = useStyles();
+ 
+  let newDate = new Date()
+  let date = newDate.getDate();
+  let month = newDate.getMonth() + 1;
+  let year = newDate.getFullYear();
+  let hour = newDate.getHours()
+  let minute = newDate.getMinutes()
 
   let theme = createMuiTheme();
   theme = responsiveFontSizes(theme);
@@ -110,6 +128,66 @@ export default function Layout({ children }) {
               title={data.site.siteMetadata.pro_title}
               subheader = {data.site.siteMetadata.pro_subheader}
             />
+            <CardContent>
+              <Grid 
+                container
+                direction="row"
+                justify="space-evenly"
+                alignItems="center"
+              >
+                <Grid item>
+                  <Grid
+                    container
+                    direction="column"
+                    justify="center"
+                    alignItems="center"
+                  > 
+                    <Typography >
+                      Post01
+                      
+                    </Typography>
+
+                    <Typography >
+                    {year}-{month}-{date}-{hour}:{minute}
+                    </Typography>
+                  </Grid>
+                </Grid>
+
+                <Grid item>
+                  <Grid
+                    container
+                    direction="column"
+                    justify="center"
+                    alignItems="center"
+                  > 
+                  < GitHubIcon fontSize="large"/>
+                  </Grid>
+                </Grid>
+
+                <Grid item>
+                  <Grid
+                    container
+                    direction="column"
+                    justify="center"
+                    alignItems="center"
+                  > 
+                  <LinkedInIcon style={{fontSize: '48px'}}/>
+                  </Grid>
+                </Grid>
+
+                <Grid item>
+                  <Grid
+                    container
+                    direction="column"
+                    justify="center"
+                    alignItems="center"
+                  > 
+                  <CodeIcon style={{fontSize: '48px'}}/>
+                  </Grid>
+                </Grid>
+
+              </Grid>
+            </CardContent>
             </Card>
             
           </Grid>

@@ -33,7 +33,6 @@ export default function Template({
   const useStyles = makeStyles({
     root: {
       margin: 15,
-      marginTop: 25,
       maxWidth: 650,
     },
     cardmedia:{
@@ -72,7 +71,11 @@ export default function Template({
   return (
     <Layout>
 
-      <Grid item xs={12} md={10} lg={6} >
+<Grid
+  container
+  direction="row"
+  justify="center"
+  alignItems="flex-start" xs={12} lg={6} >
             <ThemeProvider theme={theme}>
             <Card className={classes.root}>
               <CardContent>

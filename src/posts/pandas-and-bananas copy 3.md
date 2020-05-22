@@ -1,7 +1,7 @@
 ---
 publish: True
 title: "P"
-date: "2017-08-21"
+date: "2020-05-22"
 url_path : "/blog/2017-08-21/my-first-post"
 thumbnailImage : ../images/pass.jpg
 description : "가나다라aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
@@ -10,7 +10,7 @@ tags :
     - av2
     - av3
 ---
-
+s
 # r1
 ## dd2
 # r2
