@@ -13,7 +13,7 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 
 import Typography from '@material-ui/core/Typography';
-import { createMuiTheme, responsiveFontSizes, ThemeProvider } from '@material-ui/core/styles';
+import { createMuiTheme, responsiveFontSizes, ThemeProvider, withStyles } from '@material-ui/core/styles';
 
 
 import Grid from '@material-ui/core/Grid';
@@ -30,11 +30,18 @@ export default function Home({ data }) {
       margin: 10,
       marginTop: 15,
       maxWidth: 650,
+      transform: "scale(0.95)",
+      transition: "transform .2s",
+      '&:hover': {
+        borderRadius: "2%",
+        transform: "scale(1)",
+      },        
     },
     cardmedia:{
       margin: "0 10% 0 10",
       borderRadius: "2%",
       objectFit: "cover",
+      transform: "scale(0.95)",
     },
     cardcontent:{
       marginTop: "-5%",
@@ -51,23 +58,40 @@ export default function Home({ data }) {
       justifyContent: "right",
       color:"#1f4068",
       '&:hover': {
-        color: '#6886c5',
+        color: 'red',
       },
     },
   });
   const classes = useStyles();
-  
+
+  const mulStyles = makeStyles({
+    root:{
+      width: "100%",
+      display: "block",
+      flexWrap: "wrap",
+      boxSizing: "border-box",
+    }
+  });
+  const mulclasses = mulStyles();
+
+
   let theme = createMuiTheme();
   theme = responsiveFontSizes(theme);
 
   return (
     <Layout>
       <Helmet title={data.site.siteMetadata.title} />
-      <Grid item xs={12} md={10} lg={6} >
+      <Grid       
+        container
+        direction="column"
+        justify="center"
+        alignItems="center" 
+      >
+        <Grid item lg={6}>
         {data.allMarkdownRemark.edges.map(({ node }) => (    
           <Link to={node.frontmatter.url_path} >
             <ThemeProvider theme={theme}>
-            <Card className={classes.root}>
+            <Card className={classes.root} >
               <CardActionArea>  
                 <CardMedia
                   className={classes.cardmedia}
@@ -104,6 +128,7 @@ export default function Home({ data }) {
             </ThemeProvider>
           </Link> 
         ))}
+        </Grid>
       </Grid>
   </Layout>
   )

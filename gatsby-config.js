@@ -1,6 +1,8 @@
 module.exports = {
   siteMetadata: {
     title: `Whywhyy`,
+    pro_title: `"-_-"`,
+    pro_subheader: `탐색하고 적용하는 개발자`,
   },
   plugins: [
     {

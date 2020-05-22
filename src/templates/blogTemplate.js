@@ -32,14 +32,15 @@ export default function Template({
 
   const useStyles = makeStyles({
     root: {
-      margin: 10,
-      marginTop: 15,
+      margin: 15,
+      marginTop: 25,
       maxWidth: 650,
     },
     cardmedia:{
       margin: "0 10% 0 10",
       borderRadius: "2%",
       objectFit: "cover",
+      transform: "scale(0.95)",
     },
     cardcontent:{
       marginTop: "-5%",
@@ -59,7 +60,7 @@ export default function Template({
       padding: "0.5em",
       color:"#1f4068",
       '&:hover': {
-        color: '#6886c5',
+        color: 'red',
       },
     },
   });
