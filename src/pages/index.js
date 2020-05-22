@@ -81,13 +81,14 @@ export default function Home({ data }) {
   return (
     <Layout>
       <Helmet title={data.site.siteMetadata.title} />
+      <Grid item xs={12} lg={6}>
       <Grid       
         container
         direction="column"
         justify="center"
         alignItems="center" 
       >
-        <Grid item lg={6}>
+        <Grid item xs={12} lg={12}>
         {data.allMarkdownRemark.edges.map(({ node }) => (    
           <Link to={node.frontmatter.url_path} >
             <ThemeProvider theme={theme}>
@@ -128,6 +129,7 @@ export default function Home({ data }) {
             </ThemeProvider>
           </Link> 
         ))}
+        </Grid>
         </Grid>
       </Grid>
   </Layout>

@@ -48,6 +48,12 @@ export default function Layout({ children }) {
       marginLeft:10,
       marginRight:-10,
     },
+    root_R: {
+      flexGrow: 1,
+      marginTop:12,
+      marginLeft:-10,
+      marginRight:10,
+    },
     container: {
       display: 'flex',
       flexWrap: 'wrap',
@@ -91,7 +97,6 @@ export default function Layout({ children }) {
       <ThemeProvider theme={theme}>
         <Hidden mdDown>
           <Grid item lg={3} className={classes.grid}>
-      
           <Card className={classes.root}>
             <CardHeader
               avatar={
@@ -116,7 +121,20 @@ export default function Layout({ children }) {
         
         <Hidden mdDown>
           <Grid item lg={3} className={classes.grid}>
-            
+            <Card className={classes.root_R}>
+            <CardHeader
+              avatar={
+                <Avatar aria-label="profile" 
+                className={classes.avatar} 
+                alt="profile" 
+                src={data.file.childImageSharp.fluid.srcWebp} 
+                />
+              }
+              titleTypographyProps={{variant:'subtitle1'}}
+              title={data.site.siteMetadata.pro_title}
+              subheader = {data.site.siteMetadata.pro_subheader}
+            />
+            </Card>
           </Grid>
         </Hidden>
       </ThemeProvider>
