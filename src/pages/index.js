@@ -103,8 +103,7 @@ export default function Home({ data }) {
 
   let theme = createMuiTheme();
   theme = responsiveFontSizes(theme);
-  console.log(data)
-    
+
   return (
     <Layout>
       <Helmet title={data.site.siteMetadata.title} />

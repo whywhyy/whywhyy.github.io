@@ -63,12 +63,7 @@ export default function ProfileCard() {
 
   const useStyles = makeStyles((theme) => ({
     root: {
-      flexGrow: 1,     
-      transition: "transform .2s",
-      '&:hover': {
-        borderRadius: "2%",
-        transform: "scale(1.05)",
-      },     
+      flexGrow: 1,      
     },
     avatar:{
       display: 'flex',
@@ -101,7 +96,7 @@ export default function ProfileCard() {
   theme = responsiveFontSizes(theme);
 
   return (
-      <Card xs={12}>
+      <Card xs={12} className={classes.root}>
             <CardHeader
               avatar={
                 <Avatar aria-label="profile" 

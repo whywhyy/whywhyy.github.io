@@ -13,8 +13,14 @@ import { rhythm } from "../utils/typography"
 
 export default function About({ data }) {
   const useStyles = makeStyles((theme) => ({
+    root:{
+      flexGlow:1,
+    },
     grid:{
-      marginTop: 15,
+      flexGlow:1,
+      marginTop: 30,
+      margin: 10,
+      maxWidth: 650,
     },
   }));
   const classes = useStyles();
@@ -28,16 +34,14 @@ export default function About({ data }) {
     `}
   >
     <ButtonAppBar/>
-    <Grid item xs={12} lg={6}>
-      <Grid       
+    <Grid       
         container
-        direction="column"
+        direction="row"
         justify="center"
-        alignItems="center" 
+        alignItems="flex-start"
       >
-        <Grid item xs={12} lg={12}>
-              <ProfileCard />
-          </Grid>
+    <Grid item xs={12} lg={6} className={classes.grid}>
+        <ProfileCard  />
       </Grid>
     </Grid>
     </div>
