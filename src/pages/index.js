@@ -68,7 +68,7 @@ export default function Home({ data }) {
       color:"#808080",
     },
     tags:{
-      marginTop:-10,
+      marginTop:10,
       marginRight:10,
       padding:".2rem .5rem",
       display:"flex",
@@ -80,7 +80,7 @@ export default function Home({ data }) {
       borderRadius:".2rem",
       transition: "background-color .3s", 
       '&:hover': {
-        color:"red",
+        color:"#696969",
         backgroundColor:"#CEE7F7",
       },
     },
@@ -148,8 +148,10 @@ export default function Home({ data }) {
                   <Typography gutterBottom paragraph className={classes.textbody} variant="body2" component="p">
                     {node.frontmatter.tags.map((tag) => (
                       <Grid item >
-                        <Link to={`/tags/${kebabCase(tag)}/`}
-                        className={classes.tags} >
+                        <Link 
+                          to={`/tags/${kebabCase(tag)}/`}
+                          className={classes.tags} 
+                        >
                             {tag}{" "}
                         </Link>
                       </Grid>

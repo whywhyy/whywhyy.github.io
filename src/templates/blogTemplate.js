@@ -28,7 +28,7 @@ export default function Template({
   data, // this prop will be injected by the GraphQL query below.
 }) {
   const { markdownRemark } = data // data.markdownRemark holds your post data
-  const { frontmatter, html } = markdownRemark
+  const { frontmatter, html, fields } = markdownRemark
 
   const useStyles = makeStyles({
     root: {
@@ -52,14 +52,36 @@ export default function Template({
       padding: "0.5em",
       border: "none",
     },
+    text_date:{
+      display:"flex",
+      alignItems: "center",
+      justifyContent: "left",
+      flexFlow: "row wrap",
+      padding: "0.5em",
+      color:"#808080",
+    },
+    text_readtime:{
+      display:"flex",
+      alignItems: "center",
+      justifyContent: "left",
+      flexFlow: "row wrap",
+      color:"#808080",
+    },
     tags:{
+      marginTop:10,
+      marginRight:10,
+      padding:".2rem .5rem",
       display:"flex",
       alignItems: "center",
       justifyContent: "right",
-      padding: "0.5em",
-      color:"#1f4068",
+      color:"#696969",
+      fontWeight: "300",
+      backgroundColor:"#D3D3D3",
+      borderRadius:".2rem",
+      transition: "background-color .3s", 
       '&:hover': {
-        color: 'red',
+        color:"#696969",
+        backgroundColor:"#CEE7F7",
       },
     },
   });
@@ -70,29 +92,50 @@ export default function Template({
 
   return (
     <Layout>
-
-<Grid
-  container
-  direction="row"
-  justify="center"
-  alignItems="flex-start" xs={12} lg={6} >
+        <Grid
+          container
+          direction="row"
+          justify="center"
+          alignItems="flex-start" 
+          xs={12} lg={6} 
+          >
             <ThemeProvider theme={theme}>
             <Card className={classes.root}>
               <CardContent>
                 <Typography className={classes.textbody} variant="h4" component="h2">
                   {frontmatter.title}
-                </Typography> 
-                <Typography  className={classes.textbody} variant="body2" component="p">
-                  <EventNoteIcon  fontSize="small" />{frontmatter.date}
-                  {frontmatter.tags.map((tag) => (
-                    <Link to={`/tags/${kebabCase(tag)}/`}>
-                      <a className={classes.tags}>
-                        <LocalOfferIcon fontSize="small"/>
-                        {tag}{" "}
-                      </a>
-                    </Link>
-                  ))}
                 </Typography>
+
+                <Typography  className={classes.text_date} variant="body2" component="p">
+                   {frontmatter.date}
+                    <Typography gutterBottom paragraph className={classes.text_readtime} variant="body2" component="p">
+                        {",  "}{fields.readingTime.text}
+                    </Typography>
+                </Typography>
+
+                <Grid
+                  container
+                  direction="row"
+                  justify="flex-start"
+                  alignItems="flex-start"
+                >
+                  <Typography gutterBottom paragraph className={classes.textbody} variant="body2" component="p">
+                    {frontmatter.tags.map((tag) => (
+                      <Grid item >
+                        <Link 
+                          to={`/tags/${kebabCase(tag)}/`}
+                          className={classes.tags}
+                        >
+                          {tag}{" "}
+                        </Link>
+                      </Grid>
+                    ))}
+                  </Typography>
+                </Grid>
+
+
+
+                
               </CardContent>
               <CardMedia
                 className={classes.cardmedia}
@@ -122,7 +165,7 @@ export const pageQuery = graphql`
     markdownRemark(frontmatter: { url_path: { eq: $url_path } }) {
       html
       frontmatter {
-        date(formatString: "YYYY-MM-DD")
+        date(formatString: "MMMM DD,YYYY")
         url_path
         title
         tags
@@ -132,6 +175,11 @@ export const pageQuery = graphql`
               srcWebp
             }
           }
+        }
+      }
+      fields {
+        readingTime {
+          text
         }
       }
     }

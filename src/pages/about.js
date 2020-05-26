@@ -37,9 +37,9 @@ export default function About({ data }) {
       >
         <Grid item xs={12} lg={12}>
               <ProfileCard />
-              </Grid>
           </Grid>
-        </Grid>
+      </Grid>
+    </Grid>
     </div>
   )
 }

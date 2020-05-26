@@ -56,5 +56,15 @@ module.exports = {
         format: 'YYYY.MM.DD',
       },
     },
+    {
+      resolve: "gatsby-plugin-page-progress",
+      options: {
+        includePaths: ["/projects", { regex: "^/blog" }],
+        excludePaths: [],
+        height: 6,
+        prependToBody: false,
+        color: `#FF0000`,
+      },
+    },
   ],
 }
