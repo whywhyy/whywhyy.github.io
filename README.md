@@ -1,5 +1,7 @@
 [Gatsby.js 기반 웹사이트](https://www.gatsbyjs.org/)
 
+## Run Local
+
 ## 1. git clone & npm install
 ```
 git clone -b code https://github.com/whywhyy/whywhyy.github.io.git
@@ -18,11 +20,14 @@ npm run develop
 `http://localhost:8000/`
 
 ---
+## Git Remote ADD & Deploy Gitbubio
+
+
 ## Make Github repository : username.github.io
 
 ```
 git remote rm origin
-git remote add origin #YOUR_REPO
+git remote add origin #username.github.io
 ```
 
 ## Deploy Github.io
