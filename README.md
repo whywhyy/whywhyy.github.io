@@ -1,4 +1,12 @@
-[Gatsby.js 기반 웹사이트](https://www.gatsbyjs.org/)
+## Gatsby.js 
+ - React Material UI
+   - typography, Grid, Card ..
+ - GraphQL
+ - Responsive web design 
+ - Post
+   - Markdown
+   - Page progress bar
+---
 
 ## Run Local
 

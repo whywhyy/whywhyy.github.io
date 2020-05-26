@@ -1,5 +1,8 @@
 import React from "react"
 import { graphql, Link } from "gatsby"
+
+import Img from "gatsby-image"
+
 import { Helmet } from "react-helmet"
 
 // Utilities
@@ -39,13 +42,13 @@ export default function Home({ data }) {
       },        
     },
     cardmedia:{
-      margin: "0 10% 0 10",
+
       borderRadius: "2%",
       objectFit: "cover",
-      transform: "scale(0.95)",
+      
     },
     cardcontent:{
-      marginTop: "-5%",
+
     },
     textbody:{
       display:"flex",
@@ -100,7 +103,7 @@ export default function Home({ data }) {
 
   let theme = createMuiTheme();
   theme = responsiveFontSizes(theme);
-
+  console.log(data)
     
   return (
     <Layout>
@@ -113,17 +116,17 @@ export default function Home({ data }) {
         alignItems="center" 
       >
         <Grid item xs={12} lg={12}>
-        {data.allMarkdownRemark.edges.map(({ node }) => (    
+        {data.allMarkdownRemark.edges.map(({ node }) => (   
           <Link to={node.frontmatter.url_path} >
             <ThemeProvider theme={theme}>
             <Card className={classes.root} >
-              <CardActionArea>  
-                <CardMedia
+              <CardActionArea>
+              <CardMedia
                   className={classes.cardmedia}
                   component="img"
                   alt="이미지를 불러오지 못했습니다..ㅠㅠ"
                   height="280"
-                  image={node.frontmatter.thumbnailImage.childImageSharp.fluid.srcWebp} 
+                  image={node.frontmatter.thumbnailImage.childImageSharp.fixed.srcWebp} 
                   title={node.frontmatter.title}
                 />
               <CardContent 
@@ -194,8 +197,9 @@ export const query = graphql`
             description
             tags
             thumbnailImage {
+              id
               childImageSharp {
-                fluid {
+                fixed(width: 650, height: 350, fit: FILL, webpQuality: 100) {
                   srcWebp
                 }
               }
