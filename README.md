@@ -20,8 +20,6 @@ npm run develop
 `http://localhost:8000/`
 
 ---
-## Git Remote ADD & Deploy Gitbubio
-
 
 ## Make Github repository : username.github.io
 
