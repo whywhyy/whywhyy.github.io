@@ -8,7 +8,6 @@ kirkhamTheme.overrideThemeStyles = () => ({
       "text-decoration": "none",
     },
     'a:-webkit-any-link': {
-        color: "#D3D3D3",
         "text-decoration": "none",
     },
     'a:hover': {

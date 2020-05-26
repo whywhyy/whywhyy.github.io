@@ -20,7 +20,7 @@ import FormatQuoteIcon from '@material-ui/icons/FormatQuote';
 import HomeIcon from '@material-ui/icons/Home'; 
 import LocalOfferIcon from '@material-ui/icons/LocalOffer';
 import EmojiPeopleIcon from '@material-ui/icons/EmojiPeople';
-import ContactsIcon from '@material-ui/icons/Contacts';
+import DescriptionIcon from '@material-ui/icons/Description';
 
 export default function ButtonAppBar() {
 
@@ -47,7 +47,11 @@ export default function ButtonAppBar() {
     title: {
       flexGrow: 1,
       color: 'white',
-    },    
+    },
+    link_button: {
+      textTransform: 'none',
+      color: '#A9A9A9',
+    },
     button: {
       textTransform: 'none',
     },
@@ -88,29 +92,38 @@ export default function ButtonAppBar() {
                 </Link>
               </Typography>
             </Hidden>
-          <Link to={`/`} activeStyle={activateStyles}>
-            <Button color="inherit" className={classes.button}>
-              <HomeIcon fontSize="small"/>Home
-            </Button>
-          </Link>
 
-          <Link to={`/tags/`} activeStyle={activateStyles}>
-            <Button color="inherit" className={classes.button}>
-              <LocalOfferIcon fontSize="small"/>Tags
-            </Button>
-          </Link>
+          <Typography variant="subtitle2">
+            <Link to={`/`} activeStyle={activateStyles} className={classes.link_button}>
+              <Button color="inherit" className={classes.button}>
+                <HomeIcon fontSize="small"/>
+                <Hidden xsDown>Home</Hidden>
+              </Button>
+            </Link>
 
-          <Link to={`/about/`} activeStyle={activateStyles}>
-            <Button color="inherit" className={classes.button}>
-              <EmojiPeopleIcon />About
-            </Button>
-          </Link>
+            <Link to={`/tags/`} activeStyle={activateStyles} className={classes.link_button}>
+              <Button color="inherit" className={classes.button}>
+                <LocalOfferIcon fontSize="small"/>
+                <Hidden xsDown>Tags</Hidden>
+              </Button>
+            </Link>
+            
+            <Hidden lgUp>
+              <Link to={`/about/`} activeStyle={activateStyles} className={classes.link_button}>
+                <Button color="inherit" className={classes.button}>
+                  <EmojiPeopleIcon />
+                  <Hidden xsDown>About</Hidden>
+                </Button>
+              </Link>
+            </Hidden>
 
-          <Link to={`/contact/`} activeStyle={activateStyles}>
-            <Button color="inherit" className={classes.button}>
-              <ContactsIcon/>Contact
-            </Button>
-          </Link>
+            <Link to={`/projects/`} activeStyle={activateStyles} className={classes.link_button}>
+              <Button color="inherit" className={classes.button}>
+                <DescriptionIcon/>
+                <Hidden xsDown>Projects</Hidden>
+              </Button>
+            </Link>
+          </Typography> 
         </Grid>
         </Toolbar>
       </AppBar>

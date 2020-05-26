@@ -2,12 +2,13 @@ import React from "react"
 import PropTypes from "prop-types"
 import Layout from "../components/layout"
 
+import Typography from '@material-ui/core/Typography';
 
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Grid from '@material-ui/core/Grid';
-
-
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
 
 // Utilities
 import kebabCase from "lodash/kebabCase"
@@ -28,22 +29,50 @@ export default function TagsPage ({
     root: {
       flexGrow: 1,
     },
-    paper: {
-      padding: theme.spacing(2),
-      textAlign: 'left',
-      color: theme.palette.text.secondary,
-      flex: '1 0 auto',
-      margin: theme.spacing(1),
+    card: {
+      margin: 10,
+      marginTop: 15,
+      maxWidth: 650,
+      transform: "scale(1)",
+      transition: "transform .2s",
+      borderRadius: "3%",
       '&:hover': {
-        backgroundColor: '#d3d3d3',
+        borderRadius: "3%",
+        transform: "scale(1.05)",
+      },        
+    },
+    card_header:{
+      marginBottom:-15,
+    },    
+    tags:{
+      marginLeft:10,
+      marginTop:10,
+      padding:".2rem .5rem",
+      display:"flex",
+      alignItems: "center",
+      justifyContent: "right",
+      color:"#696969",
+      fontWeight: "300",
+      backgroundColor:"#D3D3D3",
+      borderRadius:".8rem",
+      transition: "background-color .3s", 
+      '&:hover': {
+        color:"#696969",
+        backgroundColor:"#CEE7F7",
       },
-      '&:active': {
-        boxShadow: 'none',
-        backgroundColor: '#c0c0c0',
-      },
-      '&:focus': {
-        boxShadow: '0 0 0 0.2rem rgba(0,123,255,.5)',
-      },
+    },
+    tag_num:{
+      backgroundColor:"#D9DDDC",
+      borderRadius:"50%",
+      height: "1.0rem",
+      width: "1.0rem",
+      textAlign: "center",
+      verticalAlign: "middle",
+      fontSize:".7rem",
+      marginRight:"0.3rem",
+    },
+    grid:{
+      marginTop:10,
     },
   }));
   const classes = useStyles();
@@ -52,14 +81,40 @@ export default function TagsPage ({
     return (    
       <Layout>
       <Helmet title={`tags | ${title}`} />
-        <Grid item xs={12} md={10} lg={6}>
-          {group.map(tag => (
-              <Link to={`/tags/${kebabCase(tag.fieldValue)}/`}>
-                <Paper className={classes.paper} elevation={2}>
-                {tag.fieldValue} ({tag.totalCount})
-                </Paper>
-              </Link>
-          ))}
+        <Grid item xs={12} lg={6}>
+        <Grid
+          container
+          direction="row"
+          justify="center"
+          alignItems="flex-start"
+        >
+          <Card className={classes.card} >
+            <Typography gutterBottom paragraph variant="body2" component="p">
+            <CardHeader
+              subheaderTypographyProps={{variant:'subtitle2'}}
+              subheader = {`Tags`}
+              className={classes.card_header}
+            />
+              <Grid
+                container
+                direction="row"
+                justify="flex-start"
+                alignItems="flex-start"
+                className={classes.grid}
+              >
+                {group.map(tag => (
+                    <Link 
+                      to={`/tags/${kebabCase(tag.fieldValue)}/`}
+                      className={classes.tags}
+                    >
+                    <sapn className={classes.tag_num}> {tag.totalCount}</sapn> 
+                    {tag.fieldValue}
+                    </Link>
+                ))}
+              </Grid>
+              </Typography>
+          </Card>
+          </Grid>
         </Grid>
     </Layout>
     )

@@ -1,6 +1,8 @@
 import React from "react"
 
 import ButtonAppBar from "./header"
+import ProfileCard from "./profilecard"
+
 import { useStaticQuery,graphql, Link } from "gatsby"
 import { css } from "@emotion/core"
 import {Helmet} from "react-helmet";
@@ -54,7 +56,7 @@ export default function Layout({ children }) {
       transition: "transform .2s",
       '&:hover': {
         borderRadius: "2%",
-        transform: "scale(1.1)",
+        transform: "scale(1.05)",
       },     
     },
     root_R: {
@@ -62,7 +64,7 @@ export default function Layout({ children }) {
       transition: "transform .2s",
       '&:hover': {
         borderRadius: "2%",
-        transform: "scale(1.1)",
+        transform: "scale(1.05)",
       },     
     },
     container: {
@@ -116,80 +118,8 @@ export default function Layout({ children }) {
         <Hidden mdDown>
           <Grid item lg={3} className={classes.grid}>
           <Card className={classes.root}>
-            <CardHeader
-              avatar={
-                <Avatar aria-label="profile" 
-                className={classes.avatar} 
-                alt="profile" 
-                src={data.file.childImageSharp.fluid.srcWebp} 
-                />
-              }
-              titleTypographyProps={{variant:'subtitle1'}}
-              title={data.site.siteMetadata.pro_title}
-              subheader = {data.site.siteMetadata.pro_subheader}
-            />
-            <CardContent>
-              <Grid 
-                container
-                direction="row"
-                justify="space-evenly"
-                alignItems="center"
-              >
-                <Grid item>
-                  <Grid
-                    container
-                    direction="column"
-                    justify="center"
-                    alignItems="center"
-                  > 
-                    <Typography >
-                      Post01
-                      
-                    </Typography>
-
-                    <Typography >
-                    {year}-{month}-{date}-{hour}:{minute}
-                    </Typography>
-                  </Grid>
-                </Grid>
-
-                <Grid item>
-                  <Grid
-                    container
-                    direction="column"
-                    justify="center"
-                    alignItems="center"
-                  > 
-                  < GitHubIcon fontSize="large"/>
-                  </Grid>
-                </Grid>
-
-                <Grid item>
-                  <Grid
-                    container
-                    direction="column"
-                    justify="center"
-                    alignItems="center"
-                  > 
-                  <LinkedInIcon style={{fontSize: '48px'}}/>
-                  </Grid>
-                </Grid>
-
-                <Grid item>
-                  <Grid
-                    container
-                    direction="column"
-                    justify="center"
-                    alignItems="center"
-                  > 
-                  <CodeIcon style={{fontSize: '48px'}}/>
-                  </Grid>
-                </Grid>
-
-              </Grid>
-            </CardContent>
-            </Card>
-            
+            <ProfileCard/>
+           </Card>
           </Grid>
         </Hidden>
         

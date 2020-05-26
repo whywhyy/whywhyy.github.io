@@ -35,7 +35,7 @@ export default function Home({ data }) {
       borderRadius: "2%",
       '&:hover': {
         borderRadius: "2%",
-        transform: "scale(1.1)",
+        transform: "scale(1.05)",
       },        
     },
     cardmedia:{
@@ -53,13 +53,35 @@ export default function Home({ data }) {
       justifyContent: "left",
       flexFlow: "row wrap",
     },
+    text_date:{
+      display:"flex",
+      alignItems: "center",
+      justifyContent: "left",
+      flexFlow: "row wrap",
+      color:"#808080",
+    },
+    text_readtime:{
+      display:"flex",
+      alignItems: "center",
+      justifyContent: "left",
+      flexFlow: "row wrap",
+      color:"#808080",
+    },
     tags:{
+      marginTop:-10,
+      marginRight:10,
+      padding:".2rem .5rem",
       display:"flex",
       alignItems: "center",
       justifyContent: "right",
-      color:"#1f4068",
+      color:"#696969",
+      fontWeight: "300",
+      backgroundColor:"#D3D3D3",
+      borderRadius:".2rem",
+      transition: "background-color .3s", 
       '&:hover': {
-        color: 'red',
+        color:"red",
+        backgroundColor:"#CEE7F7",
       },
     },
   });
@@ -111,18 +133,29 @@ export default function Home({ data }) {
                 {node.frontmatter.title}
                 </Typography>
 
-                <Typography gutterBottom paragraph className={classes.textbody} variant="body2" component="p">
-                 <EventNoteIcon  fontSize="small" />{node.frontmatter.date}{"  "}
-                 
-                {node.frontmatter.tags.map((tag) => (
-                  <Link to={`/tags/${kebabCase(tag)}/`}>
-                    <a className={classes.tags}>
-                      <LocalOfferIcon fontSize="small"/>
-                      {tag}{" "}
-                    </a>
-                  </Link>
-                ))}
+                <Typography gutterBottom paragraph className={classes.text_date} variant="body2" component="p">
+                  {node.frontmatter.date}
+                <Typography gutterBottom paragraph className={classes.text_readtime} variant="body2" component="p">
+                    {",  "}{node.fields.readingTime.text}
+                  </Typography>
                 </Typography>
+                <Grid
+                  container
+                  direction="row"
+                  justify="flex-start"
+                  alignItems="flex-start"
+                >
+                  <Typography gutterBottom paragraph className={classes.textbody} variant="body2" component="p">
+                    {node.frontmatter.tags.map((tag) => (
+                      <Grid item >
+                        <Link to={`/tags/${kebabCase(tag)}/`}
+                        className={classes.tags} >
+                            {tag}{" "}
+                        </Link>
+                      </Grid>
+                    ))}
+                  </Typography>
+                </Grid>
                 <Typography variant="body2" color="textSecondary" component="p">
                 {node.frontmatter.description}
                 </Typography>
@@ -154,7 +187,7 @@ export const query = graphql`
           id
           frontmatter {
             title
-            date(fromNow: true)
+            date(formatString: "MMMM DD,YYYY")
             url_path
             description
             tags
@@ -164,6 +197,11 @@ export const query = graphql`
                   srcWebp
                 }
               }
+            }
+          }
+          fields {
+            readingTime {
+              text
             }
           }
         }
