@@ -4,7 +4,7 @@ title: "P2"
 date: "2017-08-21"
 url_path : "/blog/2017-08-21/my-first-post"
 thumbnailImage : ../images/dev_image.jpg
-description : "가나다라"
+description : "다라asfaswqgwqgqwgasgasgwqg다라asfaswqgwqgqwgasgasgwqg다라asfaswqgwqgqwgasgasgwqg"
 tags : 
     - ab1
     - ab2

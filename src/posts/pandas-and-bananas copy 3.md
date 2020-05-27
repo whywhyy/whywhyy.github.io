@@ -4,7 +4,7 @@ title: "P"
 date: "2020-05-22"
 url_path : "/blog/2017-08-21/my-first-post"
 thumbnailImage : ../images/pass.jpg
-description : "가나다라aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+description : "가나다라asfaswqgwqgqwgasgasgwqg다라asfaswqgwqgqwgasgasgwqgaaa"
 tags : 
     - av1
     - av2
