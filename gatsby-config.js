@@ -1,13 +1,20 @@
 module.exports = {
   siteMetadata: {
-    title: `Whywhyy`,
     pro_title: `"-_-"`,
     pro_subheader: `탐색하고 적용하는 개발자`,
     github_url:`https://github.com/whywhyy`,
     acmicpc_url:`https://www.acmicpc.net/user/whywhy`,
     linkedin_url:`https://www.linkedin.com/in/kangsan-kim-035399154/`,
+
+    title: `Whywhyy`,
+    titleTemplate: `%s | Whywhyy`,
+    description: "Whywhyy 개발 블로그",
+    url: "https://whywhyy.github.io", // No trailing slash allowed!
+    image: "/images/my_image.jpg", // Path to your image you placed in the 'static' folder
+    siteLanguage : "ko",
   },
   plugins: [
+    `gatsby-plugin-next-seo`,
     {
       resolve: `gatsby-source-filesystem`,
       options: {

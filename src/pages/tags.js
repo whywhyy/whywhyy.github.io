@@ -1,6 +1,7 @@
 import React from "react"
 import PropTypes from "prop-types"
 import Layout from "../components/layout"
+import SEO from "../components/seo"
 
 import Typography from '@material-ui/core/Typography';
 
@@ -14,7 +15,7 @@ import CardHeader from '@material-ui/core/CardHeader';
 import kebabCase from "lodash/kebabCase"
 
 // Components
-import { Helmet } from "react-helmet"
+
 import { Link, graphql } from "gatsby"
 
 export default function TagsPage ({
@@ -81,7 +82,7 @@ export default function TagsPage ({
 
     return (    
       <Layout>
-      <Helmet title={`tags | ${title}`} />
+        <SEO title={`Tags`}/>
         <Grid item xs={12} lg={6}>
         <Grid
           container

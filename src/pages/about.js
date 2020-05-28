@@ -8,6 +8,7 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import Card from '@material-ui/core/Card';
 import Grid from '@material-ui/core/Grid';
+import SEO from "../components/seo"
 
 import { rhythm } from "../utils/typography"
 
@@ -33,6 +34,7 @@ export default function About({ data }) {
       padding-top: ${rhythm(1.5)};
     `}
   >
+    <SEO title={'About'}/>
     <ButtonAppBar/>
     <Grid       
         container

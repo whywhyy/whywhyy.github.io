@@ -5,8 +5,6 @@ import { useStaticQuery,graphql, Link } from "gatsby"
 import Img from "gatsby-image"
 
 import { css } from "@emotion/core"
-import {Helmet} from "react-helmet";
-
 import { makeStyles } from '@material-ui/core/styles';
 
 import Hidden from '@material-ui/core/Hidden';

@@ -1,6 +1,8 @@
 import React from "react"
-import Layout from "../components/layout"
 
+import ButtonAppBar from "../components/header"
+import Layout from "../components/layout"
+import SEO from "../components/seo"
 // Utilities
 import kebabCase from "lodash/kebabCase"
 
@@ -14,6 +16,8 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
 import { createMuiTheme, responsiveFontSizes, ThemeProvider } from '@material-ui/core/styles';
 
+import { css } from "@emotion/core"
+import { rhythm } from "../utils/typography"
 
 import Grid from '@material-ui/core/Grid';
 
@@ -91,13 +95,26 @@ export default function Template({
   theme = responsiveFontSizes(theme);
 
   return (
-    <Layout>
+      <div
+      css={css`
+        margin: 0 auto;
+        max-width: 1300px;
+        padding-top: ${rhythm(1.5)};
+      `}
+      >
+      <SEO 
+        title={frontmatter.title}
+        description={frontmatter.description}
+        image={frontmatter.thumbnailImage.childImageSharp.fluid.src}
+        article
+      />
+      <ButtonAppBar/>
         <Grid
           container
           direction="row"
           justify="center"
           alignItems="flex-start" 
-          xs={12} lg={6} 
+          xs={12} lg={12} 
           >
             <ThemeProvider theme={theme}>
             <Card className={classes.root}>
@@ -156,7 +173,7 @@ export default function Template({
             </Card>
           </ThemeProvider>
       </Grid>
-    </Layout>
+      </div>
   )
 }
 
@@ -169,10 +186,12 @@ export const pageQuery = graphql`
         url_path
         title
         tags
+        description
         thumbnailImage {
           childImageSharp {
             fluid {
               srcWebp
+              src
             }
           }
         }

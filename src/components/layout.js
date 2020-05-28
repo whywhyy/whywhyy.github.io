@@ -5,7 +5,6 @@ import ProfileCard from "./profilecard"
 
 import { useStaticQuery,graphql, Link } from "gatsby"
 import { css } from "@emotion/core"
-import {Helmet} from "react-helmet";
 
 import { makeStyles } from '@material-ui/core/styles';
 
@@ -110,9 +109,7 @@ export default function Layout({ children }) {
     >
       <ButtonAppBar/>
 
-    <Helmet>
-      <meta name="theme-color" content="#3498DB"/>
-    </Helmet>
+
       <div className={classes.container}>
       <ThemeProvider theme={theme}>
         <Hidden mdDown>

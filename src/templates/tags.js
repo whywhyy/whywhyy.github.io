@@ -1,6 +1,8 @@
 import React from "react"
 import PropTypes from "prop-types"
 import Layout from "../components/layout"
+import SEO from "../components/seo"
+
 // Utilities
 import kebabCase from "lodash/kebabCase"
 import Typography from '@material-ui/core/Typography';
@@ -15,7 +17,7 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
-
+import LocalOfferIcon from '@material-ui/icons/LocalOffer';
 // Components
 import { Link, graphql } from "gatsby"
 
@@ -45,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   all_tags:{
-    padding:".2rem .5rem",
+    padding:".3rem .8rem",
     alignItems: "center",
     color:"white",
     backgroundColor:"black",
@@ -119,6 +121,7 @@ const Tags = ({ pageContext, data }) => {
   
   return (
       <Layout>
+        <SEO title={`${tag} tag`}/>
         <Grid item xs={12} lg={6}>
         <Grid
           container
@@ -130,7 +133,7 @@ const Tags = ({ pageContext, data }) => {
             <Typography gutterBottom paragraph variant="body2" component="p">
             <CardHeader
               subheaderTypographyProps={{variant:'subtitle2'}}
-              subheader = {<Link to="/tags" className={classes.all_tags}>All tags</Link>}
+              subheader = {<Link to="/tags" className={classes.all_tags}>View all tags</Link>}
               titleTypographyProps={{variant:'subtitle1',gutterBottom:'true' }}
               title={tagHeader}
               className={classes.card_header}

@@ -1,6 +1,6 @@
 import React from "react"
 import Layout from "../components/layout"
-
+import SEO from "../components/seo"
 
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
@@ -29,6 +29,7 @@ export default function Projects() {
 
   return (
     <Layout>
+      <SEO title={`Projects`}/>
       <Grid item lg={6}>
             <Paper className={classes.paper}>
             <h1>I'd love to talk! Email me at the address below</h1>

@@ -3,8 +3,6 @@ import { graphql, Link } from "gatsby"
 
 import Img from "gatsby-image"
 
-import { Helmet } from "react-helmet"
-
 // Utilities
 import kebabCase from "lodash/kebabCase"
 
@@ -26,6 +24,7 @@ import LocalOfferIcon from '@material-ui/icons/LocalOffer';
 
 
 import Layout from "../components/layout"
+import SEO from "../components/seo"
 
 export default function Home({ data }) {
   const useStyles = makeStyles({
@@ -106,7 +105,10 @@ export default function Home({ data }) {
 
   return (
     <Layout>
-      <Helmet title={data.site.siteMetadata.title} />
+      <SEO 
+        titleTemplate={`Whywhyy`}
+      />
+
       <Grid item xs={12} lg={6}>
       <Grid       
         container
