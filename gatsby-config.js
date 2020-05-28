@@ -17,6 +17,7 @@ module.exports = {
   },
   plugins: [
     `gatsby-plugin-next-seo`,
+    `gatsby-plugin-sitemap`,
     {
       resolve: 'gatsby-plugin-robots-txt',
       options: {  
