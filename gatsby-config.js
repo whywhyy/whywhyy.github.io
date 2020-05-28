@@ -12,6 +12,7 @@ module.exports = {
     url: "https://whywhyy.github.io", // No trailing slash allowed!
     image: "/images/my_image.jpg", // Path to your image you placed in the 'static' folder
     siteLanguage : "ko",
+    creator : "Kangsan Kim",
   },
   plugins: [
     `gatsby-plugin-next-seo`,

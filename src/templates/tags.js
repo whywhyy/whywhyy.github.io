@@ -121,7 +121,9 @@ const Tags = ({ pageContext, data }) => {
   
   return (
       <Layout>
-        <SEO title={`${tag} tag`}/>
+        <SEO 
+          title={`${tag} tag`}
+        />
         <Grid item xs={12} lg={6}>
         <Grid
           container

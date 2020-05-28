@@ -82,7 +82,9 @@ export default function TagsPage ({
 
     return (    
       <Layout>
-        <SEO title={`Tags`}/>
+        <SEO 
+          title={`Tags`}
+        />
         <Grid item xs={12} lg={6}>
         <Grid
           container

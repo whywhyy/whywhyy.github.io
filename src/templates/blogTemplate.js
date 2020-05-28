@@ -107,6 +107,7 @@ export default function Template({
         description={frontmatter.description}
         image={frontmatter.thumbnailImage.childImageSharp.fluid.src}
         article
+        tags = {frontmatter.tags}
       />
       <ButtonAppBar/>
         <Grid

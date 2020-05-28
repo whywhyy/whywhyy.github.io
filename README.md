@@ -3,6 +3,7 @@
    - typography, Grid, Card ..
  - GraphQL
  - Responsive web design 
+ - SEO
  - Post
    - Markdown
    - Page progress bar
