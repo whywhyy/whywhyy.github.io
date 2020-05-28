@@ -5,17 +5,24 @@ module.exports = {
     github_url:`https://github.com/whywhyy`,
     acmicpc_url:`https://www.acmicpc.net/user/whywhy`,
     linkedin_url:`https://www.linkedin.com/in/kangsan-kim-035399154/`,
-
     title: `Whywhyy`,
     titleTemplate: `%s | Whywhyy`,
     description: "Whywhyy 개발 블로그",
     url: "https://whywhyy.github.io", // No trailing slash allowed!
+    siteUrl: `https://whywhyy.github.io`,
     image: "/images/my_image.jpg", // Path to your image you placed in the 'static' folder
     siteLanguage : "ko",
+    siteLocale : "ko_KR",
     creator : "Kangsan Kim",
   },
   plugins: [
     `gatsby-plugin-next-seo`,
+    {
+      resolve: 'gatsby-plugin-robots-txt',
+      options: {  
+        policy: [{ userAgent: '*', allow: '/' }],
+      } 
+    },
     {
       resolve: `gatsby-source-filesystem`,
       options: {

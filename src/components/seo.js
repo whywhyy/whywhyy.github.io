@@ -14,6 +14,7 @@ const SEO = ({ title, titleTemplate, creator, description, image, article, tags 
     defaultDescription,
     siteUrl,
     siteLanguage,
+    siteLocale,
     defaultCreator,
   } = site.siteMetadata
   const {defaultImage} = file.childImageSharp.fixed
@@ -25,11 +26,13 @@ const SEO = ({ title, titleTemplate, creator, description, image, article, tags 
     image: `${siteUrl}${image || defaultImage}`,
     url: `${siteUrl}${pathname}`,
     siteLanguage : siteLanguage,
+    siteLocale : siteLocale,
     tags : tags
   }
   return (
     <Helmet title={seo.title} titleTemplate={seo.titleTemplate}>
-      <html lang={seo.siteLanguage} />
+      {seo.siteLanguage &&  <html lang={seo.siteLanguage} />}
+      {seo.siteLocale && <meta property="og:locale" content={seo.siteLocale} />}
       <meta name="description" content={seo.description} />
       <meta name="image" content={seo.image} />
 
@@ -45,6 +48,7 @@ const SEO = ({ title, titleTemplate, creator, description, image, article, tags 
       {seo.title && <meta property="og:title" content={seo.title} />}
       {seo.description && (<meta property="og:description" content={seo.description} />)}
       {seo.image && <meta property="og:image" content={seo.image} />}
+
       <meta name="twitter:card" content="summary" />
       {seo.url && <meta property="twitter:url" content={seo.url} />}
       {seo.title && <meta name="twitter:title" content={seo.title} />}
@@ -68,6 +72,7 @@ SEO.propTypes = {
   image: PropTypes.string,
   article: PropTypes.bool,
   siteLanguage : PropTypes.string,
+  siteLocale : PropTypes.string,
   tags : PropTypes.arrayOf(PropTypes.string)
 }
 
@@ -79,6 +84,7 @@ SEO.defaultProps = {
   image: null,
   article: false,
   siteLanguage: null,
+  siteLocale : null,
   tags : null,
 }
 
@@ -91,6 +97,7 @@ const query = graphql`
         defaultDescription: description
         siteUrl: url
         siteLanguage
+        siteLocale
         defaultCreator :creator
       }
     }
