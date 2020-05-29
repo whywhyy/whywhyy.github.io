@@ -58,7 +58,7 @@ const useStyles = makeStyles((theme) => ({
   tags:{
     marginTop:10,
     marginRight:10,
-    padding:".2rem .5rem",
+    padding:".1rem .3rem",
     display:"flex",
     alignItems: "center",
     justifyContent: "right",
@@ -69,7 +69,7 @@ const useStyles = makeStyles((theme) => ({
     transition: "background-color .3s", 
     '&:hover': {
       color:"#696969",
-      backgroundColor:"#CEE7F7",
+      backgroundColor:"	#FFFFFF",
     },
   },
   textbody:{
@@ -91,6 +91,13 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "left",
     flexFlow: "row wrap",
     color:"#808080",
+  },
+  text_tag:{
+    display:"flex",
+    alignItems: "center",
+    justifyContent: "left",
+    flexFlow: "row wrap",
+    fontSize: ".7rem",
   },
   tag_num:{
     backgroundColor:"#D9DDDC",
@@ -164,14 +171,14 @@ const Tags = ({ pageContext, data }) => {
                     justify="flex-start"
                     alignItems="flex-start"
                   >
-                    <Typography gutterBottom paragraph className={classes.textbody} variant="body2" component="p">
+                    <Typography gutterBottom paragraph className={classes.text_tag} variant="body2" component="p">
                       {node.frontmatter.tags.map((tag) => (
                         <Grid item >
                           <Link 
                             to={`/tags/${kebabCase(tag)}/`}
                             className={classes.tags} 
                           >
-                              {tag}{" "}
+                              {tag}
                           </Link>
                         </Grid>
                       ))}

@@ -69,7 +69,7 @@ module.exports = {
       resolve: 'gatsby-plugin-buildtime-timezone',
       options: {
         tz: 'Asia/Seoul',
-        format: 'YYYY.MM.DD',
+        format: 'YYYY-MM-DD, h:mm:ss a'
       },
     },
     {

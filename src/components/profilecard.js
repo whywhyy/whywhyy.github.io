@@ -1,4 +1,5 @@
 import React from "react"
+import PropTypes from "prop-types"
 
 import ButtonAppBar from "./header"
 import { useStaticQuery,graphql, Link } from "gatsby"
@@ -26,39 +27,18 @@ import { createMuiTheme, responsiveFontSizes, ThemeProvider } from '@material-ui
 import { rhythm } from "../utils/typography"
 
 
-export default function ProfileCard() {
 
-  const data = useStaticQuery(graphql`
-  query {
-    allFile(filter: {relativeDirectory: {eq: "built_with"}, extension: {eq: "png"}}){
-      nodes {
-        childImageSharp{
-          fixed(width: 24, height: 24) {
-            ...GatsbyImageSharpFixed
-          }
-        }
-      }
-    }
-    file(relativePath: {eq: "my_image.jpg"}) {
-        childImageSharp {
-          fluid {
-            srcWebp
-            tracedSVG
-          }
-        }
-      }
-    site {
-        siteMetadata {
-          pro_title
-          pro_subheader
-          github_url
-          acmicpc_url
-          linkedin_url
-        }
-      }
+
+const ProfileCard = ({ title, subheader }) => {
+  const { allFile, file,  site } = useStaticQuery(query)
+  const { nodes } = allFile
+  const {srcWebp } = file.childImageSharp.fluid
+  const {pro_title, pro_subheader, github_url, acmicpc_url, linkedin_url}  = site.siteMetadata
+  const profile = {
+    title: title || pro_title,
+    subheader: subheader || pro_subheader,
   }
-  `)
-
+  
   const useStyles = makeStyles((theme) => ({
     root: {
       flexGrow: 1,      
@@ -100,12 +80,12 @@ export default function ProfileCard() {
                 <Avatar aria-label="profile" 
                 className={classes.avatar} 
                 alt="profile" 
-                src={data.file.childImageSharp.fluid.srcWebp} 
+                src={srcWebp} 
                 />
               }
               titleTypographyProps={{variant:'subtitle1'}}
-              title={data.site.siteMetadata.pro_title}
-              subheader = {data.site.siteMetadata.pro_subheader}
+              title={profile.title}
+              subheader = {profile.subheader}
             />
 
              <CardContent>
@@ -123,7 +103,7 @@ export default function ProfileCard() {
                     justify="center"
                     alignItems="center"
                   > 
-                  <a target="_blank" href={data.site.siteMetadata.github_url}>
+                  <a target="_blank" href={github_url}>
                     < GitHubIcon className={classes.card}  fontSize="large"/>
                   </a>
                   </Grid>
@@ -136,7 +116,7 @@ export default function ProfileCard() {
                     justify="center"
                     alignItems="center"
                   > 
-                  <a target="_blank" href={data.site.siteMetadata.linkedin_url}>
+                  <a target="_blank" href={linkedin_url}>
                     <LinkedInIcon  className={classes.card} style={{fontSize: '48px'}}/>
                   </a>
                   </Grid>
@@ -149,7 +129,7 @@ export default function ProfileCard() {
                     justify="center"
                     alignItems="center"
                   > 
-                  <a target="_blank" href={data.site.siteMetadata.acmicpc_url}>
+                  <a target="_blank" href={acmicpc_url}>
                     <CodeIcon  className={classes.card} style={{fontSize: '48px'}}/>
                   </a>
                   </Grid>
@@ -175,7 +155,7 @@ export default function ProfileCard() {
                   alignItems="flex-start"
               >
                 
-                  {data.allFile.nodes.map(image => (
+                  {nodes.map(image => (
                     <Grid items>
                     <Img key={image.id} 
                     fixed={image.childImageSharp.fixed}
@@ -193,3 +173,46 @@ export default function ProfileCard() {
             
   )
 }
+
+export default ProfileCard
+
+ProfileCard.propTypes = {
+  title : PropTypes.string,
+  subheader : PropTypes.string
+}
+
+ProfileCard.defaultProps = {
+  title : null,
+  subheader : null,
+}
+
+const query = graphql`
+query {
+  allFile(filter: {relativeDirectory: {eq: "built_with"}, extension: {eq: "png"}}){
+    nodes {
+      childImageSharp{
+        fixed(width: 24, height: 24) {
+          ...GatsbyImageSharpFixed
+        }
+      }
+    }
+  }
+  file(relativePath: {eq: "my_image.jpg"}) {
+      childImageSharp {
+        fluid {
+          srcWebp
+          tracedSVG
+        }
+      }
+    }
+  site {
+      siteMetadata {
+        pro_title
+        pro_subheader
+        github_url
+        acmicpc_url
+        linkedin_url
+      }
+    }
+}
+`

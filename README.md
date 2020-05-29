@@ -2,10 +2,12 @@
  - React Material UI
    - typography, Grid, Card ..
  - GraphQL
- - Responsive web design 
- - SEO (ref. https://ogp.me/)
+ - Mobile Optimize
+ - SEO 
+   - Open Graph protocol
+   - application/ld+json
  - Post
-   - Markdown
+   - Markdown format
    - Page progress bar
 ---
 

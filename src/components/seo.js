@@ -29,12 +29,16 @@ const SEO = ({ title, titleTemplate, creator, description, image, article, tags 
     siteLocale : siteLocale,
     tags : tags
   }
+
   return (
     <Helmet title={seo.title} titleTemplate={seo.titleTemplate}>
       {seo.siteLanguage &&  <html lang={seo.siteLanguage} />}
       {seo.siteLocale && <meta property="og:locale" content={seo.siteLocale} />}
       <meta name="description" content={seo.description} />
+
+      {seo.tags && <meta property="keywords" content={seo.tags.toString()} />}
       <meta name="image" content={seo.image} />
+      <meta name="theme-color" content="#000000"/>
 
       {seo.url && <meta property="og:url" content={seo.url} />}
 
@@ -55,9 +59,17 @@ const SEO = ({ title, titleTemplate, creator, description, image, article, tags 
       {seo.creator &&  <meta name="twitter:creator" content={seo.creator} />}
       {seo.description && (<meta name="twitter:description" content={seo.description} />)}
       {seo.image && <meta name="twitter:image" content={seo.image} />}
-
-
-      <meta name="theme-color" content="#000000"/>
+    
+     <script type="application/ld+json">{`
+       "@context":"http://schema.org",
+       "@type":"WebSite",
+       "url": "${siteUrl}",
+       "name" : "${seo.title}",
+       "alternateName": "whywhyy",
+       "description" : "${seo.description}"
+       `}</script>
+    
+    
     </Helmet>
   )
 }

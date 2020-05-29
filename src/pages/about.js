@@ -12,7 +12,7 @@ import SEO from "../components/seo"
 
 import { rhythm } from "../utils/typography"
 
-export default function About({ data }) {
+export default function About() {
   const useStyles = makeStyles((theme) => ({
     root:{
       flexGlow:1,
@@ -43,19 +43,12 @@ export default function About({ data }) {
         alignItems="flex-start"
       >
     <Grid item xs={12} lg={6} className={classes.grid}>
-        <ProfileCard  />
+        <ProfileCard 
+          title={'..?'} 
+          subheader={`Javascript is coming.`}
+        />
       </Grid>
     </Grid>
     </div>
   )
 }
-
-export const query = graphql`
-  query {
-    site {
-      siteMetadata {
-        title
-      }
-    }
-  }
-`
