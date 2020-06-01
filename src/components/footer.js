@@ -1,70 +1,38 @@
 import React from 'react';
+import { css } from "@emotion/core"
 
 import { useStaticQuery, Link, graphql } from "gatsby"
 
-// material - core
-import { makeStyles } from '@material-ui/core/styles';
+const Footer = () => {
+  const buildTime = useStaticQuery(query).site.buildTimeZone
 
-export default function ButtonAppBar() {
-  
-  const useStyles = makeStyles((theme) => ({
-    root: {
-      flexGrow: 1,
-      margin: '32px',
-    },
-    menuButton: {
-      color: 'white',
-    },
-    title: {
-      flexGrow: 1,
-      color: 'white',
-    },
-    link_button: {
-      textTransform: 'none',
-      color: '#A9A9A9',
-    },
-    button: {
-      textTransform: 'none',
-    },
-    mbutton: {
-      textTransform: 'none',
-      background: 'red',
-      margin: "10px",
-      color: "white",
-    },
-  }));
-  
-  const classes = useStyles();
-  const activateStyles = {
-    color: "white", 
-  }
   return (
-    <div className={classes.root}>
-
+    <footer
+    css={css`
+    flex-shrink: 0;
+    margin-top:calc(0%);
+    text-align: center;
+  `} >
+    <div     
+    css={css`
+    font-size: .7rem
+    `}
+    >
+      <Link to="/">
+        <span>Last updated {buildTime}</span>
+      </Link>
     </div>
-  );
+  </footer>
+  )
 }
 
 
+export default Footer;
+
 const query = graphql`
-  query SEO {
+  query  {
     site {
-      siteMetadata {
-        defaultTitle: title
-        defaultTitleTemplate:titleTemplate
-        defaultDescription: description
-        siteUrl: url
-        siteLanguage
-        siteLocale
-        defaultCreator :creator
-      }
+      buildTimeZone
     }
-    file(relativePath: {eq: "my_image.jpg"}) {
-        childImageSharp {
-          fixed {
-            defaultImage: src
-          }
-        }
-      }
   }
-`
+  `

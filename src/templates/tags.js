@@ -6,9 +6,9 @@ import SEO from "../components/seo"
 // Utilities
 import kebabCase from "lodash/kebabCase"
 import Typography from '@material-ui/core/Typography';
-import Img from "gatsby-image"
+
 import { makeStyles } from '@material-ui/core/styles';
-import Paper from '@material-ui/core/Paper';
+
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
@@ -16,8 +16,7 @@ import CardHeader from '@material-ui/core/CardHeader';
 import CardActionArea from '@material-ui/core/CardActionArea';
 
 import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
-import LocalOfferIcon from '@material-ui/icons/LocalOffer';
+
 // Components
 import { Link, graphql } from "gatsby"
 
@@ -148,7 +147,7 @@ const Tags = ({ pageContext, data }) => {
               className={classes.card_header}
             />
           {edges.map(({ node }) => {
-            const { url_path, title, date, description, tags } = node.frontmatter
+            const { url_path, title, date } = node.frontmatter
             return (
               
                 <Link 
@@ -214,7 +213,7 @@ Tags.propTypes = {
             frontmatter: PropTypes.shape({
               title: PropTypes.string.isRequired,
               url_path: PropTypes.string.isRequired,
-              description: PropTypes.string.isRequired,
+            
               tags: PropTypes.arrayOf(PropTypes.string),
             }),
             fields: PropTypes.shape({
@@ -244,8 +243,6 @@ export const pageQuery = graphql`
           frontmatter {
             title
             url_path
-            description
-            tags
             date
           }
           fields {

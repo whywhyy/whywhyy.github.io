@@ -1,14 +1,14 @@
 import React from "react"
 
 import ButtonAppBar from "../components/header"
-import Layout from "../components/layout"
+
 import SEO from "../components/seo"
 // Utilities
 import kebabCase from "lodash/kebabCase"
 
 import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
+
 
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
@@ -20,9 +20,6 @@ import { css } from "@emotion/core"
 import { rhythm } from "../utils/typography"
 
 import Grid from '@material-ui/core/Grid';
-
-import EventNoteIcon from '@material-ui/icons/EventNote';
-import LocalOfferIcon from '@material-ui/icons/LocalOffer';
 
 // Components
 import { graphql,Link } from "gatsby"

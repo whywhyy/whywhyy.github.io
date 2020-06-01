@@ -1,31 +1,26 @@
 import React from "react"
 import PropTypes from "prop-types"
 
-import ButtonAppBar from "./header"
-import { useStaticQuery,graphql, Link } from "gatsby"
+
+import { useStaticQuery,graphql} from "gatsby"
 import Img from "gatsby-image"
 
-import { css } from "@emotion/core"
 import { makeStyles } from '@material-ui/core/styles';
 
-import Hidden from '@material-ui/core/Hidden';
+
 import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
-import CardMedia from '@material-ui/core/CardMedia';
+
 import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';  
+
 
 import GitHubIcon from '@material-ui/icons/GitHub';
 import LinkedInIcon from '@material-ui/icons/LinkedIn';
 import CodeIcon from '@material-ui/icons/Code';
 
 import Typography from '@material-ui/core/Typography';
-import { createMuiTheme, responsiveFontSizes, ThemeProvider } from '@material-ui/core/styles';
-
-import { rhythm } from "../utils/typography"
-
 
 
 
@@ -69,9 +64,7 @@ const ProfileCard = ({ title, subheader }) => {
     },
   }));
   const classes = useStyles();
- 
-  let theme = createMuiTheme();
-  theme = responsiveFontSizes(theme);
+
 
   return (
       <Card xs={12} className={classes.root}>
@@ -103,7 +96,7 @@ const ProfileCard = ({ title, subheader }) => {
                     justify="center"
                     alignItems="center"
                   > 
-                  <a target="_blank" href={github_url}>
+                  <a target="_blank" rel="noreferrer" href={github_url}>
                     < GitHubIcon className={classes.card}  fontSize="large"/>
                   </a>
                   </Grid>
@@ -116,7 +109,7 @@ const ProfileCard = ({ title, subheader }) => {
                     justify="center"
                     alignItems="center"
                   > 
-                  <a target="_blank" href={linkedin_url}>
+                  <a target="_blank" rel="noreferrer" href={linkedin_url}>
                     <LinkedInIcon  className={classes.card} style={{fontSize: '48px'}}/>
                   </a>
                   </Grid>
@@ -129,7 +122,7 @@ const ProfileCard = ({ title, subheader }) => {
                     justify="center"
                     alignItems="center"
                   > 
-                  <a target="_blank" href={acmicpc_url}>
+                  <a target="_blank"  rel="noreferrer" href={acmicpc_url}>
                     <CodeIcon  className={classes.card} style={{fontSize: '48px'}}/>
                   </a>
                   </Grid>
@@ -156,8 +149,8 @@ const ProfileCard = ({ title, subheader }) => {
               >
                 
                   {nodes.map(image => (
-                    <Grid items>
-                    <Img key={image.id} 
+                    <Grid items key={image.id}>
+                    <Img 
                     fixed={image.childImageSharp.fixed}
                     className={classes.icons}
                     />

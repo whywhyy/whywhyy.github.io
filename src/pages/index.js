@@ -1,7 +1,6 @@
 import React from "react"
 import { graphql, Link } from "gatsby"
 
-import Img from "gatsby-image"
 
 // Utilities
 import kebabCase from "lodash/kebabCase"
@@ -14,13 +13,11 @@ import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 
 import Typography from '@material-ui/core/Typography';
-import { createMuiTheme, responsiveFontSizes, ThemeProvider, withStyles } from '@material-ui/core/styles';
+import { createMuiTheme, responsiveFontSizes, ThemeProvider } from '@material-ui/core/styles';
 
 
 import Grid from '@material-ui/core/Grid';
 
-import EventNoteIcon from '@material-ui/icons/EventNote';
-import LocalOfferIcon from '@material-ui/icons/LocalOffer';
 
 
 import Layout from "../components/layout"
@@ -88,16 +85,6 @@ export default function Home({ data }) {
     },
   });
   const classes = useStyles();
-
-  const mulStyles = makeStyles({
-    root:{
-      width: "100%",
-      display: "block",
-      flexWrap: "wrap",
-      boxSizing: "border-box",
-    }
-  });
-  const mulclasses = mulStyles();
 
 
   let theme = createMuiTheme();

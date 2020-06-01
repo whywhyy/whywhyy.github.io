@@ -1,12 +1,12 @@
 import React from "react"
-import { graphql } from "gatsby"
 import { css } from "@emotion/core"
 import ProfileCard from "../components/profilecard"
 import ButtonAppBar from "../components/header"
+import Footer from "../components/footer"
 
 import { makeStyles } from '@material-ui/core/styles';
 
-import Card from '@material-ui/core/Card';
+
 import Grid from '@material-ui/core/Grid';
 import SEO from "../components/seo"
 
@@ -27,11 +27,13 @@ export default function About() {
   const classes = useStyles();
 
   return (
+    <div>
     <div
     css={css`
       margin: 0 auto;
       max-width: 1300px;
-      padding-top: ${rhythm(1.5)};
+      min-height: 100vh;
+      padding-top: ${rhythm(1)};
     `}
   >
     <SEO title={'About'}/>
@@ -45,10 +47,12 @@ export default function About() {
     <Grid item xs={12} lg={6} className={classes.grid}>
         <ProfileCard 
           title={'..?'} 
-          subheader={`Javascript is coming.`}
+          subheader={'Javascript is coming.'}
         />
       </Grid>
     </Grid>
+    </div>
+    <Footer/>
     </div>
   )
 }

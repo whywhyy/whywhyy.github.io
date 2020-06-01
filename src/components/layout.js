@@ -2,8 +2,9 @@ import React from "react"
 
 import ButtonAppBar from "./header"
 import ProfileCard from "./profilecard"
+import Footer from "./footer"
 
-import { useStaticQuery,graphql, Link } from "gatsby"
+import { useStaticQuery,graphql} from "gatsby"
 import { css } from "@emotion/core"
 
 import { makeStyles } from '@material-ui/core/styles';
@@ -13,15 +14,8 @@ import Grid from '@material-ui/core/Grid';
 import Avatar from '@material-ui/core/Avatar';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
-import CardMedia from '@material-ui/core/CardMedia';
-import CardContent from '@material-ui/core/CardContent';
-import CardActions from '@material-ui/core/CardActions';
 
-import GitHubIcon from '@material-ui/icons/GitHub';
-import LinkedInIcon from '@material-ui/icons/LinkedIn';
-import CodeIcon from '@material-ui/icons/Code';
 
-import Typography from '@material-ui/core/Typography';
 import { createMuiTheme, responsiveFontSizes, ThemeProvider } from '@material-ui/core/styles';
 
 import { rhythm } from "../utils/typography"
@@ -88,22 +82,18 @@ export default function Layout({ children }) {
     },
   }));
   const classes = useStyles();
- 
-  let newDate = new Date()
-  let date = newDate.getDate();
-  let month = newDate.getMonth() + 1;
-  let year = newDate.getFullYear();
-  let hour = newDate.getHours()
-  let minute = newDate.getMinutes()
+
 
   let theme = createMuiTheme();
   theme = responsiveFontSizes(theme);
 
   return (
+    <div>
     <div
       css={css`
         margin: 0 auto;
         max-width: 1300px;
+        min-height: 100vh;
         padding-top: ${rhythm(1.5)};
       `}
     >
@@ -144,7 +134,9 @@ export default function Layout({ children }) {
         </Hidden>
       </ThemeProvider>
       </div>
-
+      
+    </div>
+    <Footer/>
     </div>
   )
 }
