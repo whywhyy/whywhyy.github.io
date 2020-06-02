@@ -24,6 +24,7 @@ import Grid from '@material-ui/core/Grid';
 // Components
 import { graphql,Link } from "gatsby"
 
+import "./blogTemplate.css"
 
 export default function Template({
   data, // this prop will be injected by the GraphQL query below.
@@ -34,13 +35,14 @@ export default function Template({
   const useStyles = makeStyles({
     root: {
       margin: 15,
-      maxWidth: 650,
+      maxWidth: 800,
     },
     cardmedia:{
       margin: "0 10% 0 10",
       borderRadius: "2%",
       objectFit: "cover",
       transform: "scale(0.95)",
+      marginBottom: "3rem",
     },
     cardcontent:{
       marginTop: "-5%",
@@ -117,7 +119,7 @@ export default function Template({
             <ThemeProvider theme={theme}>
             <Card className={classes.root}>
               <CardContent>
-                <Typography className={classes.textbody} variant="h4" component="h2">
+                <Typography className={classes.textbody} variant="h5" component="h1">
                   {frontmatter.title}
                 </Typography>
 
@@ -163,10 +165,12 @@ export default function Template({
               <CardContent 
               className={classes.cardcontent}
               >
+
               <div
                 className="blog-post-content"
                 dangerouslySetInnerHTML={{ __html: html }}
               />
+
               </CardContent>
             </Card>
           </ThemeProvider>

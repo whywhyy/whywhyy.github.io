@@ -1,7 +1,7 @@
 import Typography from "typography"
-import kirkhamTheme from "typography-theme-kirkham"
+import altonTheme from 'typography-theme-alton'
 
-kirkhamTheme.overrideThemeStyles = () => ({
+altonTheme.overrideThemeStyles = () => ({
     'a': {
       color: "black",
       textShadow: "none",
@@ -15,7 +15,7 @@ kirkhamTheme.overrideThemeStyles = () => ({
     },
   })
 
-const typography = new Typography(kirkhamTheme)
+const typography = new Typography(altonTheme)
 
   
 export default typography

@@ -54,6 +54,12 @@ module.exports = {
           },
           `gatsby-remark-responsive-iframe`,
           `gatsby-remark-reading-time`,
+          {
+            resolve: `gatsby-remark-prismjs`,
+            options: {
+              aliases:{sh: "bash", js:"javascript", py:"python"},
+            }
+          },
         ],
       },
     },

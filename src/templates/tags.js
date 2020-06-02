@@ -147,7 +147,7 @@ const Tags = ({ pageContext, data }) => {
               className={classes.card_header}
             />
           {edges.map(({ node }) => {
-            const { url_path, title, date } = node.frontmatter
+            const { url_path, title, date, tags } = node.frontmatter
             return (
               
                 <Link 
@@ -171,7 +171,7 @@ const Tags = ({ pageContext, data }) => {
                     alignItems="flex-start"
                   >
                     <Typography gutterBottom paragraph className={classes.text_tag} variant="body2" component="p">
-                      {node.frontmatter.tags.map((tag) => (
+                      {tags.map((tag) => (
                         <Grid item >
                           <Link 
                             to={`/tags/${kebabCase(tag)}/`}
@@ -243,6 +243,7 @@ export const pageQuery = graphql`
           frontmatter {
             title
             url_path
+            tags
             date
           }
           fields {
