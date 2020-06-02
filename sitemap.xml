@@ -1,20 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
-<url> <loc>https://whywhyy.github.io/blog/2017-08-21/my-first-post</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://whywhyy.github.io/blog/2017-08-21/my-first-post11</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://whywhyy.github.io/tags/12215125/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://whywhyy.github.io/tags/aa-1/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://whywhyy.github.io/tags/aa-2/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://whywhyy.github.io/tags/aa-3/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://whywhyy.github.io/tags/ab-1/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://whywhyy.github.io/tags/ab-2/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://whywhyy.github.io/tags/ab-3/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://whywhyy.github.io/tags/abc/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://whywhyy.github.io/tags/abcd/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://whywhyy.github.io/tags/av-1/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://whywhyy.github.io/tags/av-2/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://whywhyy.github.io/tags/av-3/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>https://whywhyy.github.io/tags/efg/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://whywhyy.github.io/blog/2020-06-02/리액트 튜토리얼</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://whywhyy.github.io/tags/게임/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://whywhyy.github.io/tags/리액트/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>https://whywhyy.github.io/tags/튜토리얼/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://whywhyy.github.io/about-css-modules/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://whywhyy.github.io/about/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>https://whywhyy.github.io/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
