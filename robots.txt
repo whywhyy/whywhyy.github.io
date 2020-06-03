@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
-Sitemap: https://whywhyy.github.io/sitemap.xml
-Host: https://whywhyy.github.io
+Sitemap: http://whywhyy.me/sitemap.xml
+Host: whywhyy.me
