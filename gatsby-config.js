@@ -8,8 +8,8 @@ module.exports = {
     title: `Whywhyy`,
     titleTemplate: `%s | Whywhyy`,
     description: "Whywhyy 개발 블로그",
-    url: "https://whywhyy.github.io", // No trailing slash allowed!
-    siteUrl: `https://whywhyy.github.io`,
+    url: "http://whywhyy.me", // No trailing slash allowed!
+    siteUrl: `http://whywhyy.me`,
     image: "/images/my_image.jpg", // Path to your image you placed in the 'static' folder
     siteLanguage : "ko",
     siteLocale : "ko_KR",
