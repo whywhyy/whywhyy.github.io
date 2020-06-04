@@ -1,5 +1,6 @@
 p {
-  font-size: 1rem;
+  font-size: .9rem;
+  font-family: 'Nanum Gothic';
 }
 
 h2 {
@@ -8,6 +9,22 @@ h2 {
 
 h3 {
   font-size: 1rem;
+}
+a {
+  color: "black";
+  text-shadow: "none";
+  text-decoration: "none";
+  font-size: .95rem;
+  font-family: 'Nanum Gothic';
+}
+a:-webkit-any-link {
+  color: #7D7D7D;
+  text-decoration: "none";
+  font-size: .95rem;
+}
+a:hover {
+    background-color: #2a9df4;
+    font-size: .95rem;
 }
 
 .gatsby-highlight pre[class*="language-"] code[class*="language-"]{
@@ -24,6 +41,8 @@ h3 {
   background-color: 	#424242;
   margin-left: -.7rem;
   padding-left: 1rem;
+  padding-right: 1rem;
   margin-right: -.7rem;
-  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-word; 
 }
