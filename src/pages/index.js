@@ -26,7 +26,6 @@ import SEO from "../components/seo"
 export default function Home({ data }) {
   const useStyles = makeStyles({
     root: {
-      margin: 10,
       marginTop: 15,
       maxWidth: 650,
       transform: "scale(1)",

@@ -12,17 +12,61 @@ tags :
 ---
 
 
-## 리액트를 배우다
-### h3 테스트 진행
-가나다라마가나다라마가나다라마가나다라마가나다라마가나다라마가나다라마가나다라마가나다라마가나다라마가나다라마가나다라마가나다라마가나다라마
+## 리액트를 간단히 겪다(?)
+### CSS 를 사용하자
 
-가나다라마가나다라마가나다라마가나다라마가나다라마가나다라마가나다라마
+```css {1-3,7,10-11}
+p {
+  font-size: 1rem;
+}
 
-가나다라마가나다라마가나다라마가나다라마가나다라마가나다라마가나다라마가나다라마가나다라마가나다라마가나다라마가나다라마가나다라마가나다라마가나다라마가나다라마가나다라마가나다라마가나다라마가나다라마가나다라마
+h2 {
+  font-size: 1.2rem;
+}
+
+h3 {
+  font-size: 1rem;
+}
+
+.gatsby-highlight pre[class*="language-"]{
+  border-radius: 1rem;
+  font-size: 14px;
+  overflow: auto;
+  min-width: 100%; 
+
+}
+code[class*="language-"]{
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.gatsby-highlight-code-line{
+  display: block;
+  background-color: 	#424242;
+  margin-left: -.7rem;
+  padding-left: 1rem;
+  margin-right: -.7rem;
+  overflow: auto;
+}
+```
+
+
+ES5
+```javascript {1-3}
+import React from 'react';qwgqwgqwgsagqwhqwgqwgqwgqwgqwgasdasdwegwgwqgwqegwqgweqgwqgwqgsagawegqgwq
+import './index.css';
+function Square(props){ 
+    return (
+        <button className={props.line ? "winsquare" : "square"} onClick={props.onClick}>
+            {props.value}
+        </button>
+    )
+} 
+```
+
 ### h2 두번째 태그
 
 
 ---
 
-![win](../images/2020-06-02/tictactoe-win.png)
-![draw](../images/2020-06-02/tictactoe-draw.png)
+[튜토리얼 결과물 : tic-tac-toe](/projects/tictactoe)

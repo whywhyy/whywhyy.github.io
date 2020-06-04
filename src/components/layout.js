@@ -47,14 +47,16 @@ export default function Layout({ children }) {
     root: {
       flexGrow: 1,     
       transition: "transform .2s",
+      marginRight:10,
       '&:hover': {
         borderRadius: "2%",
         transform: "scale(1.05)",
-      },     
+      },
     },
     root_R: {
       flexGrow: 1,
       transition: "transform .2s",
+      marginLeft:10,
       '&:hover': {
         borderRadius: "2%",
         transform: "scale(1.05)",

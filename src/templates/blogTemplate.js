@@ -34,7 +34,7 @@ export default function Template({
 
   const useStyles = makeStyles({
     root: {
-      margin: 15,
+
       maxWidth: 800,
     },
     cardmedia:{
