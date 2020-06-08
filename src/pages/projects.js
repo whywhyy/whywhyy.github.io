@@ -32,9 +32,11 @@ export default function Projects() {
       <SEO title={`Projects`}/>
       <Grid item lg={6}>
             <Paper className={classes.paper}>
-            <h1>I'd love to talk! Email me at the address below</h1>
+              <h1>
+              <span role="img" aria-label="Construction Worker">👷</span>
+              공사중입니다!..
+              </h1>
             <p>
-        <a href="mailto:me@example.com">me@example.com</a>
       </p>
             </Paper>
       </Grid>

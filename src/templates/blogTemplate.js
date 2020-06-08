@@ -3,6 +3,7 @@ import React from "react"
 import ButtonAppBar from "../components/header"
 
 import SEO from "../components/seo"
+import Footer from "../components/footer"
 // Utilities
 import kebabCase from "lodash/kebabCase"
 
@@ -100,6 +101,7 @@ export default function Template({
         margin: 0 auto;
         max-width: 1300px;
         padding-top: ${rhythm(1.5)};
+        min-height: 100vh;
       `}
       >
       <SEO 
@@ -178,6 +180,7 @@ export default function Template({
             </Card>
           </ThemeProvider>
       </Grid>
+      <Footer/>
       </div>
   )
 }

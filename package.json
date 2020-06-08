@@ -7,7 +7,7 @@
   "scripts": {
     "build": "gatsby build",
     "develop": "gatsby develop",
-    "win_develop": "rd /s /q '.cache' && gatsby develop",
+    "win_develop": "rd /s /q \".cache\" && rd /s /q \"public\" && gatsby develop",
     "deploy": "gatsby build && gh-pages -d public -b master",
     "git": "git add . &&  git commit -m",
     "postgit": "git checkout code && git push -u origin code",
