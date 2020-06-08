@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+<url> <loc>http://whywhyy.me/blog/2020-06-08/godaddy-with-github.io</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>http://whywhyy.me/blog/2020-06-08/markdown-to-mdx</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>http://whywhyy.me/blog/2020-06-02/리액트 튜토리얼</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>http://whywhyy.me/tags/a-record/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>http://whywhyy.me/tags/cname/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>http://whywhyy.me/tags/convert/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>http://whywhyy.me/tags/domin/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>http://whywhyy.me/tags/game/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>http://whywhyy.me/tags/gatsby/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>http://whywhyy.me/tags/github-page/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>http://whywhyy.me/tags/github-io/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>http://whywhyy.me/tags/godaddy/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>http://whywhyy.me/tags/images/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>http://whywhyy.me/tags/markdown/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>http://whywhyy.me/tags/mdx/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
@@ -17,11 +24,13 @@
 <url> <loc>http://whywhyy.me/tags/tag-1/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>http://whywhyy.me/tags/tag-2/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>http://whywhyy.me/tags/tutorial/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>http://whywhyy.me/tags/website/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>http://whywhyy.me/about-css-modules/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>http://whywhyy.me/about/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>http://whywhyy.me/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>http://whywhyy.me/my-file/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>http://whywhyy.me/projects/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>http://whywhyy.me/projects/tictactoe/game/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>http://whywhyy.me/projects/tictactoe/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>http://whywhyy.me/tags/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 </urlset>
