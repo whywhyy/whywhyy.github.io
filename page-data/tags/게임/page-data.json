@@ -1,1 +1,0 @@
-{"componentChunkName":"component---src-templates-tags-js","path":"/tags/게임/","result":{"data":{"allMarkdownRemark":{"totalCount":1,"edges":[{"node":{"frontmatter":{"title":"리액트 튜토리얼을 진행하자","url_path":"/blog/2020-06-02/리액트 튜토리얼","tags":["리액트","튜토리얼","게임"],"date":"2020-06-02"},"fields":{"readingTime":{"text":"6 min read"}}}}]}},"pageContext":{"tag":"게임"}}}
