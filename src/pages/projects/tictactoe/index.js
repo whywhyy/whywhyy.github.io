@@ -1,1 +1,2 @@
-export { default as Game } from "./game";
+import Game from "./game"
+export default Game ;

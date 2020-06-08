@@ -112,7 +112,8 @@ export default function Home({ data }) {
                   className={classes.cardmedia}
                   component="img"
                   alt="이미지를 불러오지 못했습니다..ㅠㅠ"
-                  height="280"
+                  height="100%"
+                  width="100%"
                   image={node.frontmatter.thumbnailImage.childImageSharp.fixed.srcWebp} 
                   title={node.frontmatter.title}
                 />

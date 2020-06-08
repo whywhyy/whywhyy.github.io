@@ -162,7 +162,8 @@ export default function Template({
                   className={classes.cardmedia}
                   component="img"
                   alt="이미지를 불러오지 못했습니다..ㅠㅠ"
-                  height="400"
+                  height="100%"
+                  width="100%"
                   image={frontmatter.thumbnailImage.childImageSharp.fluid.srcWebp} 
                   title={frontmatter.title}
                 />

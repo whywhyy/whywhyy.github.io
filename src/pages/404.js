@@ -1,7 +1,7 @@
 import React from "react"
 import { Link } from "gatsby"
 import { css } from "@emotion/core"
-import { Game } from "../pages/projects/tictactoe/index"
+import Game from "../pages/projects/tictactoe/game"
 
 export default function page404() {
     return (
