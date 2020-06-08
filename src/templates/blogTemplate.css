@@ -23,8 +23,11 @@ a:-webkit-any-link {
   font-size: .95rem;
 }
 a:hover {
-    background-color: #2a9df4;
     font-size: .95rem;
+}
+span.weblink:hover{
+  background-color: #2a9df4;
+  font-size: .95rem;
 }
 
 .gatsby-highlight pre[class*="language-"] code[class*="language-"]{

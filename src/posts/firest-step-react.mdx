@@ -4,22 +4,24 @@ title: "리액트 튜토리얼을 진행하자"
 date: "2020-06-02"
 url_path : "/blog/2020-06-02/리액트 튜토리얼"
 thumbnailImage : ../images/2020-06-02/tictactoe-board.jpg
+thumbnailImageUse : true
 description : "튜토리얼을 진행하며 배웠던점, 깨달았던 점들을 작성하였습니다."
 tags : 
-    - 리액트
-    - 튜토리얼
-    - 게임
+    - react
+    - tutorial
+    - game
 ---
 
 ## 리액트를 간단히 겪다(?)
-- [리액트 튜토리얼](https://reactjs.org/tutorial/tutorial.html/)
+- <span class="weblink"> [리액트 튜토리얼](https://reactjs.org/tutorial/tutorial.html/)</span>
 
 ### 동작방식을 익히다.
  리액트에서는 props, state 를 가지고 논다!
- props 에서 느낀점은 데이터 뿐만아니라 함수까지 전달하는 개념인것같다. [(개념적인 부분은 여기를 참고하자)](https://ko.reactjs.org/docs/components-and-props.html)
+ props 에서 느낀점은 데이터 뿐만아니라 함수까지 전달하는 개념인것같다. <span class="weblink"> [(개념적인 부분은 여기를 참고하자)](https://ko.reactjs.org/docs/components-and-props.html)</span>
 
 
-인상 깊었던 부분들 (feat. props)
+## 인상 깊었던 부분들 
+### props 간단한 사용법(?)
 ```js
 class Game extends React.Component {
     ...
@@ -40,7 +42,6 @@ class Game extends React.Component {
     ...
 }
     
-
 class Board extends React.Component {
     ...
 
@@ -64,8 +65,8 @@ class Board extends React.Component {
     
 ```
 
-
-Tag 안쪽부터 구현하여 바깥쪽을 감쌀수 있다.
+### 밖깥에서 감싸기
+ Tag 안쪽부터 구현하여 바깥쪽에서 감쌀수 있다.
 ```js
     render() {
         let items = [];
@@ -90,9 +91,10 @@ Tag 안쪽부터 구현하여 바깥쪽을 감쌀수 있다.
     }
 ```
 
+### State
 State 에 대한 정의를 내릴때, 핸들링하는 부모쪽 클래스에서 정의하며, 이 state 를 잘 핸들링하며 활용한다.
 
-[super props 관련 링크](https://overreacted.io/why-do-we-write-super-props/)
+<span class="weblink"> [super props 관련 링크](https://overreacted.io/why-do-we-write-super-props/)</span>
 
 ```js
   export default class Game extends React.Component {
@@ -150,6 +152,7 @@ State 에 대한 정의를 내릴때, 핸들링하는 부모쪽 클래스에서 
       ...
 ```
 
+### 구조 분석
 작성된 컴포넌트 구조 분석.
 
 ```js
@@ -185,7 +188,7 @@ State 에 대한 정의를 내릴때, 핸들링하는 부모쪽 클래스에서 
   }
 
 ```
-
+### props 활용
 Square 부분에 대한 render 컴포넌트를 따로 작성되었으며, props를 이용하여 표현방법을 정한다.
 ```js
 
@@ -236,12 +239,16 @@ function Square(props){ // highlight-line
 
 ```
 
+## 추후..
 튜토리얼을 했으니, 이제 프로젝트를 진행하자! 개인적으로는 infinite scroll 을 구현해보려고 한다. 
 
 ---
 
+
+### 결과물
  [튜토리얼 결과물 : tic-tac-toe](/projects/tictactoe)
 
+### index.js
 index.js 는 다음과 같다.
 ```js
 //index.js

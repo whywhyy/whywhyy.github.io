@@ -25,13 +25,14 @@ import Grid from '@material-ui/core/Grid';
 import { graphql,Link } from "gatsby"
 
 import "./blogTemplate.css"
+import { MDXRenderer } from "gatsby-plugin-mdx"
 
 export default function Template({
   data, // this prop will be injected by the GraphQL query below.
 }) {
-  const { markdownRemark } = data // data.markdownRemark holds your post data
-  const { frontmatter, html, fields } = markdownRemark
-
+  const { mdx } = data // data.mdx holds your post data
+  const { frontmatter, body, fields } = mdx
+  
   const useStyles = makeStyles({
     root: {
 
@@ -154,22 +155,24 @@ export default function Template({
 
                 
               </CardContent>
-              <CardMedia
-                className={classes.cardmedia}
-                component="img"
-                alt="이미지를 불러오지 못했습니다..ㅠㅠ"
-                height="400"
-                image={frontmatter.thumbnailImage.childImageSharp.fluid.srcWebp} 
-                title={frontmatter.title}
-              />
+              { frontmatter.thumbnailImageUse ?
+                <CardMedia
+                  className={classes.cardmedia}
+                  component="img"
+                  alt="이미지를 불러오지 못했습니다..ㅠㅠ"
+                  height="400"
+                  image={frontmatter.thumbnailImage.childImageSharp.fluid.srcWebp} 
+                  title={frontmatter.title}
+                />
+                : null
+              }
               <CardContent 
               className={classes.cardcontent}
               >
 
-              <div
-                className="blog-post-content"
-                dangerouslySetInnerHTML={{ __html: html }}
-              />
+
+                <MDXRenderer className="blog-post-content" >{ body }</MDXRenderer>
+
 
               </CardContent>
             </Card>
@@ -179,16 +182,18 @@ export default function Template({
   )
 }
 
+
 export const pageQuery = graphql`
   query($url_path: String!) {
-    markdownRemark(frontmatter: { url_path: { eq: $url_path } }) {
-      html
+    mdx(frontmatter: { url_path: { eq: $url_path } }) {
+      body
       frontmatter {
         date(formatString: "MMMM DD,YYYY")
         url_path
         title
         tags
         description
+        thumbnailImageUse
         thumbnailImage {
           childImageSharp {
             fluid {

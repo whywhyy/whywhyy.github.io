@@ -103,7 +103,7 @@ export default function Home({ data }) {
         alignItems="center" 
       >
         <Grid item xs={12} lg={12}>
-        {data.allMarkdownRemark.edges.map(({ node }) => (   
+        {data.allMdx.edges.map(({ node }) => (   
           <Link to={node.frontmatter.url_path} >
             <ThemeProvider theme={theme}>
             <Card className={classes.root} >
@@ -171,7 +171,7 @@ export const query = graphql`
         title
       }
     }
-    allMarkdownRemark (sort: {order: DESC, fields: frontmatter___date}, limit: 1000,
+    allMdx (sort: {order: DESC, fields: frontmatter___date}, limit: 1000,
                         filter: {frontmatter: {publish: {eq: true}}}){
       totalCount
       edges {

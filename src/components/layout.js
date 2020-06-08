@@ -37,7 +37,7 @@ export default function Layout({ children }) {
           pro_subheader
         }
       }
-      allMarkdownRemark {
+      allMdx {
         totalCount
       }
     }

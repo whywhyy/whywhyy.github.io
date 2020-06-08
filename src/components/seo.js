@@ -41,13 +41,8 @@ const SEO = ({ title, titleTemplate, creator, description, image, article, tags 
       <meta name="theme-color" content="#000000"/>
 
       {seo.url && <meta property="og:url" content={seo.url} />}
-
       {(article ? true : null) && <meta property="og:type" content="article" />}
-      
-      {seo.tags && seo.tags.map((tag) => (<meta property="article:tag" content={tag} />))}
-
-
-
+    
       {(article ? null : true) && <meta property="og:type" content="blog" />}
       {seo.title && <meta property="og:title" content={seo.title} />}
       {seo.description && (<meta property="og:description" content={seo.description} />)}
@@ -60,6 +55,8 @@ const SEO = ({ title, titleTemplate, creator, description, image, article, tags 
       {seo.description && (<meta name="twitter:description" content={seo.description} />)}
       {seo.image && <meta name="twitter:image" content={seo.image} />}
     
+      {seo.tags && seo.tags.map((tag) => (<meta property="article:tag" content={tag} />))}
+
      <script type="application/ld+json">{`
        "@context":"http://schema.org",
        "@type":"WebSite",

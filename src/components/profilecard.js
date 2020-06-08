@@ -25,8 +25,8 @@ import Typography from '@material-ui/core/Typography';
 
 
 const ProfileCard = ({ title, subheader }) => {
-  const { allFile, file,  site } = useStaticQuery(query)
-  const { nodes } = allFile
+  const { file,  site } = useStaticQuery(query)
+
   const {srcWebp } = file.childImageSharp.fluid
   const {pro_title, pro_subheader, github_url, acmicpc_url, linkedin_url}  = site.siteMetadata
   const profile = {
@@ -130,36 +130,8 @@ const ProfileCard = ({ title, subheader }) => {
 
               </Grid>
 
-              <Grid
-                container
-                direction="row"
-                justify="center"
-                alignItems="center"
-              >
-             
-              <Typography gutterBottom paragraph className={classes.built_with}>
-                built with:
-              </Typography>
-              </Grid>
-              <Grid
-                  container
-                  direction="row"
-                  justify="center"
-                  alignItems="flex-start"
-              >
-                
-                  {nodes.map(image => (
-                    <Grid items key={image.id}>
-                    <Img 
-                    fixed={image.childImageSharp.fixed}
-                    className={classes.icons}
-                    />
-                    </Grid>
-                  ))}
-                  
-              </Grid>
-              
-              
+
+                            
                             
             </CardContent>
         </Card>
@@ -181,15 +153,6 @@ ProfileCard.defaultProps = {
 
 const query = graphql`
 query {
-  allFile(filter: {relativeDirectory: {eq: "built_with"}, extension: {eq: "png"}}){
-    nodes {
-      childImageSharp{
-        fixed(width: 24, height: 24) {
-          ...GatsbyImageSharpFixed
-        }
-      }
-    }
-  }
   file(relativePath: {eq: "my_image.jpg"}) {
       childImageSharp {
         fluid {

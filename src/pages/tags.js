@@ -20,7 +20,7 @@ import { Link, graphql } from "gatsby"
 
 export default function TagsPage ({
   data: {
-    allMarkdownRemark: { group },
+    allMdx: { group },
     site: {
       siteMetadata: { title },
     }
@@ -126,7 +126,7 @@ export default function TagsPage ({
 
 TagsPage.propTypes = {
   data: PropTypes.shape({
-    allMarkdownRemark: PropTypes.shape({
+    allMdx: PropTypes.shape({
       group: PropTypes.arrayOf(
         PropTypes.shape({
           fieldValue: PropTypes.string.isRequired,
@@ -149,7 +149,7 @@ export const pageQuery = graphql`
         title
       }
     }
-    allMarkdownRemark(limit: 2000, filter: {frontmatter: {publish: {eq: true}}}) {
+    allMdx(limit: 2000, filter: {frontmatter: {publish: {eq: true}}}) {
       group(field: frontmatter___tags) {
         fieldValue
         totalCount
