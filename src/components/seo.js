@@ -58,12 +58,15 @@ const SEO = ({ title, titleTemplate, creator, description, image, article, tags 
       {seo.tags && seo.tags.map((tag) => (<meta property="article:tag" content={tag} />))}
 
      <script type="application/ld+json">{`
+     {
        "@context":"http://schema.org",
-       "@type":"WebSite",
+       "@type":${(article ? `"Article"` : `"WebSite"`)},
+       ${seo.creator && (article ? `"author" : "${seo.creator}"` : null)}
        "url": "${siteUrl}",
        "name" : "${seo.title}",
        "alternateName": "whywhyy",
        "description" : "${seo.description}"
+     }
        `}</script>
     
     
