@@ -25,6 +25,11 @@ a:-webkit-any-link {
 a:hover {
     font-size: .95rem;
 }
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+ }
 span.weblink:hover{
   background-color: #2a9df4;
   font-size: .95rem;

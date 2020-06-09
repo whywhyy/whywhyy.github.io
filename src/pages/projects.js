@@ -23,6 +23,7 @@ export default function Projects() {
       color: theme.palette.text.secondary,
       flex: '1 0 auto',
       margin: theme.spacing(1),
+      marginTop: -25,
     },
   }));
   const classes = useStyles();
@@ -33,7 +34,7 @@ export default function Projects() {
       <Grid item lg={6}>
             <Paper className={classes.paper}>
               <h1>
-              <span role="img" aria-label="Construction Worker">👷</span>
+              <span role="img" aria-label="Folded Hands">👷</span>
               공사중입니다!..
               </h1>
             <p>

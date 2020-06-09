@@ -32,7 +32,7 @@ export default function TagsPage ({
     },
     card: {
       flexGrow: 1,
-      marginTop: 15,
+      marginTop: -25,
       maxWidth: 650,
       transform: "scale(1)",
       transition: "transform .2s",

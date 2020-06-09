@@ -74,7 +74,7 @@ export default function Layout({ children }) {
       margin: theme.spacing(1),
     },
     grid:{
-      marginTop: 15,
+      marginTop: -25,
     },
     avatar:{
       display: 'flex',

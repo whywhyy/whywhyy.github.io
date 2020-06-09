@@ -1,6 +1,7 @@
 import React from "react"
 
 import ButtonAppBar from "../components/header"
+import TableOfContents from "../components/table-of-contents"
 
 import SEO from "../components/seo"
 import Footer from "../components/footer"
@@ -27,17 +28,20 @@ import { graphql,Link } from "gatsby"
 
 import "./blogTemplate.css"
 import { MDXRenderer } from "gatsby-plugin-mdx"
+import { Hidden } from "@material-ui/core"
 
 export default function Template({
   data, // this prop will be injected by the GraphQL query below.
 }) {
   const { mdx } = data // data.mdx holds your post data
-  const { frontmatter, body, fields } = mdx
+  const { frontmatter, body, fields, tableOfContents } = mdx
   
   const useStyles = makeStyles({
     root: {
-
-      maxWidth: 800,
+      maxWidth: 900,
+    },
+    card_col:{
+      marginTop: -25,
     },
     cardmedia:{
       margin: "0 10% 0 10",
@@ -89,6 +93,13 @@ export default function Template({
         backgroundColor:"#CEE7F7",
       },
     },
+    toc:{
+      position:'sticky',
+      top: '3rem', /* Required */
+      marginLeft:10,
+      marginRight:10,
+    },
+
   });
   const classes = useStyles();
   
@@ -117,9 +128,11 @@ export default function Template({
           direction="row"
           justify="center"
           alignItems="flex-start" 
-          xs={12} lg={12} 
+          className={classes.card_col}
           >
             <ThemeProvider theme={theme}>
+              
+            <Grid item md={8} lg={8}>
             <Card className={classes.root}>
               <CardContent>
                 <Typography className={classes.textbody} variant="h5" component="h1">
@@ -179,7 +192,27 @@ export default function Template({
 
               </CardContent>
             </Card>
+            </Grid>
+          
+          <Hidden smDown>
+            <Grid item sm={3} md={3} lg={3} className={classes.toc}>
+              
+              <Card >
+                <CardContent>
+
+                <TableOfContents
+                items={tableOfContents.items}
+                />
+              
+
+                </CardContent>
+              </Card>
+
+            </Grid>
+          </Hidden>
           </ThemeProvider>
+     
+     
       </Grid>
       <Footer/>
       </div>
@@ -191,6 +224,7 @@ export const pageQuery = graphql`
   query($url_path: String!) {
     mdx(frontmatter: { url_path: { eq: $url_path } }) {
       body
+      tableOfContents
       frontmatter {
         date(formatString: "MMMM DD,YYYY")
         url_path

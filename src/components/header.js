@@ -41,6 +41,9 @@ export default function ButtonAppBar() {
       flexGrow: 1,
       margin: '32px',
     },
+    appbar:{
+      minHeight:'48px',
+    },
     menuButton: {
       color: 'white',
     },
@@ -58,6 +61,8 @@ export default function ButtonAppBar() {
     mbutton: {
       textTransform: 'none',
       background: 'red',
+      height: "1.2rem",
+      width: "3rem",
       margin: "10px",
       color: "white",
     },
@@ -70,7 +75,7 @@ export default function ButtonAppBar() {
   return (
     <div className={classes.root}>
       <AppBar position="fixed" style={{ background: '#040404' }}>
-          <Toolbar>
+          <Toolbar className={classes.appbar}>
           <Grid
             container
             direction="row"

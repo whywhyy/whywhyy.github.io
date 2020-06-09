@@ -36,6 +36,9 @@ export default function Home({ data }) {
         transform: "scale(1.05)",
       },        
     },
+    card_col:{
+      marginTop:-40,
+    },
     cardmedia:{
 
       borderRadius: "2%",
@@ -102,7 +105,7 @@ export default function Home({ data }) {
         justify="center"
         alignItems="center" 
       >
-        <Grid item xs={12} lg={12}>
+        <Grid item xs={12} lg={12} className={classes.card_col}>
         {data.allMdx.edges.map(({ node }) => (   
           <Link to={node.frontmatter.url_path} >
             <ThemeProvider theme={theme}>
