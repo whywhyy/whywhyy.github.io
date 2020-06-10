@@ -97,7 +97,6 @@ export default function Template({
       position:'sticky',
       top: '3rem', /* Required */
       marginLeft:10,
-      marginRight:10,
     },
 
   });
@@ -132,7 +131,7 @@ export default function Template({
           >
             <ThemeProvider theme={theme}>
               
-            <Grid item md={8} lg={8}>
+            <Grid item xs={12} md={8} lg={8}>
             <Card className={classes.root}>
               <CardContent>
                 <Typography className={classes.textbody} variant="h5" component="h1">
@@ -195,7 +194,7 @@ export default function Template({
             </Grid>
           
           <Hidden smDown>
-            <Grid item sm={3} md={3} lg={3} className={classes.toc}>
+            <Grid item  md={3} lg={3} className={classes.toc}>
               
               <Card >
                 <CardContent>

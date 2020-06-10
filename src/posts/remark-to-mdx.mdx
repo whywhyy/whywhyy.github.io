@@ -28,13 +28,15 @@ tags :
 ---
 
 ## MDX?
-Syntax = Markdown JSX 
+MDX = Markdown + JSX 
 
 
 ## 왜 MDX?
-gatsby 에서는 포스트 작성시 md 보다는 mdx 를 사용하면 더 좋다(?). mdx 에서는 컴포넌트 사용이 가능하기 때문이며, 기존 remark plugin들도 사용할수 있으니 그냥 mdx 쓰도록 하자.
-[사용방법 (참고1)](https://mdxjs.com/getting-started#hello-world)
-[(참고2)](https://www.gatsbyjs.org/docs/mdx/)
+gatsby 에서는 포스트 작성시 md 보다는 mdx 를 사용하면 더 좋다(?). 
+
+- mdx 에서는 컴포넌트 사용이 가능
+
+- 기존 remark plugin들도 사용할수 있음
 
 ## 컨버팅하자
 
@@ -44,6 +46,7 @@ gatsby 에서는 포스트 작성시 md 보다는 mdx 를 사용하면 더 좋�
 `allMarkdownRemark -> allMdx`
 
 `markdownRemark ->mdx `
+
 
 ```js
 // blog-post-template.js
@@ -63,7 +66,6 @@ npm install --save gatsby-plugin-mdx gatsby-plugin-feed-mdx @mdx-js/mdx @mdx-js/
 ```bash
 npm uninstall --save gatsby-transformer-remark gatsby-plugin-feed
 ```
-
 ### gatsby-config.js
 ```yml
 {
@@ -144,5 +146,10 @@ npm uninstall --save gatsby-transformer-remark gatsby-plugin-feed
 
 
 ---
+## 참고
 
-[참고](https://www.gatsbyjs.org/blog/2019-11-21-how-to-convert-an-existing-gatsby-blog-to-use-mdx/)
+- [mdxjs](https://mdxjs.com/getting-started#hello-world)
+
+- [gatsbyjs mdx ](https://www.gatsbyjs.org/docs/mdx/)
+
+- [How to convert an existing Gatsby blog to use MDX](https://www.gatsbyjs.org/blog/2019-11-21-how-to-convert-an-existing-gatsby-blog-to-use-mdx/)

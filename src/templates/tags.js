@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   card: {
     flexGrow: 1,
     margin: 10,
-    marginTop: 15,
+    marginTop: -25,
     maxWidth: 650, 
   },
   card_header:{
@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     color:"white",
     backgroundColor:"black",
-    fontWeight: "300",
+    fontWeight: "800",
     borderRadius:".3rem",
     transition: "background-color .3s", 
   },   
@@ -141,7 +141,7 @@ const Tags = ({ pageContext, data }) => {
             <Typography gutterBottom paragraph variant="body2" component="p">
             <CardHeader
               subheaderTypographyProps={{variant:'subtitle2'}}
-              subheader = {<Link to="/tags" className={classes.all_tags}>View all tags</Link>}
+              subheader = {<Link to="/tags" className={classes.all_tags} style={{color:'white'}} >View all tags</Link>}
               titleTypographyProps={{variant:'subtitle1',gutterBottom:'true' }}
               title={tagHeader}
               className={classes.card_header}

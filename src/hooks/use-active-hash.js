@@ -23,7 +23,7 @@ export const useActiveHash = (itemIds, rootMargin = undefined) => {
         observer.unobserve(document.getElementById(id))
       })
     }
-  }, [])
+  }, [itemIds,rootMargin])
 
   return activeHash
 }
