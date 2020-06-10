@@ -19,7 +19,7 @@ export default function About() {
     },
     grid:{
       flexGlow:1,
-      marginTop: 30,
+      marginTop: -25,
       margin: 10,
       maxWidth: 650,
     },

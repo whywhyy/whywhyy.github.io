@@ -47,10 +47,8 @@ import { useActiveHash } from "../hooks/use-active-hash"
                 <Link
                     to={item.url}
                     style={ isActive ? { fontWeight: 'bold'} : {}}
-                >
-           
+                >     
                     {item.title}
-         
                 </Link>
             )}
             {item.items &&  (
