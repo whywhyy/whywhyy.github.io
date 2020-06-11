@@ -5,6 +5,9 @@ const express = require(`express`)
 // Enable development support for serving HTML from `./static` folder
 exports.onCreateDevServer = ({ app }) => {
   app.use(express.static(`public`))
+  app.get('/Q1234', (req, res) => {
+    res.send('An alligator approaches!');
+  });
 }
 
 const { createFilePath } = require(`gatsby-source-filesystem`)
