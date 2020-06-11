@@ -29,7 +29,6 @@ import { graphql,Link } from "gatsby"
 
 import "./blogTemplate.css"
 import { MDXRenderer } from "gatsby-plugin-mdx"
-import { Hidden } from "@material-ui/core"
 
 export default function Template({
   data, // this prop will be injected by the GraphQL query below.

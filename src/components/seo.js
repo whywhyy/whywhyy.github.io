@@ -49,9 +49,7 @@ const SEO = ({ title, titleTemplate, creator, description, image, article, tags 
       {seo.image && <meta property="og:image" content={seo.image} />}
 
       <meta name="twitter:card" content="summary" />
-      {seo.url && <meta property="twitter:url" content={seo.url} />}
       {seo.title && <meta name="twitter:title" content={seo.title} />}
-      {seo.creator &&  <meta name="twitter:creator" content={seo.creator} />}
       {seo.description && (<meta name="twitter:description" content={seo.description} />)}
       {seo.image && <meta name="twitter:image" content={seo.image} />}
     
