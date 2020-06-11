@@ -23,6 +23,7 @@ import { rhythm } from "../utils/typography"
 
 import Grid from '@material-ui/core/Grid';
 
+
 // Components
 import { graphql,Link } from "gatsby"
 
@@ -36,7 +37,7 @@ export default function Template({
   const { mdx } = data // data.mdx holds your post data
   const { frontmatter, body, fields, tableOfContents } = mdx
   
-  const useStyles = makeStyles({
+  const useStyles = makeStyles((theme) =>({
     root: {
       maxWidth: 900,
     },
@@ -94,12 +95,16 @@ export default function Template({
       },
     },
     toc:{
-      position:'sticky',
-      top: '3rem', /* Required */
-      marginLeft:10,
+      position:'block',
+      marginBottom:10,
+      [theme.breakpoints.up('md')]: {
+        position:'sticky',
+        marginLeft:10,
+        top: '3rem', /* Required */
+      },
     },
 
-  });
+  }));
   const classes = useStyles();
   
   let theme = createMuiTheme();
@@ -124,13 +129,28 @@ export default function Template({
       <ButtonAppBar/>
         <Grid
           container
-          direction="row"
+          direction="row-reverse"
           justify="center"
           alignItems="flex-start" 
           className={classes.card_col}
           >
             <ThemeProvider theme={theme}>
+                        
+            <Grid item  xs={12} sm={12} md={3} lg={3} className={classes.toc}>
               
+              <Card >
+                <CardContent>
+
+                <TableOfContents
+                items={tableOfContents.items}
+                />
+              
+
+                </CardContent>
+              </Card>
+
+            </Grid>
+         
             <Grid item xs={12} md={8} lg={8}>
             <Card className={classes.root}>
               <CardContent>
@@ -192,23 +212,6 @@ export default function Template({
               </CardContent>
             </Card>
             </Grid>
-          
-          <Hidden smDown>
-            <Grid item  md={3} lg={3} className={classes.toc}>
-              
-              <Card >
-                <CardContent>
-
-                <TableOfContents
-                items={tableOfContents.items}
-                />
-              
-
-                </CardContent>
-              </Card>
-
-            </Grid>
-          </Hidden>
           </ThemeProvider>
      
      
