@@ -1,9 +1,8 @@
 import React from "react"
 
 
-export default function verTemplate({ pageContext }) {
-    const { tag } = pageContext
-    return (
-        tag
-  )
+export default class Welcome extends React.Component {
+  render() {
+    return <h1>ww</h1>;
+  }
 }

@@ -1,5 +1,11 @@
 const path = require(`path`)
 const _ = require("lodash")
+const express = require(`express`)
+
+// Enable development support for serving HTML from `./static` folder
+exports.onCreateDevServer = ({ app }) => {
+  app.use(express.static(`public`))
+}
 
 const { createFilePath } = require(`gatsby-source-filesystem`)
 
@@ -76,13 +82,15 @@ exports.createPages = async ({ actions, graphql, reporter }) => {
     })
   })
 
+  /*
   // naver-site-verification
   const siteTemplate = path.resolve("src/templates/site-verification.js")
   createPage({
     path: `/navere553e0afa4b2754ae524e9175e8cb63a.html`,
     component: siteTemplate,
     context: {
-      tag: `naver-site-verification: navere553e0afa4b2754ae524e9175e8cb63a.html`
+      tag: `naver-site-verification: navere553e0afa4b2754ae524e9175e8cb63a`
     },
   })
+   */
 }
