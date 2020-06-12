@@ -57,9 +57,9 @@ const SEO = ({ title, titleTemplate, creator, description, image, article, tags 
 
      <script type="application/ld+json">{`
      {
-       "@context":"http://schema.org",
+       "@context":"https://schema.org/",
        "@type":${(article ? `"Article"` : `"WebSite"`)},
-       ${seo.creator && (article ? `"author" : "${seo.creator}"` : null)}
+       ${seo.creator && ( `"author" : "${seo.creator}",`)}
        "url": "${siteUrl}",
        "name" : "${seo.title}",
        "alternateName": "whywhyy",
