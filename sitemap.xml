@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+<url> <loc>http://whywhyy.me/blog/2020/06/22/python-sort-에-대해-알아보자</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>http://whywhyy.me/blog/2020/06/21/python-try-except-에러처리에-대해-알아보자</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>http://whywhyy.me/blog/2020/06/12/검색엔진에-웹-사이트를-등록-해보자</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>http://whywhyy.me/blog/2020/06/10/고오급 목차(Table of Contents)을 만들어보자</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
@@ -32,6 +33,9 @@
 <url> <loc>http://whywhyy.me/tags/reading-time/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>http://whywhyy.me/tags/remark/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>http://whywhyy.me/tags/responsive-iframe/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>http://whywhyy.me/tags/sort/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>http://whywhyy.me/tags/sort-multiple-fields/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>http://whywhyy.me/tags/sort-two-fields/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>http://whywhyy.me/tags/static/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>http://whywhyy.me/tags/table-of-content/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>http://whywhyy.me/tags/tag-1/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
