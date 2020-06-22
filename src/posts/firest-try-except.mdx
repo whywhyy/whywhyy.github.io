@@ -1,0 +1,337 @@
+---
+publish: True
+title: "python try-except 에러처리에 대해 알아보자"
+date: "2020-06-22T01:57:00"
+url_path : "/blog/2020/06/21/python-try-except-에러처리에-대해-알아보자"
+thumbnailImage : ../images/pray-try-except.jpg
+thumbnailImageUse : True
+description : "에러를 처리의 기본에 대해 배우고 익혀보자"
+tags : 
+    - python
+    - Try-except
+    - Exceptions
+    - Errors
+---
+
+~~잘 동작하길 기도만 할 수 없다~~
+
+---
+
+## 어떤 에러가 발생할지 모르니 pass 하자!?
+ 일단 동작하는 소프트웨어를 작성하기위해 try-except pass 를 사용했었다. ~~심지어 애용했다..~~
+
+ 그 이유를 일단 찾아보자
+
+### Try-except pass 는 해롭다
+
+https://stackoverflow.com/questions/21553327/why-is-except-pass-a-bad-programming-practice
+
+짧은 질문의 진심어린 답변들이 달려있다.
+
+
+> "I want to ignore this network error". 
+>
+> If something unexpected goes wrong, then your code silently continues and breaks in completely unpredictable ways that no one can debug. 
+
+
+디버깅이 불가능한 코드가 되기 싫다면 에러처리를 하도록 하자.
+
+
+> Catching a specific error shows that you understand both your program and the range of errors that Python throws.
+>
+> This is more likely to make other developers and code-reviewers trust your work. 
+
+Error range를 인지하며 코딩하면 리뷰어도 믿을 수 있는 코드를 작성할 수 있다.
+
+
+ - https://www.python.org/dev/peps/pep-0020/#id3
+   >  Explicit is better than implicit
+   >
+   >  Errors should never pass silently
+
+
+except:pass 를 쓴다고 ?!
+
+ > no knowledge and control
+ >
+ > If you don't know in advance, what actions these should be, at least log the error somewhere
+
+잘 모르겠으면 최소한 로깅이라도 하자.
+
+```py
+try:
+    something
+except:
+    logger.exception('Something happened')
+```
+
+---
+
+### Exception 익혀보자
+
+Exception class를 상속받아 정의할 수 있다.
+
+try 안에서 raise 로 특정한 except를 일으킬 수 있다.
+
+```py
+class B(Exception):
+    pass
+
+class C(B):
+    pass
+
+class D(C):
+    pass
+
+for cls in [B, C, D]:
+    try:
+        raise cls() # cls : class method 내부의 변수를 그대로 사용
+    except D:
+        print("D")
+    except C:
+        print("C")
+    except B:
+        print("B")
+```
+```py
+B
+C
+D
+```
+
+조금 더 익혀보자!
+
+```py
+class NegativeNumberError(Exception):
+    def __init__(self, msg):
+        self.msg = msg
+    
+    def __str__(self):
+        return self.msg # print 동작시 return 값.
+
+class BigNumberError(Exception):
+    def __init__(self, msg):
+        self.msg = msg
+    
+    def __str__(self):
+        return self.msg
+
+class Number:
+    def __init__(self, n):
+        if n < 0:
+            raise NegativeNumberError('음수는 담을 수 없습니다') # NegativeNumberError 로 msg 전달
+        if n > 100:
+            raise BigNumberError('100 보다 클수 없습니다.')
+        self.__n = n
+        print(self.__n)
+    
+
+try:
+    n = Number(-1)
+except NegativeNumberError as e:
+    print("Try 01 : ",e)
+except BigNumberError as e:
+    print("Try 01 : ",e)
+# Try 01 :  음수는 담을 수 없습니다
+
+
+try:
+    n = Number(101)
+except NegativeNumberError as e:
+    print("Try 02 : ",e)
+except BigNumberError as e:
+    print("Try 02 : ",e)
+
+# Try 02 :  100 보다 클수 없습니다.
+```
+
+### try-except-else-finally
+
+try-except-else-finally 를 사용할 수 있다.
+
+ *else : try 가 정상적으로 작동할 때, 동작한다.
+
+
+> If an exception occurs during execution of the try clause, the exception may be handled by an except clause. If the exception is not handled by an except clause, the exception is re-raised after the finally clause has been executed.
+>
+>
+> An exception could occur during execution of an except or else clause. Again, the exception is re-raised after the finally clause has been executed.
+>
+> If the try statement reaches a break, continue or return statement, the finally clause will execute just prior to the break, continue or return statement’s execution.
+>
+> If a finally clause includes a return statement, the returned value will be the one from the finally clause’s return statement, not the value from the try clause’s return statement.
+>
+> - In real world applications, the finally clause is useful for releasing external resources (such as files or network connections), regardless of whether the use of the resource was successful.
+>
+> https://docs.python.org/3/tutorial/errors.html#defining-clean-up-actions
+
+
+except 에러끼리 묶을 수 있다.
+```py
+except (NegativeNumberError,BigNumberError) as e:
+    print("Try 03 : ",e)
+```
+
+다시 익혀보자
+
+```py
+class NegativeNumberError(Exception):
+    def __init__(self, msg):
+        self.msg = msg
+    
+    def __str__(self):
+        return self.msg
+
+class BigNumberError(Exception):
+    def __init__(self, msg):
+        self.msg = msg
+    
+    def __str__(self):
+        return self.msg
+
+class Number:
+    def __init__(self, n):
+        if n < 0:
+            raise NegativeNumberError('음수는 담을 수 없습니다')
+        if n > 100:
+            raise BigNumberError('100 보다 클수 없습니다.')
+        self.__n = n
+        print(self.__n)
+        
+try:
+    n = Number(-1)
+except (NegativeNumberError,BigNumberError) as e:
+    print("Try 03 : ",e)
+else :
+    print('Try 03 : Try is True !!')
+finally:
+    print('Try 03 : Finally is Ture')
+
+"""
+Try 03 :  음수는 담을 수 없습니다
+Try 03 : Finally is Ture
+"""
+
+try:
+    n = Number(1)
+except (NegativeNumberError,BigNumberError) as e:
+    print("Try 04 : ",e)
+else :
+    print('Try 04 : Try is True !!')
+finally:
+    print('Try 04 : Finally is Ture')
+
+"""
+1
+Try 04 : Try is True !!
+Try 04 : Finally is Ture
+"""
+```
+
+
+### Exception을 상속받아 커스텀하게 잘 써보자
+
+Exception을 상속받은 NumberError class 부터 상속받아 각자의 Class에서 정의해보자
+
+```py
+class Error(Exception):
+    def __init__(self, msg):
+        self.msg = msg
+    
+    def __str__(self):
+        return self.msg
+
+class NegativeNumberError(Error):
+    def __str__(self):
+        return self.msg + " is Negative"
+
+class BigNumberError(Error):
+    def __str__(self):
+        return self.msg  + " is BigNumber"
+
+class Number:
+    def __init__(self, n):
+        if n < 0:
+            raise NegativeNumberError('음수는 담을 수 없습니다')
+        if n > 100:
+            raise BigNumberError('100 보다 클수 없습니다.')
+        self.__n = n
+        print(self.__n)
+
+
+try:
+    n = Number(-1)
+except (NegativeNumberError,BigNumberError) as e:
+    print("Try 05 : ",e)
+else :
+    print('Try 05 : Try is True !!')
+finally:
+    print('Try 05 : Finally is Ture')
+
+"""
+ Try 05 :  음수는 담을 수 없습니다 is Negative
+ Try 05 : Finally is Ture
+"""
+```
+위에서의 예제는 단순히 상속받아 쓰는것 같아 활용법이 적어 보이지만 아래의 tutorial 예제를 보면 인사이트를 얻을 수 있다.
+
+---
+
+https://docs.python.org/3/tutorial/errors.html#user-defined-exceptions
+
+TransitionError 부분에서 감탄했다. 에러에 어떻게 다뤄야 하는지 인사이트를 주는 코드이다. ~~에러를 가지고 노는 느낌이다~~
+
+
+```py
+class Error(Exception):
+    """Base class for exceptions in this module."""
+    pass
+
+class InputError(Error):
+    """Exception raised for errors in the input.
+
+    Attributes:
+        expression -- input expression in which the error occurred
+        message -- explanation of the error
+    """
+
+    def __init__(self, expression, message):
+        self.expression = expression
+        self.message = message
+
+class TransitionError(Error):
+    """Raised when an operation attempts a state transition that's not
+    allowed.
+
+    Attributes:
+        previous -- state at beginning of transition
+        next -- attempted new state
+        message -- explanation of why the specific transition is not allowed
+    """
+
+    def __init__(self, previous, next, message):
+        self.previous = previous
+        self.next = next
+        self.message = message
+```
+
+### Predefined Clean-up Actions
+ with 문도 애용해주자
+
+> The with statement allows objects like files to be used in a way that ensures they are always cleaned up promptly and correctly.
+
+```py
+with open("myfile.txt") as f:
+    for line in f:
+        print(line, end="")
+```
+
+--- 
+
+## 참고
+ - https://docs.python.org/3/tutorial/errors.html
+ - https://stackoverflow.com/questions/21553327/why-is-except-pass-a-bad-programming-practice
+ - https://www.python.org/dev/peps/pep-0020/#id3
+ - https://wayhome25.github.io/python/2017/02/26/py-12-exception/
+ - https://wikidocs.net/16060
+ - https://gomguard.tistory.com/122

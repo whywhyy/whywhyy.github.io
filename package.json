@@ -43,6 +43,7 @@
     "gatsby-remark-reading-time": "^1.1.0",
     "gatsby-remark-responsive-iframe": "^2.4.4",
     "gatsby-source-filesystem": "^2.3.10",
+    "gatsby-source-instagram": "^0.8.0",
     "gatsby-transformer-sharp": "^2.5.4",
     "prismjs": "^1.20.0",
     "react": "^16.12.0",

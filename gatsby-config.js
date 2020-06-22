@@ -96,5 +96,11 @@ module.exports = {
         color: `#FF0000`,
       },
     },
+    {
+      resolve: `gatsby-source-instagram`,
+      options: {
+        username: `1492521445`,
+      },
+    },
   ],
 }
