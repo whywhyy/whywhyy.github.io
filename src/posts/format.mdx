@@ -1,0 +1,250 @@
+---
+publish: True
+title: "python sort method 에 대해 알아보자 (feat. python Sorting HOW TO)"
+date: "2020-06-22T13:33:00"
+url_path : "/blog/2020/06/22/python-sort-에-대해-알아보자"
+thumbnailImage : ../images/python-sort.jpg
+thumbnailImageUse : True
+description : "python tutorial sort 에서 배운 것들"
+tags : 
+    - python
+    - sort
+    - sort two fields
+    - sort multiple fields
+---
+
+## sort 그냥 하면 되는거 아니야!?
+
+그냥 하면 당연히 잘 동작한다.(!?) 하지만 객체로 다뤄야 하는 sort then sort 방법, 객체가 담고있는 변수기반 sort 방법 등은 익혀두어야 한다.
+
+## python Tutorial 을 보자
+
+ - https://docs.python.org/3/howto/sorting.html
+
+
+### 기본적인 사용법
+
+```py
+a = [5, 2, 3, 1, 4]
+s_a = sorted(a)
+re_s_a = sorted(a,reverse=True)
+print(a) # [5, 2, 3, 1, 4]
+print(s_a) # [1, 2, 3, 4, 5]
+print(re_s_a) # [5, 4, 3, 2, 1]
+print(sorted(a)) # [1, 2, 3, 4, 5]
+```
+
+### Key functions
+
+ key 를 사용하면 비교를 위한 전처리를 진행할 수 있다.
+
+```py
+print(sorted("This is a test string from Andrew".split()))
+print(sorted("This is a test string from Andrew".split(), key=str.lower))
+# ['Andrew', 'This', 'a', 'from', 'is', 'string', 'test']
+# ['a', 'Andrew', 'from', 'is', 'string', 'test', 'This']
+
+print(sorted("90 30 40 50 60 10 20 101".split()))  # 단순 str 
+print(sorted("90 30 40 50 60 10 20 101".split(), key=int))
+# ['10', '101', '20', '30', '40', '50', '60', '90']
+# ['10', '20', '30', '40', '50', '60', '90', '101']
+```
+
+### sort two fields
+
+튜플도 잘 sorting 한다. 두개 이상의 sorting 도 가능하다.
+
+```py
+student_tuples = [
+    ('john', 'A', 15),
+    ('jane', 'B', 12),
+    ('dave', 'B', 10),
+]
+print(sorted(student_tuples, key=lambda student: student[2]))
+# [('dave', 'B', 10), ('jane', 'B', 12), ('john', 'A', 15)]
+# highlight-start
+print(sorted(student_tuples, key=lambda student: (student[1],student[2]))) 
+# [('john', 'A', 15), ('dave', 'B', 10), ('jane', 'B', 12)]
+# highlight-end
+```
+
+objects 의 attributes 로도 잘 동작한다.
+
+```py
+class Student:
+    def __init__(self, name, grade, age):
+        self.name = name
+        self.grade = grade
+        self.age = age
+    def __repr__(self):
+        return repr((self.name, self.grade, self.age))
+
+student_objects = [
+    Student('john', 'A', 15),
+    Student('jane', 'B', 12),
+    Student('dave', 'B', 10),
+]
+
+
+print(sorted(student_objects, key=lambda student: student.age))
+# [('dave', 'B', 10), ('jane', 'B', 12), ('john', 'A', 15)]
+
+
+student_objects = [
+    Student('john', 'A', 15),
+    Student('jane', 'B', 12),
+    Student('Bdave', 'B', 10),
+    Student('Adave', 'A', 10),
+    Student('Cdave', 'C', 10),
+]
+
+# highlight-start
+print(sorted(student_objects, key=lambda student: (student.age,student.grade)))
+# [('Adave', 'A', 10), ('Bdave', 'B', 10), ('Cdave', 'C', 10), ('jane', 'B', 12), ('john', 'A', 15)]
+# highlight-end
+```
+
+operator 모듈의 itemgetter로 attrgetter 로 접근하여 동작시킬 수 있다.
+
+*itemgetter
+
+> - After f = itemgetter(2), the call f(r) returns r[2].
+>
+> - After g = itemgetter(2, 5, 3), the call g(r) returns (r[2], r[5], r[3]).
+
+*attrgetter 
+
+> - After f = attrgetter('name'), the call f(b) returns b.name.
+>
+> - After f = attrgetter('name', 'date'), the call f(b) returns (b.name, b.date).
+>
+> - After f = attrgetter('name.first', 'name.last'), the call f(b) returns (b.name.first, b.name.last).
+
+
+```py
+from operator import itemgetter, attrgetter
+
+class Student:
+    def __init__(self, name, grade, age):
+        self.name = name
+        self.grade = grade
+        self.age = age
+    def __repr__(self):
+        return repr((self.name, self.grade, self.age))
+
+student_objects = [
+    Student('john', 'A', 15),
+    Student('jane', 'B', 12),
+    Student('dave', 'B', 10),
+]
+
+student_tuples = [
+    ('john', 'A', 15),
+    ('jane', 'B', 12),
+    ('dave', 'B', 10),
+]
+
+print(sorted(student_tuples, key=itemgetter(2)))
+print(sorted(student_objects, key=attrgetter('age')))
+# [('dave', 'B', 10), ('jane', 'B', 12), ('john', 'A', 15)]
+# [('dave', 'B', 10), ('jane', 'B', 12), ('john', 'A', 15)]
+
+# Sorting two fields
+print(sorted(student_tuples, key=itemgetter(1,2)))
+print(sorted(student_objects, key=attrgetter('grade', 'age')))
+# [('john', 'A', 15), ('dave', 'B', 10), ('jane', 'B', 12)]
+# [('john', 'A', 15), ('dave', 'B', 10), ('jane', 'B', 12)]
+```
+
+### Sorts are guaranteed to be stable.
+[stable](https://en.wikipedia.org/wiki/Sorting_algorithm#Stability) sort 이다.
+
+즉, Key 가 아닌것 끼리는 앞 뒤가 변경되지 않는다!
+
+```py
+data = [('red', 1), ('blue', 2), ('red', 2), ('blue', 1)]
+print(sorted(data, key=itemgetter(0)))
+# [('blue', 2), ('blue', 1), ('red', 1), ('red', 2)]
+print(sorted(data, key=itemgetter(0),reverse=True))
+# [('red', 1), ('red', 2), ('blue', 2), ('blue', 1)]
+print(sorted(data, key=itemgetter(1)))
+# [('red', 1), ('blue', 1), ('blue', 2), ('red', 2)]
+print(sorted(data, key=itemgetter(1),reverse=True))
+# [('blue', 2), ('red', 2), ('red', 1), ('blue', 1)]
+```
+그러니 단순한 sort 두번으로 two fields sort가 가능하다.
+
+```py
+from operator import itemgetter, attrgetter
+
+class Student:
+    def __init__(self, name, grade, age):
+        self.name = name
+        self.grade = grade
+        self.age = age
+    def __repr__(self):
+        return repr((self.name, self.grade, self.age))
+
+student_objects = [
+    Student('john', 'A', 15),
+    Student('jane', 'B', 12),
+    Student('Bdave', 'B', 10),
+    Student('Adave', 'A', 10),
+    Student('Cdave', 'C', 10),
+]
+# highlight-start
+print(sorted(student_objects, key=lambda student: (student.age,student.grade)))
+# [('Adave', 'A', 10), ('Bdave', 'B', 10), ('Cdave', 'C', 10), ('jane', 'B', 12), ('john', 'A', 15)]
+# highlight-end
+
+# highlight-start
+s = sorted(student_objects, key=attrgetter('grade'))     # sort on secondary key
+print(sorted(s, key=attrgetter('age')))
+# [('Adave', 'A', 10), ('Bdave', 'B', 10), ('Cdave', 'C', 10), ('jane', 'B', 12), ('john', 'A', 15)]
+# highlight-end
+
+```
+
+### 복잡한 sort
+
+여러 필드를 sort 해야할때, 특정한 필드에 대해서는 reverse를 적용해야한다면, 단순한 two fields 방식으로 sort 가 안된다.
+
+방금 위의 두번의 sort 방식은 순서를 거꾸로 진행해야 되니, 실수 할 가능성이 크다. 
+아래의 multisort 처럼 구현하여, two fields 처럼 사용하자.
+
+```py
+from operator import itemgetter, attrgetter
+
+class Student:
+    def __init__(self, name, grade, age):
+        self.name = name
+        self.grade = grade
+        self.age = age
+    def __repr__(self):
+        return repr((self.name, self.grade, self.age))
+
+student_objects = [
+    Student('john', 'A', 15),
+    Student('jane', 'B', 12),
+    Student('Bdave', 'B', 10),
+    Student('Adave', 'A', 10),
+    Student('Cdave', 'C', 10),
+]
+
+# for key, reverse in reversed(specs) 이므로 two fields 처럼 동작한다.
+def multisort(xs, specs):
+    for key, reverse in reversed(specs):
+        xs.sort(key=attrgetter(key), reverse=reverse)
+    return xs
+    
+print(multisort(list(student_objects), (('grade', False), ('age', True))))
+# [('john', 'A', 15), ('Adave', 'A', 10), ('jane', 'B', 12), ('Bdave', 'B', 10), ('Cdave', 'C', 10)]
+print(multisort(list(student_objects), (('grade', False), ('age', False))))
+# [('Adave', 'A', 10), ('john', 'A', 15), ('Bdave', 'B', 10), ('jane', 'B', 12), ('Cdave', 'C', 10)]
+```
+
+---
+
+## 참고
+ - https://docs.python.org/3/howto/sorting.html
+ - https://stackoverflow.com/questions/4233476/sort-a-list-by-multiple-attributes
