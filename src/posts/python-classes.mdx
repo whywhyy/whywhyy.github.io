@@ -1,0 +1,337 @@
+---
+publish: True
+title: "python Classes에 대해 알아보자 (feat. python classes)"
+date: "2020-06-23T11:26:00"
+url_path : "/blog/2020/06/22/python-Classes에-대해-알아보자"
+thumbnailImage : ../images/python-classes-oop.jpg
+thumbnailImageUse : True
+description : "Class 기초적인 부분에 대해 알고가자"
+tags : 
+    - python
+    - tutorial
+    - class
+    - scope
+---
+
+## Tutorial 
+ - https://docs.python.org/3/tutorial/classes.html#classes
+
+### scope
+
+  scope 는 항상 가장 내부의 변수먼저 사용한다. (디버깅이 어렵기에 nonlocal, global 을 쓰지 않는것이 좋다.)
+ 
+  nonlocal 은 해당 상위 지역 변수를 조작
+
+  global 프로그램이 동작하는 가장 외부변수 이다.
+
+  nonlocal, global 을 쓸 일이 없었다. 굳이 쓸 필요 나 이유도 못느꼈다. 어떻게 동작하는지는 알아 둘 필요는 있는것 같다.
+
+```py
+def scope_test():
+    def do_local():
+        spam = "local spam"
+
+    def do_nonlocal():
+        nonlocal spam
+        spam = "nonlocal spam"
+
+    def do_global():
+        global spam
+        spam = "global spam"
+
+    spam = "test spam"
+    do_local()
+    print("After local assignment:", spam) 
+    # do_local() 해당 함수안의 spam 한 수정한다.
+#highlight-start
+    # After local assignment: test spam 
+#highlight-end
+    do_nonlocal()
+    print("After nonlocal assignment:", spam)
+    # do_nonlocal() 함수가 spam = "test spam" 을 변경하였다.
+#highlight-start
+    # After nonlocal assignment: nonlocal spam
+#highlight-end
+    do_global()
+    print("After global assignment:", spam)
+    # nonlocal 변수가 먼저 참조된다.
+#highlight-start
+    # After global assignment: nonlocal spam 
+#highlight-end
+
+scope_test()
+print("In global scope:", spam)
+#highlight-start
+# In global scope: global spam
+#highlight-end
+```
+
+
+### Instance variables 가능하다.
+
+```py
+class Complex:
+    def __init__(self, realpart, imagpart):
+        self.r = realpart
+        self.i = imagpart
+
+x = Complex(3.0, -4.5)
+
+x.counter = 1
+while x.counter < 10:
+    x.counter = x.counter * 2
+print(x.counter) # 16
+del x.counter
+```
+
+### Method Objects 또한 가능한다.
+
+Javascript 처럼 method 를 변수처럼 사용할 수 있다.
+
+```py
+class Complex:
+    def __init__(self, realpart, imagpart):
+        self.r = realpart
+        self.i = imagpart
+    
+    def f(self):
+        print("Hi !")
+
+x = Complex(3.0, -4.5)
+xf = x.f
+xf() # Hi !
+```
+
+### Class and Instance Variables
+
+  Class 에서 Instance 로 생성되는 부분과 Share 되는 부분이 존재한다.
+
+```py
+class Dog:
+
+    kind = 'canine'         # class variable shared by all instances
+
+    def __init__(self, name):
+        self.name = name    # instance variable unique to each instance
+
+d = Dog('Fido')
+e = Dog('Buddy')
+print(d.kind)  # shared by all dogs
+#canine
+print(e.kind)  # shared by all dogs
+#canine
+print(d.name)  # unique to d
+#Fido
+print(e.name)  # unique to e
+#Buddy
+```
+
+아래 Dog 에서 tricks 이 정말로 공유되는걸 확인할 수 있다!
+
+적절하게 잘 활용하면 좋을듯 하다.
+
+```py
+class Dog:
+
+    tricks = []             # mistaken use of a class variable
+
+    def __init__(self, name):
+        self.name = name
+
+    def add_trick(self, trick):
+        self.tricks.append(trick)
+
+d = Dog('Fido')
+e = Dog('Buddy')
+print(d.name)
+#Fido
+print(e.name)
+#Buddy
+d.add_trick('roll over')
+e.add_trick('play dead')
+print(d.tricks)
+#highlight-start
+# ['roll over', 'play dead']
+#highlight-end
+```
+
+### self?
+ 
+  class 내부의 변수 사용시 self 사용은 필수이다. 잘못하면 global 변수를 참조할 수 있다.
+
+> Often, the first argument of a method is called self. 
+>   
+> This is nothing more than a convention: the name self has absolutely no special meaning to Python. 
+> 
+> Note, however, that by not following the convention your code may be less readable to other Python programmers, and it is also conceivable that a class browser program might be written that relies upon such a convention.
+
+```py
+class Bag:
+    x = 7
+
+    def px(self):
+        print(self.x)
+        print(x)
+
+
+x = 3
+a = Bag()
+a.px() 
+#7
+#3
+```
+
+
+### 상속
+
+여러개 클래스 상속시 DerivedClassName 에서 먼저 찾고, 그 다음 Base1 없으면 Base2 에서 찾는 방식으로 동작한다.
+
+> if an attribute is not found in DerivedClassName, it is searched for in Base1, then (recursively) in the base classes of Base1,  and if it was not found there, it was searched for in Base2, and so on.
+
+```py
+class Base1():
+    base1 = 1
+    share = 1
+    def func_base1(self):
+        print("Base1")
+
+    def func_share(self):
+        print("Base1")
+
+class Base2():
+    base2 =2
+    share =2
+    def func_base2(self):
+        print("Base2")
+    
+    def func_share(self):
+        print("Base2")
+
+class Base3():
+    base3 = 3
+    share = 3
+    def func_base3(self):
+        print("Base3")
+    
+    def func_share(self):
+        print("Base2")
+
+class DerivedClassName(Base1, Base2, Base3):
+    def func(self):
+        print("func")
+
+a = DerivedClassName()
+print(a.base1, a.base2, a.base3)
+#1 2 3
+print(a.share)
+#1
+a.func_share()
+#Base1
+a.func()
+#func
+```
+
+###  iter for next 
+
+> the for statement calls iter() on the container object.
+>
+>  The function returns an iterator object that defines the method __next__() which accesses elements in the container one at a time.
+> 
+>  When there are no more elements, __next__() raises a StopIteration exception which tells the for loop to terminate.
+> 
+> You can call the __next__() method using the next() built-in function; this example shows how it all works:
+
+```py
+s = 'abc'
+it = iter(s)
+print(it)
+print(next(it))
+print(next(it))
+print(next(it))
+print(next(it))
+#<str_iterator object at 0x0000013C3981DB08>
+#a
+#b
+#c
+#Traceback (most recent call last):
+#  File "except_test.py", line 32, in <module>
+#    print(next(it))
+#StopIteration
+```
+
+아래 코드의 동작방식을 보면 for 는 next 를 계속 호출함을 확인할 수 있다.
+
+```py
+class Reverse:
+    """Iterator for looping over a sequence backwards."""
+    def __init__(self, data):
+        self.data = data
+        self.index = len(data)
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self.index == 0:
+            raise StopIteration
+        self.index = self.index - 1
+        return self.data[self.index] + " is next"
+
+rev = Reverse('spam')
+print(iter(rev))
+# <__main__.Reverse object at 0x0000018C1719D788>
+for char in rev:
+    print(char)
+# m is next
+# a is next
+# p is next
+# s is next
+```
+
+### Private Variables
+ python 에서 Private 변수는 존재하지 않는다. 
+ 하지만 더블언더스코어 같은 방식으로 변수를 숨긴다. 충돌의 문제를 회피하기 위해서도 사용한다.
+
+ 아래 코드에서 __update 코드가 그대로 Mapping 클래스의 update를 사용함을 확인할 수 있다.
+
+```py
+class Mapping:
+    def __init__(self, iterable):
+        self.items_list = []
+        self.__update(iterable)
+    
+    # highlight-start
+    def update(self, iterable):
+        for item in iterable:
+            self.items_list.append(item)
+    # highlight-end
+    
+    # highlight-start
+    __update = update   # private copy of original update() method
+    # highlight-end
+
+
+class MappingSubclass(Mapping):
+
+    def update(self, keys, values):
+        # provides new signature for update()
+        # but does not break __init__()
+        for item in zip(keys, values):
+            self.items_list.append(item)
+
+s = [(1,"abc"),(2,"def")]
+cl_map = MappingSubclass(iter(s))
+print(cl_map.items_list)
+#[(1, 'abc'), (2, 'def')]
+value = ['a', 'b'] 
+key = [1, 2]
+cl_map.update(key,value)
+print(cl_map.items_list)
+#[(1, 'abc'), (2, 'def'), (1, 'a'), (2, 'b')]
+
+```
+
+---
+
+## 참고
+ - https://docs.python.org/3/tutorial/classes.html#classes
