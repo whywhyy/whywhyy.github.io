@@ -1,0 +1,230 @@
+---
+publish: True
+title: "python Duck typing 에 대해 알아보자"
+date: "2020-06-24T14:58:00"
+url_path : "/blog/2020/06/24/python-Duck-typing-에-대해-알아보자"
+thumbnailImage : ../images/python-duck-typing.jpg
+thumbnailImageUse : True
+description : "Duck typting 이 뭐지!? 그리고 갑자기 EAFP vs LBYL !?"
+tags : 
+    - python
+    - pythonic
+    - duck typing
+    - EAFP vs LBYL
+    - EAFP
+    - LBYL
+---
+
+## Duck typing
+
+"If it walks like a duck and it quacks like a duck, then it must be a duck"
+
+ '오리처럼 걷고 꽥꽥 거리면 오리다' 라고 간주하는 것 이다.
+
+ 아래 코드를 보면 해당 클래스가 fly() 이만 가지고 있으면 실행 가능함을 확인 할 수 있다.
+
+ > A programming style which does not look at an object’s type to determine if it has the right interface
+ >
+ >  By emphasizing interfaces rather than specific types, well-designed code improves its flexibility by allowing polymorphic substitution
+ > 
+ >  - https://docs.python.org/3/glossary.html#term-duck-typing
+
+ 
+  즉, 객체의 유형을 확인하지 않고, 올바른 인터페이스가 있는지확인하는 코딩스타일 이다. 유연성을 확보 할 수 있다.
+
+### 예제
+
+```python
+class Duck:
+    def fly(self):
+        print("Duck flying")
+
+class Sparrow:
+    def fly(self):
+        print("Sparrow flying")
+
+class Whale:
+    def swim(self):
+        print("Whale swimming")
+
+for animal in Duck(), Sparrow(), Whale():
+    animal.fly()
+
+
+# Duck flying
+# Sparrow flying
+# Traceback (most recent call last):
+#   File "except_test.py", line 14, in <module>
+#     animal.fly()
+# AttributeError: 'Whale' object has no attribute 'fly'
+
+```
+ 
+### 갑자기 EAFP vs LBYL
+
+ 그래서 이 방법을 써야하는지 안써야하는지 찾아보던 도중 EAFP, LBYL 프로그래밍 방식에 따라 달라짐을 배웠다.
+
+  > EAFP - Easier to ask for forgiveness than permission.
+  > 
+  > LBYL - Look before you leap.
+ 
+  EAFP 허락보다는 용서를 구하는 것이 쉽다. 
+
+  LBYL 도약하기 전에 살핀다.
+
+  예제를 보자
+
+  ```py
+
+    # EAFP 01
+    try:
+        value += dict_["key"]
+    except KeyError:
+        pass
+
+    # EAFP 02
+    try:
+        ham = spam.eggs
+    except AttributeError:
+        handle_error()
+
+    # LBYL 01
+    if "key" in dict_:
+        value += dict_["key"]
+
+    # LBYL 02
+    if hasattr(spam, 'eggs'):
+        ham = spam.eggs
+    else:
+        handle_error()
+
+  ```
+
+#### EAFP 
+ 그래서 뭘 써야되는가!? 
+ 
+ EAFP 를 쓰도록 하자
+
+> These two code samples have the same effect, 
+>
+> although there will be performance differences. 
+> When spam has the attribute eggs, the EAFP sample will run faster.
+>
+> When spam does not have the attribute eggs (the "exceptional" case), 
+> the EAFP sample will run slower. 
+>
+> it avoids the whole class of time-of-check-to-time-of-use (TOCTTOU) vulnerabilities
+> other race conditions, and is compatible with duck typing. 
+> 
+> A drawback of EAFP is that it can be used only with statements; an exception cannot be caught in a generator expression, list comprehension, or lambda function. 
+>
+> - https://en.wikipedia.org/wiki/Python_syntax_and_semantics#Exceptions
+>
+> "explicit is better than implicit" 
+>
+> - https://www.python.org/dev/peps/pep-0020/
+
+ 인상 깊었던 점은 LBYL 을 사용할때, dict의 value 가 없다는 것을 단지 아무일 없는것처럼(?) 넘어가는 듯한 코드라고 이야기 하는 점 이였다.
+
+
+#### EAFP 주의사항
+
+ try 문에는 명확하게 해당 하는 try 만 넣도록 하자. ## 01 보다는 ## 02 와 같이 사용하자.
+
+```py
+
+## 01
+try:
+    do_something(dict_["key"])
+except KeyError:
+    pass
+
+### 02
+
+try:
+    value = dict_["key"]
+except KeyError:
+    pass
+else:
+    do_something(value)
+```
+
+### EAFP with duck typing
+
+ 아래 코드와 같이 Duck typing 을 EAFP 의 방법으로 활용할 수 있다.
+
+ LBYL 보다 EAFP가 간결하고 유지보수에 좋은 코드다. 
+
+ 에러가 나타날때 ('Duck' object has no attribute 'quack') 와 같이 에러도 잘 내뿜는다!
+
+ Exception 과 친해지도록 하자.
+
+```py
+class Duck:
+    def quack(self):
+	    print("I am duck who can quack")
+    def ice(self):
+        print("I am duck who can't live in iceland")
+    
+class Penguin:
+	def quack(self):
+		print("I am penguin who can  quack")
+	def ice(self):
+		print("I am penguin who can live in iceland")
+
+def quack_and_ice_permission(myObj):
+	if hasattr(myObj, 'quack'):  # ask for permission
+		if callable(myObj.quack):      # ask for permission
+			myObj.quack()
+	if hasattr(myObj, 'ice'):
+		if callable(myObj.ice):
+			myObj.ice()
+
+def quack_and_ice_forgiveness(myObj):
+	try:                         # ask for forgiveness
+		myObj.quack()
+		myObj.ice()
+	except AttributeError as e: # handle exception
+		print(e)
+
+d = Duck()
+#an operation is given a duck
+
+quack_and_ice_permission(d)
+print("@")
+# I am duck who can quack
+# I am duck who can't live in iceland
+# @
+
+quack_and_ice_forgiveness(d)
+print("@")
+# I am duck who can quack
+# I am duck who can't live in iceland
+# @
+
+p = Penguin()
+#an operation is given a penguin
+quack_and_ice_permission(p)
+print("@")
+# I am penguin who can  quack
+# I am penguin who can live in iceland
+# @
+
+quack_and_ice_forgiveness(p)
+# I am penguin who can  quack
+# I am penguin who can live in iceland
+
+```
+
+
+--- 
+
+## 참고
+
+- https://en.wikipedia.org/wiki/Duck_typing
+- https://docs.python.org/3/glossary.html#term-duck-typing
+- https://docs.python.org/3/glossary.html#term-eafp
+- https://docs.python.org/3/glossary.html#term-lbyl
+- https://en.wikipedia.org/wiki/Python_syntax_and_semantics#Exceptions
+- https://devblogs.microsoft.com/python/idiomatic-python-eafp-versus-lbyl/
+- https://www.quora.com/How-is-duck-typing-handled-in-Python

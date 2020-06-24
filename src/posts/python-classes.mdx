@@ -188,6 +188,8 @@ a.px()
 
 > if an attribute is not found in DerivedClassName, it is searched for in Base1, then (recursively) in the base classes of Base1,  and if it was not found there, it was searched for in Base2, and so on.
 
+ super() 로 부모클래스의 함수나 변수를 사용하는것을 확인할 수 있다.
+
 ```py
 class Base1():
     base1 = 1
@@ -214,11 +216,15 @@ class Base3():
         print("Base3")
     
     def func_share(self):
-        print("Base2")
+        print("Base3")
 
 class DerivedClassName(Base1, Base2, Base3):
     def func(self):
         print("func")
+    
+    def func_su(self):
+        print(super().share)
+        super().func_share()
 
 a = DerivedClassName()
 print(a.base1, a.base2, a.base3)
@@ -229,6 +235,9 @@ a.func_share()
 #Base1
 a.func()
 #func
+a.func_su()
+#1
+#Base1
 ```
 
 ###  iter for next 
