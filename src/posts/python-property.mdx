@@ -1,0 +1,139 @@
+---
+publish: True
+title: "python @property 를 이용해 getter setter deleter 를 만들자"
+date: "2020-06-24T11:13:00"
+url_path : "/blog/2020/06/24/python-@property-를-이용해-getter-setter-deleter-를-만들자"
+thumbnailImage : ../images/python-getter-setter.jpg
+thumbnailImageUse : True
+description : "Class 에서 변수에 "
+tags : 
+    - python
+    - tutorial
+    - property
+    - getter
+    - setter
+    - deleter
+---
+
+## pythonic vs getter setter deleter
+
+ python 에서 Class를 생성하고, 변수를 할당하기위해 getter,setter,deleter 를 사용할 수 도 있다.
+ 
+ 하지만, pythonic 스럽지 않다. 왜냐하면 python 에서는 Class.x 와 같은 방식으로 데이터에 접근하고, 조작하기 때문이다.
+ 
+```py
+class C:
+    def __init__(self):
+        self._x = None
+
+    def getx(self):
+        return self._x
+
+    def setx(self, value):
+        self._x = value
+
+    def delx(self):
+        del self._x
+
+    x = property(getx, setx, delx, "I'm the 'x' property.") # highlight-line
+```
+
+---
+
+### property
+
+ python 에서는 property 라는 클래스를 만들어 데코레이터 형식으로 제공한다.
+
+ 사용방법은 method 이름을 getter, setter, deleter 모두 동일하게 한다.
+
+ getter -> @property 
+
+ setter -> @methodname.setter
+
+ deleter -> @methodname.deleter 
+
+ 와 같이 설정하여 사용하면 된다.
+ 
+ ```py
+ class C:
+    def __init__(self):
+        self._x = None
+
+    @property
+    def x(self):
+        """I'm the 'x' property."""
+        return self._x
+
+    @x.setter
+    def x(self, value):
+        self._x = value
+
+    @x.deleter
+    def x(self):
+        del self._x
+ ```
+
+### With exception (feat. raise)
+
+ 오직 양의 숫자만 가능한 setter를 만들어보자. 
+
+```py
+
+class C:
+    def __init__(self):
+        self._x = None
+
+    @property
+    def x(self):
+        """I'm the 'x' property."""
+        return self._x
+
+    @x.setter
+    def x(self, value):
+        try :
+            if type(value) == int or type(value) == float:
+                pass
+            else:
+                raise NumberError("숫자만 담을 수 있습니다.")
+            if value < 0 :
+                raise NumberError("음수는 담을 수 없습니다.")
+        except NumberError as e:
+            print(e)
+        else :
+            self._x = value
+
+    @x.deleter
+    def x(self):
+        del self._x
+
+class NumberError(Exception):
+    def __init__(self,msg):
+        self.msg = msg
+    
+    def __str__(self):
+        return self.msg
+
+c = C()
+
+c.x = "3a"
+print(c.x)
+# 숫자만 담을 수 있습니다.
+# None
+c.x = "3"
+print(c.x)
+# 숫자만 담을 수 있습니다.
+# None
+c.x = -3
+print(c.x)
+# 음수는 담을 수 없습니다.
+# None
+c.x = 3  
+print(c.x)
+# 3
+```
+
+---
+
+## 참고
+ 
+ - https://docs.python.org/3/library/functions.html#property
