@@ -1,0 +1,437 @@
+---
+publish: True
+title: "python type hints 에 대해 알아보자"
+date: "2020-06-25T10:47:00"
+url_path : "/blog/2020/06/25/python-type-hints-에-대해-알아보자"
+thumbnailImage : ../images/python-type-hint.jpg
+thumbnailImageUse : True
+description : "python 3.5 이상부터에서는 타입을 선언할 수 있다. 적용을 고려해봐도 좋다."
+tags : 
+    - python
+    - type hints
+    - typing
+    - function annotation
+    - arrow
+---
+
+## Type hints
+
+```py
+def greeting(name: str) -> str:
+    return 'Hello ' + name
+```
+
+ '->' 는 function annotation 이라고 한다. return 값의 타입을 알리는 역할을 한다.(https://www.python.org/dev/peps/pep-3107/)
+
+ name arg 는 str type 이고, return type 은 str 라는 의미 이다.
+ 
+ type hints 는 강제도 아니며, 주석과 다름없다. type이 틀려도 잘 동작에는 문제없다.
+ 
+
+## type checker
+
+ - mypy, pyright, pyre-check 와 같은 type checker 를 이용하여 체킹하도록 호자.
+
+ > Note The Python runtime does not enforce function and variable type annotations.
+ >
+ > They can be used by third party tools such as type checkers, IDEs, linters, etc.
+
+
+### mypy를 사용해보자
+
+ mypy 를 설치하자.
+
+```bash
+pip install mypy
+mypy test.py
+```
+
+ mypy 를 사용해보자. 아래 코드에서 에러가 잘 나오는지 확인해보자.
+
+ 사용법은 `mypy a.py b.py some_directory` 와 같은 방법으로 사용 가능하다.
+
+```py
+def greeting(name: str) -> str:
+    return 'Hello ' + name
+
+print(greeting(12))
+
+# mypy test.py
+# except_test.py:4: error: Argument 1 to "greeting" has incompatible type "int"; expected "str"
+# Found 1 error in 1 file (checked 1 source file)
+```
+
+ 잘 동작하도록 str 을 넣어보자. 
+ 
+```py
+def greeting(name: str) -> str:
+    return 'Hello ' + name
+
+print(greeting("whywhyy"))
+
+# Success: no issues found in 1 source file
+```
+
+ 잘 동작한다. :)
+
+---
+
+## Type hints 조금 더 배워보자
+
+### Type aliases
+
+ 아래의 Vector 와 List[float] 처럼 alias 를 이용하여 type hints 를 사용할 수 있다. 
+ 
+```py
+from typing import List
+Vector = List[float]
+
+def scale(scalar: float, vector: Vector) -> Vector:
+    return [scalar * num for num in vector]
+
+# typechecks; a list of floats qualifies as a Vector.
+new_vector = scale(2.0, [1.0, -4.2, 5.4])
+
+# mypy test.py
+# Success: no issues found in 1 source file
+```
+ 
+  여러 사용 례가 있는 사이를 찾았다! 여기를 참고하자.
+
+ - https://www.pythonsheets.com/notes/python-typing.html
+
+ 인상깊었던점 들은
+ 
+ initializing 없이 적용 가능하다.
+ 
+ regex 와도 동작한다.
+
+ Sequence 와 Iterable 와 같이 duck type 과 같은 방식으로도 동작한다.
+
+```py
+# without initializing
+x: int
+x_: int = 0
+
+# any type
+y: Any
+y = 1
+y = "1"
+
+# re
+p: Pattern = re.compile("(https?)://([^/\r\n]+)(/[^\r\n]*)?")
+m: Optional[Match] = p.match("https://www.python.org/")
+
+# duck types: list-like
+var_seq_list: Sequence[int] = [1, 2, 3]
+var_seq_tuple: Sequence[int] = (1, 2, 3)
+var_iter_list: Iterable[int] = [1, 2, 3]
+var_iter_tuple: Iterable[int] = (1, 2, 3)
+
+# duck types: dict-like
+var_map_dict: Mapping[str, str] = {"foo": "Foo"}
+var_mutable_dict: MutableMapping[str, str] = {"bar": "Bar"}
+```
+
+#### 복잡한 Type aliases
+
+ 별칭을 typing 으로 더 감쌀 수 있다.
+ 
+```py
+from typing import Dict, Tuple, Sequence
+
+ConnectionOptions = Dict[str, str]
+Address = Tuple[str, int]
+Server = Tuple[Address, ConnectionOptions]
+
+def broadcast_message(message: str, servers: Sequence[Server]) -> None:
+	pass
+
+```
+
+### NewType
+ 
+ NewType 으로 별칭을 생성할 수도 있다.
+
+ 놓치지 말하야 할 점은 단지 별칭이니, type 은 그대로 유지 된다는 점이며, 별칭에 한번더 NewType을 적용할 수 있다.
+
+```py
+from typing import NewType
+
+UserId = NewType('UserId', int)
+some_id = UserId(524313)
+print(some_id, type(some_id))
+# 524313 <class 'int'>
+
+# 'output' is of type 'int', not 'UserId'
+output = UserId(23413) + UserId(54341)
+print(output,type(output))
+# 77754 <class 'int'>
+
+ProUserId = NewType('ProUserId', UserId)
+pro_user = ProUserId(123)
+print(type(pro_user), pro_user)
+# <class 'int'> 123
+
+```
+
+### Callable
+
+ function 에 대해서도 활용 가능하다. 'Callable[[Arg1Type, Arg2Type], ReturnType]' 형태로 사용된다.
+ return을 function으로 할 때도 사용 가능하다.
+
+```py
+# callback
+def fun(cb: Callable[[int, int], int]) -> int:
+    return cb(55, 66)
+
+def call(a:int,b:int) -> int:
+	return a
+
+print(fun(call))
+# 55
+```
+
+```py
+from typing import Callable
+
+def ret_fun(val: int) -> Callable[[], int]:
+	# func 함수를 반환한다.
+    def func() -> int:
+        return val
+
+    return func
+
+print(ret_fun(123))
+# <function ret_fun.<locals>.func at 0x000001E8240815E8>
+```
+
+```py
+from typing import Callable
+
+def func(num:int) -> int:
+	return num
+
+# 함수를 객체를 할당할때도 사용 가능하다.
+new_func : Callable[[int],int] = func
+
+print(new_func(123))
+# 123
+```
+
+### Class
+ 
+  다음과 같이 Class 를 type 으로 사용하여 활용할 수 있다.
+
+```py
+from typing import List
+
+class Client(object):
+    pass
+
+class Process(object):
+    # highlight-start
+    def find (self, client: List[Client]) -> List[Client]:
+    # highlight-end
+        pass
+```
+
+
+### Generics
+
+  값을 input 할때 데이터 타입을 정의할 수 도 있다. 마치 C++ template 와 같다.
+
+```py
+T = TypeVar('T')      # Declare type variable
+
+def first(l: Sequence[T]) -> T:   # Generic function
+    return l[0]
+
+x : Sequence[int] = [1,2,3]
+print(first(x)) # 1
+
+y : Sequence[str] = ["a","b","c"]
+print(first(y)) # a
+
+```
+
+ class 에서도 generic 이 적용 가능하다.
+
+```py
+from typing import Generic, TypeVar
+
+T = TypeVar("T")
+
+class Foo(Generic[T]):
+    def __init__(self, foo: T) -> None:
+        self.foo = foo
+
+    def get(self) -> T:
+        return self.foo
+
+f: Foo[str] = Foo("Foo")
+v: str = f.get()
+```
+
+ 아래 T 처럼 데이터 타입에 제한을 둘 수 있다. 
+
+```py
+from typing import TypeVar
+
+# restrict T = int or T = float
+T = TypeVar("T", int, float)
+
+def add(x: T, y: T) -> T:
+    return x + y
+
+add(1, 2)
+add(1., 2.)
+add("1", 2)
+#except_test.py:11: error: Value of type variable "T" of "add" cannot be "object"
+add("hello", "world")
+#except_test.py:12: error: Value of type variable "T" of "add" cannot be "str"
+
+#Found 2 errors in 1 file (checked 1 source file)
+```
+ 아래의 StrangePair 이 결정된 경우 다른 type을 할당하게 되면 에러이다.
+
+```py
+from typing import Tuple,TypeVar, Generic
+
+
+T = TypeVar('T')
+S = TypeVar('S', int, str)
+
+class StrangePair(Generic[T, S]):
+	def __init__(self, name : T, want: S) -> None:
+		self._name:T = name
+		self._want:S = want
+	
+	@property
+	def value(self) -> Tuple[T,S]:
+		return self._name, self._want
+
+	@value.setter
+	def value(self, val:Tuple[T,S]) -> None:
+		name, want = val
+		self._name = name
+		self._want = want
+
+c : StrangePair[str,str] = StrangePair("NAME01","WANT01")
+c_val : Tuple[str,str] = c.value
+print(c_val)
+
+
+c.value = ("NAME02","WANT02")
+print(c.value)
+
+# 위에서 S가 str 로 정해졌으므로 변경이 안됨.
+c.value = ("NAME03",3)
+print(c.value)
+# except_test.py:94: error: Incompatible types in assignment (expression has type "Tuple[str, int]", variable has type "Tuple[str, str]")
+# Found 1 error in 1 file (checked 1 source file)
+
+# 새 객체이므로 가능함.
+new_c : StrangePair[str,int] = StrangePair("NEW_NAME01",3)
+new_c_val : Tuple[str,int] = new_c.value
+print(new_c_val)
+```
+
+### Union and @overload
+
+
+> Based on PEP 484, 
+>
+> the @overload decorator just for type checker only, 
+>
+> it does not implement the real overloading like c++/java. 
+>
+>Thus, we have to implement one exactly non-@overload function.
+> At the runtime, calling the @overload function will raise NotImplementedError.
+>
+
+ @overload 는 단순히 데이터 타입만 확인하는 용도이며, Union 은 여러 타입을 선언할때 사용한다.
+
+```py
+from typing import Generic, List, Union, overload
+
+
+class Array(object):
+    def __init__(self, arr: List[int]) -> None:
+        self.arr = arr
+
+    @overload
+    def __getitem__(self, i: str) -> str:
+        pass
+
+    @overload
+    def __getitem__(self, i: int) -> int:
+        pass
+
+    def __getitem__(self, i: Union[int, str]) -> Union[int, str]:
+        if isinstance(i, int):
+            return self.arr[i]
+        if isinstance(i, str):
+            return str(self.arr[int(i)])
+
+
+arr = Array([1, 2, 3, 4, 5])
+x: int = arr[1]
+y: str = arr["2"]
+```
+ 
+  단지 Union 으로 다 해결하려는 건 권고하지 않는다. (https://www.pythonsheets.com/notes/python-typing.html#multiple-return-values)
+
+```py
+from typing import Tuple, Iterable, Union
+
+def foo(x: int, y: int) -> Tuple[int, int]:
+    return x, y
+
+# or
+
+def bar(x: int, y: str) -> Iterable[Union[int, str]]:
+    # XXX: not recommend declaring in this way
+    return x, y
+
+a: int
+b: int
+a, b = foo(1, 2)      # ok
+c, d = bar(3, "bar")  # ok
+```
+
+### Optional
+
+  'Union[Any, None] == Optional[Any]' 이므로 None 의 경우 Optional을 사용하자.
+
+```py
+from typing import List, Union
+
+def first(l: List[Union[int, None]]) -> Union[int, None]:
+    return None if len(l) == 0 else l[0]
+
+first([None])
+
+# equal to
+```
+
+```py
+from typing import List, Optional
+
+def first(l: List[Optional[int]]) -> Optional[int]:
+    return None if len(l) == 0 else l[0]
+
+first([None])
+```
+
+
+---
+
+## 참고
+
+- https://docs.python.org/3/library/typing.html
+- https://blog.pingpong.us/python-in-pingpong/
+- https://stackoverflow.com/questions/49862318/run-mypy-on-all-python-files-of-a-project
+- https://docs.python.org/3/glossary.html#term-sequence
+- https://www.pythonsheets.com/notes/python-typing.html
+- https://lewisxyz000.tistory.com/35
