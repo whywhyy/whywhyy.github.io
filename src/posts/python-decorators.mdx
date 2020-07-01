@@ -1,0 +1,375 @@
+---
+publish: True
+title: "python decorators 에 대해 알아보자 (feat. args, kwargs)"
+date: "2020-06-29T13:59:00"
+url_path : "/blog/2020/06/29/title_name"
+thumbnailImage : ../images/python-decorators.jpg
+thumbnailImageUse : True
+description : ""
+tags : 
+    - python
+    - decorators
+    - args
+    - kwargs
+---
+
+## Decorator
+ 
+  Decorator 는 호출을 통해 해당 함수나 클래스를 수정하는 역할을 하며, 동일한 이름의 객체에 바인딩하여 return 한다. 
+
+  Decorator를 이용하여 class method, static method 생성, function에 attribute를 추가하기도 하고, pre- post condition 을 세팅 등 여러가지 방면에서 쓰인다.
+
+> A decorator is any callable Python object that is used to modify a function, method or class definition.
+>
+>  A decorator is passed the original object being defined and returns a modified object, which is then bound to the name in the definition.
+>
+> Canonical uses of function decorators are for creating class methods or static methods, adding function attributes, tracing, setting pre- and postconditions, and synchronization, but can be used for far more besides, including tail recursion elimination, memoization and even improving the writing of decorators.
+
+
+### @Decorator
+ 
+ 아래 코드를 보자.
+
+ @Decorator 은 내부의 first class function 기반으로 동작한다.
+
+ menu_item 을 인자로 받으며, 내부의 function 을 retrun 한다.
+ 
+
+```python
+def viking_chorus(myfunc):
+    def inner_func(*args, **kwargs):
+        for i in range(8):
+            myfunc(*args, **kwargs)
+    return inner_func
+
+@viking_chorus
+def menu_item():
+    print("spam")
+
+menu_item()
+# spam
+# spam
+# spam
+# spam
+# spam
+# spam
+# spam
+# spam
+```
+
+아래의 코드는 위의 decorator 와 동일하게 동작하는 코드이다.
+
+```python
+def viking_chorus(myfunc):
+    def inner_func(*args, **kwargs):
+        for i in range(8):
+            myfunc(*args, **kwargs)
+    return inner_func
+
+def menu_item():
+    print("spam")
+menu_item = viking_chorus(menu_item)
+
+menu_item()
+# spam
+# spam
+# spam
+# spam
+# spam
+# spam
+# spam
+# spam
+```
+
+#### 갑자기 args, kwargs
+
+  필수적인 argument 들은 function에서 선언하고, 추가적인 arguments 는 *변수명(args) 로 사용한다. 
+  
+  추가적인 arguments를 key-value 로 받는 경우, **변수명(kwargs) 로 받아 사용한다.
+
+```python
+def func(arg1,arg2,*args,**kwargs):
+    print(arg1,arg2)
+    # arg1 arg2
+
+    for i in args:
+        print(i)
+    # arg3
+    # arg4
+    # arg5
+   
+    for i in kwargs:
+        print(i,kwargs[i])
+    # key1 karg1
+    # key2 karg2
+
+func("arg1","arg2","arg3","arg4","arg5",key1="karg1",key2="karg2")
+```
+
+
+
+### 중첩 @Decorator
+ 
+  아래 코드들은 모두 동일한 코드이다. 제일 마지막에 invincible 이 실행되어 black_knight 에 바인딩 된다.
+  
+  따라서 black_knight() 실행시 invincible 이 가장 먼저 실행됨을 알 수 있으며, @Decorator 적용시 가장 위의 함수가 먼저 실행된다.
+  
+```python
+def black_knight():
+    pass
+black_knight = invincible(favourite_colour("Blue")(black_knight))
+```
+
+```py
+def black_knight():
+    pass
+blue_decorator = favourite_colour("Blue")
+decorated_by_blue = blue_decorator(black_knight)
+black_knight = invincible(decorated_by_blue)
+```
+
+```python
+@invincible
+@favourite_colour("Blue")
+def black_knight():
+    pass
+```
+
+ 이제 어떻게 구현되어 지는지 확인해 보자. 
+
+ 아래 코드를 보자.
+
+ - function 은 get_text의 name을 변수로 받기위해 decorator function 에서 계속적으로 name을 받는다.
+ 
+ - decorator 를 구현하기위해 아래의 decorator부터 수행됨을 확인할 수 있다.
+
+ - 마지막 출력에서 get_text 가 decorator에 의해 변경됨을 확인할 수 있다.
+
+
+ ```py
+
+def div_decorate(func):
+    def func_wrapper(name):
+        return "<div>{0}</div>".format(func(name))
+    return func_wrapper
+
+def p_decorate(func):
+    def func_wrapper(name):
+        return "<p>{0}</p>".format(func(name))
+    return func_wrapper
+
+def strong_decorate(func):
+    def func_wrapper(name):
+        return "<strong>{0}</strong>".format(func(name))
+    return func_wrapper
+
+# use decorator
+@div_decorate
+@p_decorate
+@strong_decorate
+def get_text(name):
+    return "lorem ipsum, {0} dolor sit amet".format(name)
+
+
+print (get_text("John"))
+# <div><p><strong>lorem ipsum, John dolor sit amet</strong></p></div>
+
+def pre_get_text(name):
+    return "lorem ipsum, {0} dolor sit amet".format(name)
+
+# use function
+st_func = strong_decorate(pre_get_text)
+p_st_func = p_decorate(st_func)
+div_p_st_func = div_decorate(p_st_func)
+print(div_p_st_func("John"))
+# <div><p><strong>lorem ipsum, John dolor sit amet</strong></p></div>
+
+
+# get_text 는 decorator에 의해 바뀜
+st_func=strong_decorate(get_text)
+p_st_func = p_decorate(st_func)
+div_p_st_func = div_decorate(p_st_func)
+print(div_p_st_func("John"))
+# <div><p><strong><div><p><strong>lorem ipsum, John dolor sit amet</strong></p></div></strong></p></div> 
+ ```
+
+ 위의 코드를 하나의 tags 로 functiond decorator로 구현하면 다음과 같다.
+
+ tags 에서 tag_name 을 변수로 받고, 기존 Decorator function 을 return 하여 사용한다.
+  
+
+ ```python
+def tags(tag_name):
+    def tags_decorator(func):
+        def func_wrapper(name):
+            return "<{0}>{1}</{0}>".format(tag_name, func(name))
+        return func_wrapper
+    return tags_decorator
+
+@tags("div")
+@tags("p")
+@tags("strong")
+def get_text(name):
+    """returns some text"""
+    return "Hello "+name
+
+print(get_text("John")) 
+# <div><p><strong>Hello John</strong></p></div>
+print(get_text.__name__) # func_wrapper
+print(get_text.__doc__) # None
+print(get_text.__module__) # __main__
+
+ ```
+
+  functools 의 wraps를 사용하면 Decorator로 싸여 기존 함수의 속성값들을 잃는 것을 방지할 수 있다.
+
+```py
+from functools import wraps
+
+def tags(tag_name):
+    def tags_decorator(func):
+        @wraps(func)
+        def func_wrapper(name):
+            return "<{0}>{1}</{0}>".format(tag_name, func(name))
+        return func_wrapper
+    return tags_decorator
+
+
+@tags("div")
+@tags("p")
+@tags("strong")
+def get_text(name):
+    """returns some text"""
+    return "Hello "+name
+
+
+print(get_text("John")) # <div><p><strong>Hello John</strong></p></div>
+print(get_text.__name__) # get_text
+print(get_text.__doc__) # returns some text
+print(get_text.__module__) # __main__
+
+```
+
+
+ 아래의 예제 trace 는 파라미터로 받은 함수를 바로 실행하는 코드이다.
+
+```python
+def trace(fn):
+	def wrapper():
+		print('\nbegin executing fn:', fn.__name__, '----')
+		fn()
+		print('-----end fn:', fn.__name__, '\n')
+	return wrapper
+
+def twice(fn):
+	def wrapper():
+		fn()
+		fn()
+	return wrapper
+
+@trace
+@twice
+def greet():
+	print('Hello World')
+
+
+greet()
+# begin executing fn: wrapper ----
+# Hello World
+# Hello World
+# -----end fn: wrapper
+
+```
+
+ 아래 예제는 클로저를 이용하여 multiplier(mul 의 a) 의 값을 설정하여 실행하는 코드이다. 
+
+```py
+
+def times(multiplier):
+    def wrapper1(fn):
+        def wrapper2(num):
+            return fn(multiplier, num)
+        return wrapper2
+    return wrapper1
+
+
+@times(5)
+def mul(a, b):
+    return a * b
+
+
+print(mul(10))  # Output: 50
+print(mul(20))  # Output: 100
+```
+
+ 아래 예제는 Class 기반 Decorator 를 구현한 코드이다.
+ 
+ fibonacci 함수가 선언될때 메모리 변수에 있는지 확인하여 return 한다.
+
+```py
+# class based decorator
+class Memoize:
+    def __init__(self, fn):
+        self.__mem = {}
+        self.__fn = fn
+
+    def __call__(self, *args):
+        if args not in self.__mem:
+            self.__mem[args] = self.__fn(*args)
+        return self.__mem[args]
+
+
+@Memoize
+def fibonacci(n):
+    if n in (0, 1):
+        return n
+    return fibonacci(n - 1) + fibonacci(n - 2)
+
+
+print('fibonacci 10', fibonacci(10))
+print('fibonacci 20', fibonacci(20))
+
+# Output
+# fibonacci 10 55
+# fibonacci 20 6765
+```
+
+ 아래 코드는 class 내부에서 decorator 를 사용하는 예제이다.
+
+```py
+def p_decorate(func):
+   def func_wrapper(*args, **kwargs):
+       return "<p>{0}</p>".format(func(*args, **kwargs))
+   return func_wrapper
+
+class Person(object):
+    def __init__(self):
+        self.name = "John"
+        self.family = "Doe"
+
+    @p_decorate
+    def get_fullname(self):
+        return self.name+" "+self.family
+
+my_person = Person()
+
+print(my_person.get_fullname())
+# <p>John Doe</p>
+
+```
+
+ Decorator 구현체를 가져다 쓴적은 있지만, 직접 만들어 쓴적이 없어 동작하는 방식에 대해 공부하는 시간을 가졌다.
+
+ 직접 코드를 짤때는 구현에 쫒겨 아쉬운 코드를 생산해 낼때가 많다.
+ 
+ 코드를 작성하며 단지 작성만 하는게 옳은지 고민이 필요한 시점이다.
+
+---
+
+## 참고
+
+ - https://en.wikipedia.org/wiki/Python_syntax_and_semantics#Decorators
+ - https://medium.com/@sumeetsarkar/python-decorators-part-2-b5b1f30b4c31
+ - https://medium.com/@sumeetsarkar/python-decorators-part-4-6ec988713791
+ - https://medium.com/sjk5766/%EB%B2%88%EC%97%AD-python%EC%9D%98-%ED%95%A8%EC%88%98-decorators-%EA%B0%80%EC%9D%B4%EB%93%9C-2cd9d5151a1d
+ - https://cjh5414.github.io/wraps-with-decorator/
