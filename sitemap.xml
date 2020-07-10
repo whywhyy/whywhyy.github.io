@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+<url> <loc>http://whywhyy.me/blog/2020/07/09/python-pipfile-을-사용해보자</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>http://whywhyy.me/blog/2020/06/29/title_name</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>http://whywhyy.me/blog/2020/06/29/python-first-class-function-에-대해-알아보자</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>http://whywhyy.me/blog/2020/06/25/python-type-hints-에-대해-알아보자</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
@@ -48,6 +49,9 @@
 <url> <loc>http://whywhyy.me/tags/kwargs/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>http://whywhyy.me/tags/markdown/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>http://whywhyy.me/tags/mdx/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>http://whywhyy.me/tags/pipenv/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>http://whywhyy.me/tags/pipfile/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>http://whywhyy.me/tags/pipfile-lock/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>http://whywhyy.me/tags/plugin/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>http://whywhyy.me/tags/prismjs/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>http://whywhyy.me/tags/property/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
@@ -56,6 +60,7 @@
 <url> <loc>http://whywhyy.me/tags/react/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>http://whywhyy.me/tags/reading-time/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>http://whywhyy.me/tags/remark/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
+<url> <loc>http://whywhyy.me/tags/requirements-txt/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>http://whywhyy.me/tags/responsive-iframe/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>http://whywhyy.me/tags/scope/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>http://whywhyy.me/tags/setter/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
@@ -75,10 +80,8 @@
 <url> <loc>http://whywhyy.me/tags/목차/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>http://whywhyy.me/tags/사이트-등록/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>http://whywhyy.me/tags/웹마스터/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>http://whywhyy.me/about-css-modules/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>http://whywhyy.me/about/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>http://whywhyy.me/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
-<url> <loc>http://whywhyy.me/my-file/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>http://whywhyy.me/projects/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>http://whywhyy.me/projects/tictactoe/game/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
 <url> <loc>http://whywhyy.me/projects/tictactoe/</loc> <changefreq>daily</changefreq> <priority>0.7</priority> </url>
