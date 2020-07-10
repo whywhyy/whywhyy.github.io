@@ -11,20 +11,23 @@ h3 {
   margin-top: 1.2rem;
   font-size: 1.2rem;
 }
+h4 {
+  margin-top: 1rem;
+}
 a {
   color: "black";
   text-shadow: "none";
   text-decoration: "none";
-  font-size: 1.15rem;
+
   font-family: 'Nanum Gothic';
 }
 a:-webkit-any-link {
   color: #7D7D7D;
   text-decoration: "none";
-  font-size: 1.15rem;
+
 }
 ul {
-  font-size: 1.2rem;
+  font-size: 1.1rem;
 }
 span.weblink:hover{
   background-color: #2a9df4;

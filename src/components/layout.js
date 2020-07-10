@@ -11,9 +11,9 @@ import { makeStyles } from '@material-ui/core/styles';
 
 import Hidden from '@material-ui/core/Hidden';
 import Grid from '@material-ui/core/Grid';
-import Avatar from '@material-ui/core/Avatar';
+
 import Card from '@material-ui/core/Card';
-import CardHeader from '@material-ui/core/CardHeader';
+
 
 
 import { createMuiTheme, responsiveFontSizes, ThemeProvider } from '@material-ui/core/styles';
@@ -119,18 +119,7 @@ export default function Layout({ children }) {
         <Hidden mdDown>
           <Grid item lg={3} className={classes.grid}>
             <Card className={classes.root_R}>
-            <CardHeader
-              avatar={
-                <Avatar aria-label="profile" 
-                className={classes.avatar} 
-                alt="profile" 
-                src={data.file.childImageSharp.fluid.srcWebp} 
-                />
-              }
-              titleTypographyProps={{variant:'subtitle1'}}
-              title={data.site.siteMetadata.pro_title}
-              subheader = {data.site.siteMetadata.pro_subheader}
-            />
+
             </Card>
           </Grid>
         </Hidden>

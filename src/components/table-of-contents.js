@@ -72,6 +72,7 @@ function TableOfContents({ items }) {
       listStyleType: 'none',
       margin: '0 0 10 0',
       padding: 0,
+      fontSize: '1rem',
       paddingInlineStart: '.5rem',
       marginBlockStart: '.3rem',
       marginBlockEnd:'.3rem',
