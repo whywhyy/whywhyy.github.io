@@ -1,0 +1,1 @@
+{"componentChunkName":"component---src-templates-tags-js","path":"/tags/fetch/","result":{"data":{"allMdx":{"totalCount":1,"edges":[{"node":{"frontmatter":{"title":"CORS 와 SOP 란 무엇인가","url_path":"/blog/2020/07/18/CORS-와-SOP-란-무엇인가","tags":["CORS","SOP","ajax","fetch"],"date":"2020-07-18T13:21:00"},"fields":{"readingTime":{"text":"5 min read"}}}}]}},"pageContext":{"tag":"fetch"}}}
