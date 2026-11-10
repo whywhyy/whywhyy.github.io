@@ -21,5 +21,5 @@ description: 김강산 — 탐색하고 적용하는 개발자
 ### 링크
 
 - GitHub — [@whywhyy](https://github.com/whywhyy)
-- LinkedIn — [kangsan-kim](https://www.linkedin.com/in/kangsan-kim-035399154/)
+- LinkedIn — [kangsan-kim](https://www.linkedin.com/in/kangsan-kim-01-ln)
 - BOJ — [whywhy](https://www.acmicpc.net/user/whywhy)

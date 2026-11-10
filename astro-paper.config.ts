@@ -30,6 +30,10 @@ export default defineAstroPaperConfig({
   },
   socials: [
     { name: "github", url: "https://github.com/whywhyy" },
+    {
+      name: "linkedin",
+      url: "https://www.linkedin.com/in/kangsan-kim-01-ln",
+    },
     { name: "mail", url: "mailto:whywhyy@users.noreply.github.com" },
   ],
   shareLinks: [
