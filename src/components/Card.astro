@@ -3,12 +3,13 @@ import type { CollectionEntry } from "astro:content";
 import { getPostUrl } from "@/utils/getPostPaths";
 import { toTransitionName } from "@/utils/toTransitionName";
 import Datetime from "./Datetime.astro";
+import { getReadingTime } from "@/utils/readingTime";
 
 type Props = {
   variant?: "h2" | "h3";
 } & CollectionEntry<"posts">;
 
-const { variant: Heading = "h2", id, data, filePath } = Astro.props;
+const { variant: Heading = "h2", id, data, filePath, body } = Astro.props;
 
 const { title, description, thumbnail, ...props } = data;
 
@@ -16,6 +17,7 @@ const thumbSrc =
   typeof thumbnail === "string" ? thumbnail : thumbnail?.src ?? undefined;
 
 const postUrl = getPostUrl(id, filePath, Astro.currentLocale);
+const readingTime = getReadingTime(body ?? "");
 ---
 
 <li class="my-6">
@@ -42,6 +44,7 @@ const postUrl = getPostUrl(id, filePath, Astro.currentLocale);
         {title}
       </Heading>
       <Datetime {...props} />
+      <p class="text-muted-foreground mt-0.5 text-sm">{readingTime} min read</p>
       <p class="mt-1">{description}</p>
     </div>
   </a>

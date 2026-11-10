@@ -1,0 +1,92 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Header from "@/components/Header.astro";
+import Breadcrumb from "@/components/Breadcrumb.astro";
+import Footer from "@/components/Footer.astro";
+import config from "@/config";
+
+/**
+ * 프로젝트 목록.
+ * 새 프로젝트는 아래 배열에 항목만 추가하면 됩니다.
+ * (title, description, href, tags, year)
+ */
+const projects = [
+  {
+    title: "tictactoe",
+    description: "리액트로 만든 틱택토 미니게임 (예전 /projects/tictactoe)",
+    href: "https://github.com/whywhyy/whywhyy.github.io/tree/code/src/pages/projects/tictactoe",
+    tags: ["React", "game"],
+    year: "2020",
+  },
+  {
+    title: "study-log",
+    description: "스터디 기록 저장소. 읽은 책과 정리한 내용을 모아둡니다.",
+    href: "https://github.com/st-study-group/study-log",
+    tags: ["study"],
+    year: "2022–",
+  },
+  {
+    title: "hackatalk",
+    description: "위핵 프로젝트 오픈소스 기여 (PR #501)",
+    href: "https://github.com/hyochan/hackatalk/pull/501",
+    tags: ["open source"],
+    year: "2021",
+  },
+];
+
+const title = "프로젝트";
+const description = "진행했던 프로젝트 모음";
+---
+
+<Layout title={`${title} | ${config.site.title}`} description={description}>
+  <Header />
+
+  <main id="main-content" class="app-layout">
+    <Breadcrumb />
+
+    <h1 class="text-accent mb-6 inline-block text-2xl font-bold sm:text-3xl">
+      {title}
+    </h1>
+
+    <ul class="space-y-6">
+      {
+        projects.map(p => (
+          <li class="border-border rounded-lg border p-4">
+            <div class="flex flex-wrap items-baseline justify-between gap-2">
+              <a
+                href={p.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-accent text-lg font-medium decoration-dashed underline-offset-4 hover:underline"
+              >
+                {p.title}
+              </a>
+              <span class="text-muted-foreground text-sm">{p.year}</span>
+            </div>
+            <p class="mt-1">{p.description}</p>
+            {p.tags.length > 0 && (
+              <p class="text-muted-foreground mt-2 text-sm">
+                {p.tags.join(" · ")}
+              </p>
+            )}
+          </li>
+        ))
+      }
+    </ul>
+
+    <p class="text-muted-foreground mt-8 text-sm">
+      더 많은 작업물은{" "}
+      <a
+        href="https://github.com/whywhyy"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="text-accent decoration-dashed underline-offset-4 hover:underline"
+      >
+        GitHub
+      </a>
+      에서 볼 수 있습니다.
+    </p>
+  </main>
+
+  <Footer />
+</Layout>

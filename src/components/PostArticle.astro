@@ -1,0 +1,145 @@
+---
+/**
+ * Shared article body used by both post routes:
+ *   /posts/<slug>/          (canonical Astro route)
+ *   /blog/<legacy-path>/    (URL-compatibility route)
+ *
+ * Keeping the markup here means a design change lands in both routes at once.
+ */
+import type { CollectionEntry } from "astro:content";
+import { render } from "astro:content";
+import Header from "@/components/Header.astro";
+import Footer from "@/components/Footer.astro";
+import Datetime from "@/components/Datetime.astro";
+import Tag from "@/components/Tag.astro";
+import PostToc from "@/pages/posts/[...slug]/_components/PostToc.astro";
+import EditPost from "@/pages/posts/[...slug]/_components/EditPost.astro";
+import ShareLinks from "@/pages/posts/[...slug]/_components/ShareLinks.astro";
+import BackButton from "@/pages/posts/[...slug]/_components/BackButton.astro";
+import BackToTopButton from "@/pages/posts/[...slug]/_components/BackToTopButton.astro";
+import AdjacentPostNav from "@/pages/posts/[...slug]/_components/AdjacentPostNav.astro";
+import ImageLightbox from "@/components/ImageLightbox.astro";
+import { slugifyStr } from "@/utils/slugify";
+import { toTransitionName } from "@/utils/toTransitionName";
+import { getReadingTime } from "@/utils/readingTime";
+import config from "@/config";
+
+type AdjacentPost = {
+  id: string;
+  title: string;
+  filePath: string | undefined;
+} | null;
+
+type Props = {
+  post: CollectionEntry<"posts">;
+  prevPost: AdjacentPost;
+  nextPost: AdjacentPost;
+};
+
+const { post, prevPost, nextPost } = Astro.props;
+const {
+  title,
+  thumbnail,
+  pubDatetime,
+  modDatetime,
+  timezone,
+  tags,
+  hideEditPost,
+  hideToc,
+} = post.data;
+
+const { Content, headings } = await render(post);
+const tocHeadings = config.features.toc && !hideToc ? headings : [];
+const readingTime = getReadingTime(post.body ?? "");
+
+const thumbUrl =
+  typeof thumbnail === "string" ? thumbnail : thumbnail?.src ?? undefined;
+---
+
+<Header />
+
+<BackButton />
+
+<main
+  id="main-content"
+  class:list={["app-layout", { "mt-8": !config.features.showBackButton }]}
+  data-pagefind-body
+>
+  <h1
+    style={{ viewTransitionName: toTransitionName(post.id) }}
+    class="text-accent inline-block text-2xl font-bold sm:text-3xl"
+  >
+    {title}
+  </h1>
+
+  <div class="my-2 flex flex-wrap items-center gap-2">
+    <Datetime {pubDatetime} {modDatetime} {timezone} size="lg" />
+    <span class="text-muted-foreground text-sm">{readingTime} min read</span>
+    <span
+      aria-hidden="true"
+      class:list={[
+        "text-muted-foreground max-sm:hidden",
+        { hidden: !config.features.editPost?.enabled || hideEditPost },
+      ]}
+    >
+      |
+    </span>
+    <EditPost {hideEditPost} {post} class="max-sm:hidden" />
+  </div>
+
+  {
+    tags && tags.length > 0 && (
+      <ul class="mt-2 mb-4 flex flex-wrap gap-2">
+        {tags.map(tag => (
+          <li class="inline-block">
+            <Tag tag={slugifyStr(tag)} tagName={tag} size="sm" />
+          </li>
+        ))}
+      </ul>
+    )
+  }
+
+  <div class="post-body mt-8">
+    {
+      thumbUrl && (
+        <img
+          src={thumbUrl}
+          alt=""
+          class="border-border mb-8 w-full rounded-lg border object-cover"
+          loading="eager"
+          decoding="async"
+        />
+      )
+    }
+    <PostToc headings={tocHeadings} />
+    <article
+      id="article"
+      class:list={[
+        "w-full",
+        "app-prose max-w-app",
+        "prose-pre:bg-(--shiki-light-bg) dark:prose-pre:bg-(--shiki-dark-bg)",
+      ]}
+    >
+      <Content />
+    </article>
+  </div>
+
+  <hr class="my-8 border-dashed" />
+
+  <BackToTopButton headings={tocHeadings} />
+
+  <div class="sm:my-8 sm:flex sm:items-start sm:justify-between sm:gap-8">
+    <div class="mt-4 mb-8 flex items-start justify-between gap-4 sm:my-0">
+      <EditPost class="flex-none sm:hidden" {hideEditPost} {post} />
+    </div>
+    <ShareLinks />
+  </div>
+
+  <hr class="my-8 border-dashed" />
+
+  <AdjacentPostNav {prevPost} {nextPost} />
+</main>
+
+<Footer />
+
+<ImageLightbox />
