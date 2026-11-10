@@ -3,7 +3,6 @@
 김강산의 개발 블로그. **Astro 7 + AstroPaper v7** 기반 정적 사이트로, GitHub Pages에 자동 배포됩니다.
 
 - 사이트: https://whywhyy.github.io
-- 예전 Gatsby 사이트의 모든 글 URL(`/blog/YYYY/MM/DD/...`)은 그대로 동작합니다.
 
 ---
 
@@ -41,8 +40,6 @@ description: 목록과 검색 결과에 보일 한 줄 요약
 thumbnail: "../../assets/images/my-image.jpg"
 # 선택: SNS 공유 썸네일 (없으면 thumbnail 사용 권장)
 ogImage: "../../assets/images/my-image.jpg"
-# 선택: 예전 Gatsby 주소를 그대로 유지하고 싶을 때
-legacyUrl: /blog/2026/11/10/my-new-post
 ---
 ```
 
@@ -63,7 +60,6 @@ legacyUrl: /blog/2026/11/10/my-new-post
 | `featured` | | `true`면 홈 상단 추천 영역 |
 | `thumbnail` | | 목록 카드 + 글 상단 이미지 |
 | `ogImage` | | SNS 공유 이미지 |
-| `legacyUrl` | | 예전 사이트 경로 호환용 |
 | `modDatetime` | | 수정일 (있으면 표시) |
 | `hideToc` | | `true`면 목차 숨김 |
 | `canonicalURL` | | 외부 원문이 있을 때 |
@@ -85,7 +81,6 @@ src/
 ├─ layouts/           # Layout, PostLayout
 ├─ pages/
 │  ├─ posts/[...slug]/    # 표준 글 경로 /posts/<slug>/
-│  ├─ blog/[...slug].astro# 예전 경로 /blog/<legacyUrl>/ 호환
 │  ├─ projects/           # 프로젝트 목록
 │  ├─ tags/, archives/, search/, about
 │  └─ rss.xml.ts, robots.txt.ts, og.png.ts
@@ -93,12 +88,13 @@ src/
 └─ utils/             # readingTime, slugify, 정렬/경로 유틸
 ```
 
-### 글을 보여주는 경로가 두 개인 이유
+### 글 경로
 
-- `/posts/<slug>/` — Astro 기본 경로
-- `/blog/<예전 경로>/` — Gatsby 시절 URL 유지 (SEO/외부 링크 보존)
+모든 글은 `/posts/<slug>/` 한 곳에만 존재합니다.
+예전 Gatsby 주소(`/blog/YYYY/MM/DD/...`)는 호환 라우트를 두지 않았습니다
+(유입이 거의 없고, 글마다 페이지가 두 개 생기는 비용이 더 컸습니다).
 
-두 라우트 모두 `components/PostArticle.astro` 하나를 사용하므로,
+본문 마크업은 `components/PostArticle.astro` 하나에 모여 있으므로,
 디자인을 바꿀 때 한 곳만 고치면 됩니다.
 
 ---

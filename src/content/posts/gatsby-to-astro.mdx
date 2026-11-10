@@ -11,7 +11,6 @@ tags:
 description: "2020년에 만든 Gatsby 블로그를 Astro로 옮겼습니다. arm64에서 터진 네이티브 모듈, 조용히 사라진 글 한 편, 그리고 마지막 배포 벽까지 — 실제로 겪은 순서대로 정리했습니다."
 thumbnail: "../../assets/images/blog-migration.png"
 ogImage: "../../assets/images/blog-migration.png"
-legacyUrl: /blog/2026/11/10/gatsby-to-astro
 ---
 
 이 글은 AI 에이전트가 작성했습니다. 앞으로도 이 블로그의 글은 대부분 AI가 쓰고, 사람은 방향을 정하고 결과를 검수한 뒤 게시하게 될 것 같다.
@@ -165,45 +164,24 @@ AstroPaper는 `pubDatetime`, `draft`, `ogImage`를 씁니다. 매핑은 이렇�
 | `date` | `pubDatetime` | 날짜 형식 유지 |
 | `publish: False` | `draft: true` | 빌드에서 제외 |
 | `thumbnailImageUse: True` | `thumbnail` | 카드/상단 이미지 |
-| `url_path` | `legacyUrl` | 기존 URL 보존용 |
+| `url_path` | (사용 안 함) | 예전 URL은 유지하지 않음 |
 | `description` | `description` | 그대로 |
 
 글 19개(발행 17 + 초안 2), 이미지 42개를 스크립트로 한 번에 옮겼습니다.
 손으로 했다면 frontmatter에서 실수가 나왔을 겁니다.
 
-### 2. 기존 URL을 살려야 한다
+### 2. 기존 URL은 포기했다
 
-10년치 링크가 걸린 주소를 바꾸면 검색 유입이 끊깁니다.
-그래서 이전한 글마다 예전 주소를 `legacyUrl`로 남기고,
-그 주소를 그대로 렌더하는 라우트를 하나 추가했습니다.
+처음에는 이전한 글마다 예전 주소(`/blog/YYYY/MM/DD/...`)를 `legacyUrl`로 남기고,
+그 주소를 그대로 렌더하는 호환 라우트를 하나 더 만들었습니다.
+글 하나가 두 주소에서 열리도록 하는 방식이었습니다.
 
-```astro
-// src/pages/blog/[...slug].astro
-export async function getStaticPaths() {
-  const prefix = "/blog/";
-  const posts = await getCollection("posts");
-  const sortedPosts = getSortedPosts(posts);
+동작은 했지만, 다시 생각해보니 예전 주소로 들어오는 유입이 거의 없었습니다.
+호환 라우트를 유지하면 글마다 페이지가 두 개씩 생기고, 그만큼 빌드 시간과
+관리할 지점이 늘어납니다. 얻는 것보다 잃는 게 크다고 판단해서 걷어냈습니다.
 
-  return sortedPosts
-    .map((post, index) => {
-      const legacyUrl = post.data.legacyUrl;
-      if (!legacyUrl?.startsWith(prefix)) return null;
-
-      const slug = legacyUrl.slice(prefix.length).replace(/\/+$/, "");
-      if (!slug) return null;
-
-      return { params: { slug }, props: { post, canonicalPath: legacyUrl } };
-    })
-    .filter(Boolean);
-}
-```
-
-결과적으로 글 하나가 **두 주소**에서 열립니다.
-
-- `/posts/<slug>/` — Astro 기본 경로
-- `/blog/<예전 경로>/` — 기존 링크 호환
-
-그리고 두 라우트는 같은 컴포넌트를 씁니다. 이 부분은 뒤에서 다시 다룹니다.
+지금은 모든 글이 `/posts/<slug>/` 한 곳에만 존재합니다.
+주소를 하나로 유지하는 편이 훨씬 단순합니다.
 
 ### 3. MDX가 중괄호를 삼킨다
 
@@ -248,7 +226,7 @@ title_name.mdx  ← 작성 중이던 초안 템플릿이 덮어씀
 > 이전 작업에서 **파일 개수와 페이지 개수를 반드시 대조**해야 한다.
 
 지금은 초안 템플릿의 이름을 바꾸고, 그 글을 원본에서 복구해
-`/posts/python-decorators/`와 `/blog/2020/06/29/title_name/` 양쪽에서 열립니다.
+`/posts/python-decorators/`에서 정상적으로 열립니다.
 
 ### 5. 썸네일이 사라진 이유
 
@@ -265,7 +243,7 @@ title_name.mdx  ← 작성 중이던 초안 템플릿이 덮어씀
 ```
 수정 전
   pages/posts/[...slug]/index.astro   673줄  (마크업 + 라이트박스 스크립트)
-  pages/blog/[...slug].astro          191줄  (거의 같은 마크업 복사)
+  pages/blog/[...slug].astro          191줄  (거의 같은 마크업 복사, 이후 삭제)
 ```
 
 한쪽만 고치면 다른 쪽이 어긋나는 구조입니다.
@@ -276,7 +254,6 @@ title_name.mdx  ← 작성 중이던 초안 템플릿이 덮어씀
   components/PostArticle.astro        글 본문 (제목·메타·태그·목차·썸네일·공유)
   components/ImageLightbox.astro      이미지 확대 + 읽기 진행바
   pages/posts/[...slug]/index.astro    60줄
-  pages/blog/[...slug].astro           75줄
 ```
 
 이제 디자인을 바꾸면 `PostArticle.astro` 한 곳만 고치면 됩니다.
