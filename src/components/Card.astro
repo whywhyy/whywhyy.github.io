@@ -1,0 +1,51 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { getPostUrl } from "@/utils/getPostPaths";
+import { toTransitionName } from "@/utils/toTransitionName";
+import Datetime from "./Datetime.astro";
+import { getReadingTime } from "@/utils/readingTime";
+
+type Props = {
+  variant?: "h2" | "h3";
+} & CollectionEntry<"posts">;
+
+const { variant: Heading = "h2", id, data, filePath, body } = Astro.props;
+
+const { title, description, thumbnail, ...props } = data;
+
+const thumbSrc =
+  typeof thumbnail === "string" ? thumbnail : thumbnail?.src ?? undefined;
+
+const postUrl = getPostUrl(id, filePath, Astro.currentLocale);
+const readingTime = getReadingTime(body ?? "");
+---
+
+<li class="my-6">
+  <a
+    href={postUrl}
+    class="group flex flex-col gap-3 no-underline sm:flex-row sm:items-start sm:gap-4"
+  >
+    {
+      thumbSrc && (
+        <img
+          src={thumbSrc}
+          alt=""
+          loading="lazy"
+          decoding="async"
+          class="border-border h-32 w-full rounded-md border object-cover sm:h-24 sm:w-36 sm:shrink-0"
+        />
+      )
+    }
+    <div class="min-w-0 flex-1">
+      <Heading
+        transition:name={toTransitionName(id)}
+        class="text-accent inline-block text-lg font-medium decoration-dashed underline-offset-4 group-hover:underline"
+      >
+        {title}
+      </Heading>
+      <Datetime {...props} />
+      <p class="text-muted-foreground mt-0.5 text-sm">{readingTime} min read</p>
+      <p class="mt-1">{description}</p>
+    </div>
+  </a>
+</li>
