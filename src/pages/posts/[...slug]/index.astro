@@ -66,6 +66,7 @@ const {
   title,
   description,
   ogImage: initOgImage,
+  thumbnail: initThumbnail,
   canonicalURL,
   pubDatetime,
   modDatetime,
@@ -97,6 +98,11 @@ if (!ogImageUrl && config.features.dynamicOgImage) {
 const ogImage = ogImageUrl
   ? new URL(ogImageUrl, Astro.url.origin).href
   : undefined;
+
+const thumbUrl =
+  typeof initThumbnail === "string"
+    ? initThumbnail
+    : initThumbnail?.src ?? undefined;
 ---
 
 <PostLayout
@@ -138,6 +144,17 @@ const ogImage = ogImageUrl
     </div>
 
     <div class="post-body mt-8">
+      {
+        thumbUrl && (
+          <img
+            src={thumbUrl}
+            alt=""
+            class="border-border mb-8 w-full rounded-lg border object-cover"
+            loading="eager"
+            decoding="async"
+          />
+        )
+      }
       <PostToc headings={tocHeadings} />
       <article
         id="article"
