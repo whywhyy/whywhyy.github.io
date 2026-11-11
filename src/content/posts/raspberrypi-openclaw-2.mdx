@@ -1,0 +1,67 @@
+---
+title: "굴러다니는 라즈베리파이 오픈클로 구성하기 (2) — 아키텍처 논의해보자"
+pubDatetime: 2026-11-11T18:55:00+09:00
+featured: false
+tags:
+  - openclaw
+  - raspberrypi
+  - tailscale
+  - architecture
+  - self-hosted
+description: "설치 전에 정해야 할 것들. 외부 접속은 Tailscale, 클라이언트는 앱, 모델은 OpenRouter 경유 DeepSeek으로 정했습니다."
+---
+
+설치부터 하기 전에, 어떻게 굴릴지부터 정했다. 정할 건 세 가지였다.
+
+- 외부에서 어떻게 접속할 것인가
+- 무엇으로 대화할 것인가
+- 어떤 모델을 쓸 것인가
+
+## 네트워크: Tailscale
+
+라즈베리파이는 24시간 홈 네트워크에 물려 있을 예정이다. 문제는 밖에서 쓸 때다.
+
+가장 먼저 떠오르는 건 공인 IP와 포트포워딩이지만, 집 네트워크를 인터넷에 직접 노출하는 셈이라 관리 부담이 크다. 인증도 직접 붙여야 하고, 뭘 잘못 열어두면 그대로 위험이 된다.
+
+그래서 **Tailscale**을 쓰기로 했다. 요즘 서비스가 잘 나와서 VPN 망을 몇 분 만에 만들 수 있다. 기기 추가도 각 기기에서 계정 로그인 한 번이면 끝이다.
+
+OpenClaw 문서에도 Tailscale 구성 가이드가 잘 정리돼 있다. HTTPS URL을 붙이는 방법까지 나와 있어서, 모바일 앱이나 웹에서 접속할 때 그대로 참고하면 된다.
+
+## 클라이언트: OpenClaw 앱
+
+플레이스토어에 OpenClaw 앱이 있다는 걸 알았다. 이걸로 모바일에서 쓰려고 한다.
+
+텔레그램, 슬랙, 디스코드에 챗봇으로 붙이는 유즈케이스도 많다. 그쪽이 익숙하고 자동화도 잘 되지만, 지금은 채널을 하나 더 관리하는 것보다 앱 하나로 끝나는 쪽이 낫다고 판단했다.
+
+## 모델: OpenRouter 경유 DeepSeek
+
+가성비 모델을 찾으려고 OpenRouter를 뒤져봤다. **DeepSeek이 매우 싸고 성능도 좋다.**
+
+DeepSeek에 직접 계정을 만들고 카드를 등록할 수도 있지만, 두 가지 이유로 OpenRouter를 경유하기로 했다.
+
+- 카드 등록이 번거롭고, 모델을 바꿀 가능성도 있다
+- 여러 벤더를 키 하나로 갈아끼울 수 있다
+
+대신 감수하는 것도 있다.
+
+- DeepSeek는 데이터 처리 쪽이 신경 쓰이는 모델이라 **민감한 정보는 넣지 않는다**
+- OpenRouter의 약관이나 보안을 좋게 보지 않는 시각도 있어서, 같은 이유로 민감정보는 제외한다
+- 중간 벤더가 붙으니 비용이 조금 더 들지만, 애초에 싼 모델이라 크게 문제되지 않는다
+
+최종 선택은 **DeepSeek-V4.1-Flash-1017 (via OpenRouter)**.
+
+## 정리
+
+| 항목 | 선택 |
+| --- | --- |
+| 네트워크 | Tailscale VPN |
+| 클라이언트 | OpenClaw 앱 (모바일) |
+| 모델 | DeepSeek-V4.1-Flash-1017 (OpenRouter 경유) |
+
+이제 설치할 준비가 됐다. 다음 편에서 실제로 올려본다.
+
+## 참조
+
+- [OpenClaw — Tailscale 구성](https://docs.openclaw.ai/gateway/tailscale)
+- [OpenClaw — Stable HTTPS URL](https://docs.openclaw.ai/gateway/stable-https-url)
+- [OpenRouter](https://openrouter.ai)
