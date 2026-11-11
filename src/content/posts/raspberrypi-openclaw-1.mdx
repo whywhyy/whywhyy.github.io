@@ -51,7 +51,15 @@ Pi Connect도 항상 매끄럽지는 않아서, 가끔은 SSH를 같이 썼다. 
 
 단서는 재부팅 직전에 1~2초 뜨는 메시지였다. Pi Connect 설정을 하라는 안내였는데, 그 몇 초를 놓치면 남는 게 없다. 메시지를 못 보고 한참을 헤맸다.
 
-그 뒤로는 긴 작업을 Pi Connect 세션에 그대로 걸지 않는다. SSH로 붙이거나, 세션이 끊겨도 살아남는 방식으로 돌린다.
+해결은 **linger** 설정이었다. 계정에 lingering을 켜두면 로그아웃하거나 세션이 끊겨도 사용자 서비스가 계속 살아 있다. 이걸 켜고 나서는 업데이트가 세션과 함께 죽는 일이 없어졌다.
+
+```bash
+sudo loginctl enable-linger "$(whoami)"
+```
+
+[Pi Connect 문서 — Raspberry Pi](https://www.raspberrypi.com/documentation/services/connect.html)
+
+참고로 OpenClaw 문서도 headless Pi에서 같은 설정을 권한다. 게이트웨이를 사용자 서비스로 돌리는데, 로그아웃했다고 서비스가 죽으면 안 되니까.
 
 ## 공식 문서를 안 읽어서 생긴 삽질
 
