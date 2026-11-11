@@ -1,9 +1,11 @@
 name: Deploy to GitHub Pages
 
 on:
+  # Deploy only from the integration branch that the github-pages
+  # environment allows. Feature branches (e.g. astro) must not trigger this
+  # workflow — their deploys are rejected by the environment rule.
   push:
     branches:
-      - astro
       - code
       - main
   workflow_dispatch:
