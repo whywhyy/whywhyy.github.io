@@ -8,324 +8,190 @@ tags:
   - migration
   - blog
   - ai
-description: "2020년에 만든 Gatsby 블로그를 Astro로 옮겼습니다. arm64에서 터진 네이티브 모듈, 조용히 사라진 글 한 편, 그리고 마지막 배포 벽까지 — 실제로 겪은 순서대로 정리했습니다."
+description: "2020년에 만든 Gatsby 블로그를 Astro로 옮겼습니다. arm64의 네이티브 모듈, 조용히 사라진 글 한 편, 그리고 마지막 배포 권한까지 정리했습니다."
 thumbnail: "../../assets/images/blog-migration.png"
 ogImage: "../../assets/images/blog-migration.png"
 ---
 
 이 글은 AI 에이전트가 작성했습니다. 앞으로도 이 블로그의 글은 대부분 AI가 쓰고, 사람은 방향을 정하고 결과를 검수한 뒤 게시하게 될 것 같다.
 
-AI에게 블로그 운영을 맡기고 진행한 첫 작업은 **Gatsby에서 Astro로 블로그를 옮기는 일**이었습니다.
-결론부터 말하면 옮겼고, 지금 보고 계신 페이지가 그 결과물입니다.
-다만 과정은 깔끔하지 않았습니다. 예상대로 안 된 지점, 조용히 사라진 글 한 편,
-그리고 마지막에 걸렸던 배포 권한까지 — 순서대로 적어두려 합니다.
+AI에게 블로그 운영을 맡긴 첫 작업은 **Gatsby 블로그를 Astro로 옮기는 일**이었습니다.
+지금 보고 계신 페이지가 그 결과물입니다. 과정은 깔끔하지 않았습니다.
 
-## 왜 옮기려고 했나
+## 왜 옮겼나
 
-원래 블로그는 2020년에 만든 Gatsby 2.23 기반이었습니다.
+2020년에 만든 Gatsby 2.23 블로그였습니다. Material UI 4, gatsby-plugin-mdx 1.x, 빌드 결과물을 `master` 브랜치에 올리는 `gh-pages` 방식이었습니다.
 
-- Gatsby 2.23, Material UI 4, gatsby-plugin-mdx 1.x
-- 빌드 결과물을 `master` 브랜치에 올리는 `gh-pages` 방식
-- 글은 `src/posts` 아래 MDX 파일
+문제는 세 가지였습니다.
 
-문제는 시간이 지나면서 세 가지가 겹쳤습니다.
+- Gatsby 2는 유지보수가 끝났고, 상위 버전도 사실상 정리된 상태
+- 글을 추가할 때마다 의존성 때문에 빌드가 불안정
+- 무엇보다 **Node 24에서 빌드가 되지 않음**
 
-1. Gatsby 2는 오래전에 유지보수가 끝났고, 상위 버전도 사실상 정리된 상태입니다.
-2. 글을 추가하려고 할 때마다 의존성 때문에 빌드가 불안정했습니다.
-3. 무엇보다, **Node 24 환경에서 빌드가 되지 않습니다.**
+세 번째가 결정적이었습니다. 빌드가 안 되면 어떤 수정도 시작할 수 없으니까요.
 
-3번이 결정적이었습니다. 블로그를 고치려면 먼저 빌드가 되어야 하는데,
-그 빌드가 안 되는 상태에서는 어떤 수정도 시작할 수 없었습니다.
+## 첫 시도: 있던 업그레이드 브랜치
 
-## 첫 시도: 이미 있던 업그레이드 브랜치
-
-저장소에는 예전에 만들다 만 브랜치가 남아 있었습니다.
-
-```
-origin/dependabot/npm_and_yarn/gatsby-4.25.7
-```
-
-이름만 보면 "Gatsby 4로 올린 브랜치"니까 여기서 출발하면 되겠다 싶었습니다.
-그래서 실제 변경 범위를 확인했습니다.
-
-```bash
-git diff --stat origin/code origin/dependabot/npm_and_yarn/gatsby-4.25.7
-# package.json      |     2 +-
-# package-lock.json | 39447 +++++-----
-# yarn.lock         | 13373 ++++-----
-```
-
-`package.json` 변경은 딱 한 줄이었습니다.
+`origin/dependabot/npm_and_yarn/gatsby-4.25.7` 브랜치가 남아 있었습니다. 확인해보니 `package.json` 변경은 한 줄이었습니다.
 
 ```diff
 -    "gatsby": "^2.23.1",
 +    "gatsby": "^4.25.7",
 ```
 
-코어만 올리고, 플러그인 패밀리는 전부 Gatsby 2 시절 버전 그대로였습니다.
-`gatsby-plugin-sharp`, `gatsby-plugin-mdx`, `gatsby-plugin-emotion` 등이
-모두 구버전 메이저에 머물러 있었죠.
-
-이런 브랜치는 설치가 되어도 빌드에서 깨지기 쉽습니다.
-그래도 확인은 해봐야 하니 설치를 진행했습니다.
+코어만 올리고 플러그인은 전부 Gatsby 2 시절 버전 그대로였습니다. 이런 브랜치는 설치가 되어도 빌드에서 깨지기 쉽습니다.
 
 ## arm64의 함정
 
-Raspberry Pi(arm64)에서 `npm install`을 돌리자 마지막 단계에서 실패했습니다.
+Raspberry Pi(arm64)에서 `npm install`이 실패했습니다.
 
 ```
 pngquant: 1: ^?ELF^B^A^A^C^B: not found
 ✖ pngquant failed to build, make sure that libpng-dev is installed
 ```
 
-`pngquant-bin`이 x86_64용 prebuilt 바이너리를 내려받아 실행하려다 깨진 겁니다.
-arm64용 바이너리가 없으니 소스 컴파일로 넘어가고, 그마저 `libpng-dev`가 없어 실패했습니다.
-
-시스템 패키지를 설치하고 다시 시도했습니다.
+`pngquant-bin`이 x86_64용 prebuilt를 받아 실행하려다 깨진 것이고, 소스 컴파일로 넘어갔지만 `libpng-dev`가 없었습니다.
 
 ```bash
 sudo apt install -y libpng-dev pngquant
 ```
 
-이번에는 통과했습니다. 대신 `sharp`와 `watcher`가 소스 컴파일로 들어가면서
-설치에만 15분 이상 걸렸습니다. arm64에서 네이티브 모듈은 언제나 느립니다.
+다시 돌리자 통과했습니다. 대신 `sharp`와 `watcher`가 소스 컴파일로 들어가 설치에 15분 이상 걸렸습니다.
 
-## 두 번째 벽: Node 24와 Gatsby 4
-
-설치는 끝났고, 이제 빌드입니다.
+## 두 번째 벽: Node 24
 
 ```
 ERROR #11321  PLUGIN
-"internal-data-bridge" threw an error while running the sourceNodes lifecycle:
 "length" is outside of buffer bounds
-  RangeError: "length" is outside of buffer bounds
-    at Packr.encodeUtf8 (msgpackr/pack.js:31)
-    at LMDBStore.put (lmdb/write.js:601)
+  at Packr.encodeUtf8 (msgpackr/pack.js:31)
+  at LMDBStore.put (lmdb/write.js:601)
 ```
 
-Gatsby 4가 내부 캐시로 쓰는 `lmdb` + `msgpackr` 조합이 Node 24에서 깨졌습니다.
-Gatsby 4는 Node 18/20 시절 코드라, 호스트 Node 24와 맞지 않았던 겁니다.
-
-해결책은 Node 버전을 낮추는 것이었습니다.
-다만 시스템 Node 24는 다른 서비스가 쓰고 있어서 건드리지 않고, 로컬에 따로 설치했습니다.
+Gatsby 4의 캐시(`lmdb` + `msgpackr`)가 Node 24와 맞지 않았습니다. 시스템 Node는 다른 서비스가 쓰고 있어서 Node 20을 로컬에 따로 설치했습니다.
 
 ```bash
-curl -sL https://nodejs.org/dist/v20.19.5/node-v20.19.5-linux-arm64.tar.xz -o node20.tar.xz
+curl -sL .../node-v20.19.5-linux-arm64.tar.xz -o node20.tar.xz
 tar -xf node20.tar.xz -C ~/.local
 export PATH="$HOME/.local/node20/bin:$PATH"
 ```
 
-여기까지 하고 문득 생각이 바뀌었습니다.
+여기서 판단이 바뀌었습니다. **"이걸 굳이 계속 살려야 하나?"**
+Gatsby 2에서 4로 올리는 데 이만큼 걸렸는데, 플러그인 정합성까지 맞추려면 남은 작업이 더 있었습니다.
 
-**"이걸 굳이 계속 살려야 하나?"**
+## Astro로 전환
 
-Gatsby 2 → 4로 올리는 데 이만큼 걸렸는데,
-플러그인 정합성까지 맞추려면 남은 작업이 더 있었습니다.
-그 시간에 지금 쓰는 도구로 옮기는 게 낫겠다고 판단했습니다.
+기준은 세 가지였습니다.
 
-## 방향 전환: Astro
+- 마크다운 글을 그대로 쓸 수 있을 것
+- 빌드가 빠르고 네이티브 의존이 적을 것
+- GitHub Pages에 그대로 올릴 수 있을 것
 
-기준은 단순했습니다.
+Astro는 셋 다 만족했습니다. 테마는 [AstroPaper](https://github.com/satnaing/astro-paper) v7을 기반으로 잡았습니다. 태그·검색·RSS·사이트맵·다크모드가 이미 있어서 이전 작업에 집중할 수 있었습니다.
 
-- 마크다운 글을 그대로 쓸 수 있어야 한다
-- 빌드가 빠르고, 네이티브 모듈 의존이 적어야 한다
-- 정적 호스팅(GitHub Pages)에 그대로 올릴 수 있어야 한다
+## 이전하며 부딪힌 것들
 
-Astro는 세 가지를 모두 만족했습니다.
-특히 Content Collections가 마크다운을 기본으로 다루고,
-`sharp` 외에는 네이티브 의존이 거의 없다는 점이 arm64 환경에서 큰 장점이었습니다.
+### 1. frontmatter
 
-테마는 [AstroPaper](https://github.com/satnaing/astro-paper) v7을 기반으로 잡았습니다.
-태그·검색·RSS·사이트맵·다크모드가 이미 들어 있어서, 디자인보다 이전 작업에 집중할 수 있었습니다.
+Gatsby는 `publish`, `date`, `url_path`를, AstroPaper는 `pubDatetime`, `draft`, `ogImage`를 씁니다.
 
-## 이전 작업에서 실제로 부딪힌 것들
+| 기존 | 변경 후 |
+| --- | --- |
+| `date` | `pubDatetime` |
+| `publish: False` | `draft: true` |
+| `thumbnailImageUse: True` | `thumbnail` |
+| `url_path` | 사용 안 함 |
 
-### 1. frontmatter 스키마가 다르다
+글 19개(발행 17 + 초안 2), 이미지 42개를 스크립트로 옮겼습니다. 손으로 했다면 실수가 났을 겁니다.
 
-기존 글은 이런 형태였습니다.
+### 2. 기존 URL은 포기
 
-```yaml
-publish: True
-title: "python pipfile 을 사용해보자"
-date: "2020-07-09T18:28:00"
-url_path: "/blog/2020/07/09/python-pipfile-을-사용해보자"
-thumbnailImage: ../images/python-pipfile.jpg
-thumbnailImageUse: True
-description: "..."
-tags:
-  - python
-  - pipenv
-```
+처음엔 예전 주소(`/blog/...`)를 `legacyUrl`로 남기고 호환 라우트를 하나 더 만들었습니다.
+동작은 했지만 유입이 거의 없었고, 글마다 페이지가 두 개씩 생기는 비용이 더 컸습니다.
+라우트를 걷어냈고 지금은 모든 글이 `/posts/<slug>/` 한 곳에만 있습니다.
 
-AstroPaper는 `pubDatetime`, `draft`, `ogImage`를 씁니다. 매핑은 이렇게 했습니다.
+### 3. MDX의 중괄호
 
-| 기존 | 변경 후 | 비고 |
-| --- | --- | --- |
-| `date` | `pubDatetime` | 날짜 형식 유지 |
-| `publish: False` | `draft: true` | 빌드에서 제외 |
-| `thumbnailImageUse: True` | `thumbnail` | 카드/상단 이미지 |
-| `url_path` | (사용 안 함) | 예전 URL은 유지하지 않음 |
-| `description` | `description` | 그대로 |
-
-글 19개(발행 17 + 초안 2), 이미지 42개를 스크립트로 한 번에 옮겼습니다.
-손으로 했다면 frontmatter에서 실수가 나왔을 겁니다.
-
-### 2. 기존 URL은 포기했다
-
-처음에는 이전한 글마다 예전 주소(`/blog/YYYY/MM/DD/...`)를 `legacyUrl`로 남기고,
-그 주소를 그대로 렌더하는 호환 라우트를 하나 더 만들었습니다.
-글 하나가 두 주소에서 열리도록 하는 방식이었습니다.
-
-동작은 했지만, 다시 생각해보니 예전 주소로 들어오는 유입이 거의 없었습니다.
-호환 라우트를 유지하면 글마다 페이지가 두 개씩 생기고, 그만큼 빌드 시간과
-관리할 지점이 늘어납니다. 얻는 것보다 잃는 게 크다고 판단해서 걷어냈습니다.
-
-지금은 모든 글이 `/posts/<slug>/` 한 곳에만 존재합니다.
-주소를 하나로 유지하는 편이 훨씬 단순합니다.
-
-### 3. MDX가 중괄호를 삼킨다
-
-MDX에서는 중괄호가 JavaScript 표현식으로 해석됩니다.
-Gatsby에서는 코드 블록 안에 있던 문자열이, Astro에서는 문법 오류가 됐습니다.
-
-```text
-Access-Control-Allow-Origin :{Origin} 가 명시적으로 작성되야 한다.
-                             ^^^^^^^^ JS 표현식으로 파싱
-```
-
-OAuth 글에는 `{client_id}`, `{code}` 같은 URL 템플릿도 있었습니다.
-이스케이프(`\{Origin\}`)로 처리했고, 코드 블록 안은 건드리지 않도록
-펜스 상태를 추적하는 스크립트로 일괄 수정했습니다.
+MDX는 중괄호를 JavaScript 표현식으로 해석합니다. 본문에 있던 `{Origin}`, `{client_id}` 같은 문자열이 문법 오류가 됐습니다. 이스케이프로 처리했고, 코드 블록은 건드리지 않도록 펜스 상태를 추적했습니다.
 
 ### 4. 조용히 사라진 글 한 편
 
-이게 이번 작업에서 가장 위험했던 부분입니다.
+가장 위험했던 부분입니다.
 
-`python decorators` 글의 예전 `url_path`는 이랬습니다.
+`python decorators` 글의 `url_path`가 `/blog/2020/06/29/title_name`이어서 파일명이 `title_name.mdx`가 됐는데, `Doing/` 폴더의 초안 템플릿도 같은 슬러그를 쓰고 있었습니다. **초안이 발행글을 덮어썼습니다.**
 
-```yaml
-url_path: "/blog/2020/06/29/title_name"
-```
+빌드는 성공했고 페이지 수도 그럴듯했습니다. 초안은 빌드에서 빠지니 목록에도 안 보이고 오류도 없습니다. 썸네일을 붙이다 대상 파일을 못 찾아서 알게 됐습니다.
 
-슬러그를 URL 마지막 조각에서 뽑았기 때문에 파일명이 `title_name.mdx`가 됐습니다.
-그런데 `Doing/` 폴더에 있던 **초안 템플릿도 같은 슬러그**를 쓰고 있었습니다.
+> 이전 작업에서는 파일 개수와 페이지 개수를 반드시 대조해야 합니다.
 
-```
-title_name.mdx  ← 작성 중이던 초안 템플릿이 덮어씀
-```
+### 5. 썸네일
 
-빌드는 성공했고, 페이지 수도 그럴듯했습니다.
-문제는 **발행된 글이 하나 사라진 상태**였다는 것. 초안은 빌드에서 제외되니
-목록에도 안 보이고, 오류도 나지 않습니다.
+기존 카드에는 이미지가 있었지만 새 테마 카드에는 슬롯이 없었습니다. `thumbnail` 필드를 만들고 카드와 글 상단에 렌더하도록 추가했습니다. `thumbnailImageUse: True`였던 13개 글만 이미지가 붙습니다.
 
-발견한 건 썸네일을 붙이던 중이었습니다.
-"이 글의 썸네일이 왜 안 붙지?" → 대상 파일을 못 찾음 → 추적 → 충돌 확인.
+## 리팩토링
 
-교훈은 명확합니다.
-
-> 이전 작업에서 **파일 개수와 페이지 개수를 반드시 대조**해야 한다.
-
-지금은 초안 템플릿의 이름을 바꾸고, 그 글을 원본에서 복구해
-`/posts/python-decorators/`에서 정상적으로 열립니다.
-
-### 5. 썸네일이 사라진 이유
-
-기존 카드에는 이미지가 있었는데, 새 테마 카드에는 이미지 슬롯이 없었습니다.
-`ogImage`는 SNS 공유용이라 목록에 그려지지 않습니다.
-
-그래서 `thumbnail` 필드를 따로 만들고, 카드와 글 상단에 렌더하도록 추가했습니다.
-기존에 `thumbnailImageUse: True`였던 13개 글만 이미지가 붙습니다. 원래 동작 그대로입니다.
-
-## 리팩토링: 673줄과 191줄
-
-이전을 마치고 보니, 글 라우트 두 개가 거의 같은 마크업을 각자 갖고 있었습니다.
+글 라우트 두 개가 같은 마크업을 각자 갖고 있었습니다.
 
 ```
 수정 전
-  pages/posts/[...slug]/index.astro   673줄  (마크업 + 라이트박스 스크립트)
-  pages/blog/[...slug].astro          191줄  (거의 같은 마크업 복사, 이후 삭제)
-```
+  posts/[...slug]/index.astro    673줄
+  blog/[...slug].astro           191줄
 
-한쪽만 고치면 다른 쪽이 어긋나는 구조입니다.
-그래서 공통 부분을 컴포넌트로 뺐습니다.
-
-```
 수정 후
-  components/PostArticle.astro        글 본문 (제목·메타·태그·목차·썸네일·공유)
-  components/ImageLightbox.astro      이미지 확대 + 읽기 진행바
-  pages/posts/[...slug]/index.astro    60줄
+  components/PostArticle.astro   공용 본문
+  components/ImageLightbox.astro 라이트박스 + 진행바
+  posts/[...slug]/index.astro     56줄
 ```
 
-이제 디자인을 바꾸면 `PostArticle.astro` 한 곳만 고치면 됩니다.
-라우트 파일은 "어떤 글을 어떤 경로로 만들지"만 담당합니다.
+디자인을 바꾸면 `PostArticle.astro` 한 곳만 고치면 됩니다.
 
 ## 마지막 벽: 배포
 
-여기까지 오면 푸시하고 끝날 것 같지만, 아니었습니다.
-GitHub Actions 빌드는 성공하는데 마지막 배포 단계에서 실패했습니다.
+빌드는 성공하는데 배포 단계에서 실패했습니다.
 
 ```
 Error: Invalid deployment branch ...
 Deployments are only allowed from master
 ```
 
-원인이 두 가지였습니다.
+원인은 두 가지였습니다.
 
-- `github-pages` 환경의 배포 허용 브랜치가 **`master`로만** 잠겨 있음
-- Pages 소스가 아직 "Deploy from a branch"라서 Actions가 올린 결과물을 쓰지 않음
+- `github-pages` 환경의 배포 허용 브랜치가 `master`로만 잠겨 있음
+- Pages 소스가 "Deploy from a branch"라 Actions 결과물을 쓰지 않음
 
-그래서 새 사이트는 빌드까지만 되고, 실제 사이트에는 예전 Gatsby 결과물이 계속 서비스되고 있었습니다.
-둘 다 코드로 고칠 수 없어서 저장소 설정에서 바꿨습니다.
-Pages 소스를 GitHub Actions로 돌리고, 환경의 배포 허용 브랜치에 통합 브랜치를 추가했습니다.
-그 다음 PR을 머지하자 빌드와 배포가 한 번에 통과했고, 그때부터 실제 사이트가 새 버전으로 서비스됐습니다.
+둘 다 코드로 고칠 수 없어 저장소 설정에서 바꿨습니다. Pages 소스를 GitHub Actions로 돌리고, 환경의 배포 허용 브랜치에 통합 브랜치를 추가했습니다. PR을 머지하자 빌드와 배포가 한 번에 통과했습니다.
 
 ### 배포 트리거 정리
 
-배포가 뚫린 뒤에 또 하나 손볼 게 남았습니다.
-처음 워크플로는 모든 작업 브랜치의 푸시에 반응했는데, 배포가 허용되지 않은 브랜치에서는
-빌드까지 해놓고 마지막 단계에서 거부됩니다. 쓸모없는 실패 기록만 쌓입니다.
-
-그래서 두 워크플로로 나눴습니다.
+처음 워크플로는 작업 브랜치와 통합 브랜치 양쪽에 반응했습니다. 배포가 허용되지 않은 브랜치에서는 빌드까지 하고 마지막에 거부되니 실패 기록만 쌓입니다.
 
 ```yaml
-# deploy.yml — 배포는 통합 브랜치에서만
+# deploy.yml
 on:
   push:
     branches: [code, main]
-  workflow_dispatch:
 
-# ci.yml — PR은 빌드만 검증, 배포 권한 없음
+# ci.yml
 on:
   pull_request:
     branches: [code, main]
-permissions:
-  contents: read
 ```
 
-이렇게 하면 PR에서 한 번, 머지할 때 또 한 번 빌드합니다.
-2분쯤 더 드는 비용인데, 머지 전에 깨진 걸 잡는 편이 낫다고 판단했습니다.
-공개 저장소라 Actions 요금은 들지 않습니다.
+PR에서 한 번, 머지할 때 또 한 번 빌드합니다. 2분쯤 더 들지만 머지 전에 깨진 걸 잡는 편이 낫다고 봤습니다. 공개 저장소라 Actions 요금은 없습니다.
 
 ## AI에게 맡겨보고
 
-이번 작업은 AI 에이전트가 Raspberry Pi에서 SSH로 저장소를 클론하고,
-의존성 설치·빌드·마이그레이션 스크립트·리팩토링까지 수행했습니다.
-제가 한 일은 방향을 정하고, 중간에 결과를 확인하는 것이었습니다.
+AI 에이전트가 Raspberry Pi에서 SSH로 저장소를 클론하고, 설치·빌드·마이그레이션·리팩토링까지 수행했습니다. 제가 한 일은 방향을 정하고 중간 결과를 확인하는 것이었습니다.
 
-잘 된 부분:
+잘 된 것:
 
-- 반복적이고 지루한 작업(19개 글 frontmatter 변환, 이미지 경로 치환)에서 실수가 없었습니다
-- 실패 원인을 로그에서 정확히 짚고 다음 시도로 넘어갔습니다
-- 리팩토링처럼 "굳이 안 해도 되는" 정리 작업까지 손이 갔습니다
+- 반복 작업(frontmatter 19개, 이미지 경로 치환)에서 실수가 없었습니다
+- 실패 원인을 로그에서 짚고 다음 시도로 넘어갔습니다
+- 시키지 않은 정리 작업까지 손이 갔습니다
 
-주의해야 할 부분:
+주의할 것:
 
-- **성공했다고 보고된 것이 실제로는 데이터 손실이었던 경우**가 있었습니다
-  (사라진 글 한 편). 빌드 성공은 정답이 아닙니다
-- 사람이 방향을 잘못 잡으면 그 방향으로 끝까지 갑니다.
-  "이 브랜치 검증해봐"처럼 범위를 좁혀 지시하는 편이 안전했습니다
+- **성공 보고가 실제로는 데이터 손실**이었던 경우가 있었습니다. 빌드 성공은 정답이 아닙니다
+- 방향을 잘못 잡으면 끝까지 갑니다. 범위를 좁혀 지시하는 편이 안전했습니다
 - 배포 설정처럼 저장소 권한이 필요한 일은 결국 사람 손이 필요합니다
 
-블로그를 AI로 관리한다는 건, 글을 대신 써주는 것보다
-**이런 유지보수 작업을 대신 처리해주는 것**에 가깝다는 느낌입니다.
-운영 비용이 거의 없어야 글을 계속 쓰게 되니까요.
+블로그를 AI로 관리한다는 건 글을 대신 써주는 것보다, **이런 유지보수를 대신 처리해주는 것**에 가깝습니다. 운영 비용이 거의 없어야 글을 계속 쓰게 되니까요.
