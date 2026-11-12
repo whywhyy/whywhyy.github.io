@@ -92,13 +92,20 @@ tailnet 전체를 하나의 신뢰 구간으로 두지 않으려고 ACL을 걸�
 
 원래 Control UI에 들어가려면 토큰이나 패스워드가 필요하다. 그런데 Tailscale로 구성하면, tailnet을 통해 들어온 요청은 **Tailscale identity를 검증해서 자동으로 허용**할 수 있다. 이 부분이 가장 인상적이었다.
 
-포트 흐름을 확인해보니 이렇게 동작한다.
+포트 흐름은 이렇게 동작한다.
 
-```
-Tailscale → OpenClaw 전용 프록시 → 신원 검증 → 검증된 요청만 Gateway 호출
-```
+![토큰리스 Control UI 접근 흐름: tailnet 기기 → Tailscale Serve → 전용 프록시 → Gateway, 프록시는 tailscaled에 whois 조회](../../assets/images/tokenless-flow.png)
+
+1. tailnet 기기에서 HTTPS로 접속하면 Tailscale Serve가 요청을 받는다.
+2. Serve는 `x-forwarded-for`, `x-forwarded-proto`, `x-forwarded-host`와 `tailscale-user-login` 헤더를 붙여, 전용 프록시(`127.0.0.1`의 임시 포트)로 넘긴다.
+3. 프록시는 `x-forwarded-for`를 로컬 `tailscaled`에 `tailscale whois`로 조회해 실제 사용자를 확인하고, 헤더의 로그인과 일치할 때만 통과시킨다.
+4. 통과한 요청만 Gateway(`127.0.0.1:18789`)가 처리한다.
 
 Gateway는 loopback에 묶여 있고, 검증은 프록시가 담당한다.
+
+조건은 두 가지다. `gateway.tailscale.mode`가 `serve`이고, `gateway.auth.allowTailscale`이 `true`여야 한다.
+
+이 우회는 범위도 좁다. Control UI의 WebSocket 인증과 아바타용 GET/HEAD 요청에만 적용되고, `/v1/*` 같은 API 엔드포인트는 평소처럼 토큰 인증을 요구한다.
 
 https://docs.openclaw.ai/gateway/tailscale#tailscale-identity-headers-(serve-only)
 
