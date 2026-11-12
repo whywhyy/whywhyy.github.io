@@ -75,6 +75,19 @@ tailnet 전체를 하나의 신뢰 구간으로 두지 않으려고 ACL을 걸�
 
 결과적으로 tailnet의 다른 피어는 이 노드와 HTTPS로만 통신할 수 있다. SSH를 비롯한 다른 포트는 열려 있지 않으니, tailnet에 들어왔다고 해서 노드 전체에 접근할 수 있는 구조는 아니다.
 
+정책은 이런 모양이다. Tailscale ACL은 명시적으로 허용한 것만 통과하므로, 아래 규칙에 없는 포트는 자동으로 막힌다.
+
+```json
+{
+  "action": "accept",
+  "src": ["autogroup:member"],
+  "dst": ["tag:openclaw"],
+  "ip": ["tcp:443"],
+}
+```
+
+`tag:openclaw`가 이 노드에 붙인 태그이고, `ip`에 `tcp:443` 하나만 적은 부분이 핵심이다. 목적지는 노드로 두고 포트를 따로 제한하면, 허용 범위가 눈에 바로 들어온다.
+
 **토큰 없이 컨트롤 UI 접근**
 
 원래 Control UI에 들어가려면 토큰이나 패스워드가 필요하다. 그런데 Tailscale로 구성하면, tailnet을 통해 들어온 요청은 **Tailscale identity를 검증해서 자동으로 허용**할 수 있다. 이 부분이 가장 인상적이었다.
