@@ -1,0 +1,103 @@
+---
+title: "굴러다니는 라즈베리파이 오픈클로 구성하기 (3) — 구성하자"
+pubDatetime: 2026-11-12T14:20:00+09:00
+featured: false
+tags:
+  - openclaw
+  - raspberrypi
+  - tailscale
+  - openrouter
+  - self-hosted
+description: "Lite 64-bit OS, 문서에 숨어 있던 성능 팁, Tailscale Serve 구성, 그리고 OpenRouter 충전식 과금까지. 실제 설치 과정 기록."
+thumbnail: "../../assets/images/setup-stack.png"
+ogImage: "../../assets/images/setup-stack.png"
+---
+
+## 오픈클로 설치
+
+설치 자체는 문서를 따라가면 된다. 다만 **라즈베리파이 문서는 꼭 읽어야 한다.**
+
+https://docs.openclaw.ai/install/raspberry-pi
+
+특히 OS는 **Raspberry Pi OS Lite (64-bit)** 를 써야 한다. 나는 이걸 안 지키고 다른 버전으로 밀었다가 업데이트가 중간에 터졌다. ㅎㅎ;;
+
+## 문서가 알려준 성능 팁
+
+설치 문서인데 성능 팁이 꽤 자세히 적혀 있어서 놀랐다.
+
+**USB SSD 권장**
+SD 카드는 느리고 수명도 짧으니 USB SSD로 부팅하라고 한다. 나는 SSD가 없어서 이건 넘겼다.
+
+**모듈 컴파일 캐시 + 재시작 최적화**
+`NODE_COMPILE_CACHE`와 `OPENCLAW_NO_RESPAWN=1`을 설정하면, 재시작할 때 새 프로세스를 띄우지 않고 in-process로 처리한다. 작은 보드에서 프로세스 교체 비용을 줄이는 팁이다.
+
+```bash
+export NODE_COMPILE_CACHE=/var/tmp/openclaw-compile-cache
+export OPENCLAW_NO_RESPAWN=1
+```
+
+**메모리 절약**
+headless 환경이니 GPU 메모리를 줄이고 안 쓰는 서비스를 끈다.
+
+```bash
+echo 'gpu_mem=16' | sudo tee -a /boot/config.txt
+sudo systemctl disable bluetooth
+```
+
+**로컬 LLM은 쓰지 말 것**
+Pi에서 모델을 직접 돌리지 말고 API 기반 모델을 쓰라고 명시돼 있다. 애초에 그렇게 쓸 생각은 없었지만, 근거를 적어둔 게 좋았다.
+
+SSD를 제외한 나머지는 그대로 적용했다.
+
+## Tailscale 적용
+
+Tailscale 구성은 아래 문서를 보고 진행했다.
+
+https://docs.openclaw.ai/gateway/stable-https-url
+
+보안을 기본값으로 강하게 잡는 프로젝트라 그런지, Tailscale 구성도 꽤 정교했다. OpenClaw는 자체적으로 `openclaw gateway --tailscale serve` 같은 명령을 제공해서, 문서에 나온 그대로 따라 하면 Serve 구성이 끝난다.
+
+**MagicDNS**
+
+Tailscale은 MagicDNS라는 이름으로 DNS도 제공한다.
+
+https://tailscale.com/docs/features/magicdns
+
+**HTTPS 인증서**
+
+tailnet 안에서 각 기기의 HTTPS 인증서를 발급하는 절차도 지원한다. 덕분에 HTTPS도 Tailscale 선에서 해결된다.
+
+https://tailscale.com/docs/how-to/set-up-https-certificates
+
+**ACL**
+
+OpenClaw가 tailnet에서 날뛰어(?) 다른 노드에 영향을 주지 않도록 ACL도 넣어둔 것 같다. 이건 추측이지만, tailnet 전체가 하나의 신뢰 구간이 되지 않게 하려는 의도로 보였다.
+
+**토큰 없이 컨트롤 UI 접근**
+
+원래 Control UI에 들어가려면 토큰이나 패스워드가 필요하다. 그런데 Tailscale로 구성하면, tailnet을 통해 들어온 요청은 **Tailscale identity를 검증해서 자동으로 허용**할 수 있다. 이 부분이 가장 인상적이었다.
+
+포트 흐름을 확인해보니 이렇게 동작한다.
+
+```
+Tailscale → OpenClaw 전용 프록시 → 신원 검증 → 검증된 요청만 Gateway 호출
+```
+
+Gateway는 loopback에 묶여 있고, 검증은 프록시가 담당한다.
+
+https://docs.openclaw.ai/gateway/tailscale#tailscale-identity-headers-(serve-only)
+
+## OpenRouter
+
+오픈라우터는 카드 등록 후 **충전식**으로 쓴다. 충전해두면 사용할 때마다 실시간으로 잔액이 깎인다.
+
+DeepSeek Flash 기준으로, 간단한 작업을 한 번 호출하면 체감상 **130원 정도** 나갔다. 생각보다 부담이 없어서 놀랐다.
+
+## 참조
+
+- [OpenClaw — Raspberry Pi 설치 가이드](https://docs.openclaw.ai/install/raspberry-pi)
+- [OpenClaw — Stable HTTPS URL](https://docs.openclaw.ai/gateway/stable-https-url)
+- [OpenClaw — Tailscale (identity headers)](https://docs.openclaw.ai/gateway/tailscale#tailscale-identity-headers-(serve-only))
+- [Tailscale — MagicDNS](https://tailscale.com/docs/features/magicdns)
+- [Tailscale — HTTPS 인증서 설정](https://tailscale.com/docs/how-to/set-up-https-certificates)
+- [OpenRouter](https://openrouter.ai)
