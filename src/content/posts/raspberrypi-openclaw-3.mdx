@@ -79,20 +79,14 @@ tailnet 전체를 하나의 신뢰 구간으로 두지 않으려고 ACL을 걸�
 
 ```json
 {
-  "acls": [
-    {
-      "action": "accept",
-      "src": ["autogroup:member"],
-      "dst": ["tag:openclaw:443"]
-    }
-  ],
-  "tagOwners": {
-    "tag:openclaw": ["autogroup:admin"]
-  }
+  "action": "accept",
+  "src": ["autogroup:member"],
+  "dst": ["tag:openclaw"],
+  "ip": ["tcp:443"],
 }
 ```
 
-`tag:openclaw`는 이 노드에 붙인 태그이고, 목적지 포트를 `443` 하나로 제한한 부분이 핵심이다.
+`tag:openclaw`가 이 노드에 붙인 태그이고, `ip`에 `tcp:443` 하나만 적은 부분이 핵심이다. 목적지는 노드로 두고 포트를 따로 제한하면, 허용 범위가 눈에 바로 들어온다.
 
 **토큰 없이 컨트롤 UI 접근**
 
