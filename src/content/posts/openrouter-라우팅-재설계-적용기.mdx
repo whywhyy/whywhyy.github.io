@@ -1,0 +1,117 @@
+---
+title: "OpenRouter 라우팅 재설계 적용기 — order를 빼고 only만 남기기"
+pubDatetime: 2026-11-13T21:40:00+09:00
+featured: false
+tags:
+  - openrouter
+  - openclaw
+  - llm
+  - cost
+  - routing
+description: "OpenRouter가 기본 라우터를 가격 중심에서 성능·신뢰성 중심으로 바꿨다. provider.order를 쓰면 그 라우터를 우회한다는 사실을 알고, 설정을 다시 짰다."
+---
+
+[오픈라우터 설정 팁](/posts/openrouter-가격-최적화-설정팁/) 글을 쓰고 나서, OpenRouter가 라우팅 알고리즘을 재설계했다는 공지를 읽었다. 읽고 나니 내 설정이 **새 라우터를 스스로 끄고 있었다.**
+
+## 무엇이 바뀌었나
+
+예전 기본 라우터는 사실상 **입력 토큰 가격**만 봤다. 싼 곳이 이기고, 실패하면 다음 싼 곳으로 넘어갔다. 그 방식의 부작용을 OpenRouter 스스로 이렇게 정리했다.
+
+> Cheap won even when it was bad. … a provider could keep traffic share with weird pricing cocktails like listing an artificially low input price and then making back the difference with overpriced cached or completion tokens.
+
+새 라우터는 요청마다 **"좋은 답 하나에 얼마가 드는가"** 를 계산한다.
+
+| 신호 | 내용 |
+|---|---|
+| effective price | 실제 캐시 적중률과 실제 입출력 비율을 반영한 가격 |
+| throughput | 초당 출력 토큰 |
+| TTFT | 첫 토큰까지 걸리는 시간 |
+| rate limit | 429를 얼마나 자주 내는지 |
+| reliability | 제공자 귀책 실패율 |
+| quality | 툴 호출이 제대로 돌아오는지 |
+
+공개된 실험(2,400만 요청, 1주) 결과는 이렇다.
+
+```
+TTFT p50        1,007ms → 837ms   (−16.9%)
+throughput p50  62.4 → 72.6 tok/s (+16.3%)
+429 발생         7.1% → 3.8%      (−46%)
+비용             +6.0%
+```
+
+**조금 더 내고 훨씬 빠르고 안정적으로** 가는 쪽을 기본값으로 택한 것이다.
+
+## 내 설정이 그걸 끄고 있었다
+
+문제는 이 문장이었다.
+
+> Requests that set `provider.order` **bypass the new routing logic**, with providers ordered as specified. Setting `provider.only` or `provider.ignore` will use the new algorithm to select from the remaining providers.
+
+나는 `order`에 다섯 곳을 나열해뒀다. 즉 **새 라우터를 우회하고, 내가 정한 순서대로만** 가게 만든 상태였다. 게다가 캐싱 문서에는 이런 문장도 있었다.
+
+> Sticky routing is **not used when you specify a manual provider order** via `provider.order`.
+
+sticky routing은 대화를 같은 제공자에 고정해 프롬프트 캐시를 유지하는 기능이다. 내 워크로드는 프롬프트의 94%가 캐시라서, 이걸 끄는 손실이 작지 않다.
+
+## 바꾼 설정
+
+```json5
+provider: {
+  only: ["Morph", "DeepInfra", "Cloudflare"],
+  allow_fallbacks:    true,
+  require_parameters: true,
+  data_collection:    "deny",
+}
+```
+
+`order`를 지우고 `only`만 남겼다. 후보는 내가 검증한 곳으로 제한하되, 그 안에서 고르는 일은 알고리즘에 맡긴다.
+
+## 실제로 어떻게 도나
+
+같은 요청을 반복해봤다.
+
+```
+session 없이   Morph → DeepInfra → Morph
+session 고정   DeepInfra → DeepInfra → DeepInfra
+```
+
+`session_id`를 주면 한 곳에 고정된다. 안 주면 메시지 해시로 대화를 식별해 sticky가 동작한다. 즉 **대화 단위로는 캐시가 유지되고, 대화가 다르면 부하가 분산된다.**
+
+## 부작용 — 후보가 셋으로 줄었다
+
+`require_parameters`를 켜면 요청에 포함된 파라미터를 전부 지원하는 제공자만 남는다. 내 요청에는 `presence_penalty`와 `seed`가 들어간다.
+
+```
+PrimeIntellect  미지원: presence_penalty, seed  → 탈락
+Together        미지원: seed                    → 탈락
+Morph / DeepInfra / Cloudflare  전부 지원        → 생존
+```
+
+목록에 다섯 곳을 넣어도 **실제로 서비스할 수 있는 곳은 세 곳**이었다. 그래서 `only`도 셋으로 줄였다. 후보 수를 부풀려두면 "다섯 곳 중 하나가 살아남겠지"라는 착각만 생긴다.
+
+## 429는 장애가 아니다
+
+점검 중에 Cloudflare가 429를 냈다.
+
+```
+429 Provider returned error
+"deepseek/deepseek-v4.1-flash-1017 is temporarily rate-limited upstream"
+```
+
+이걸 장애로 알리면 오탐이다. **일시적 레이트리밋은 정상 동작의 일부**이고, 새 라우터는 429를 비용으로 계산해 자연히 트래픽을 옮긴다. 그래서 감시 스크립트에서 429는 알림에서 빼고 로그로만 남기게 고쳤다.
+
+## 비용은 어떻게 되나
+
+새 라우터는 가격만 보지 않으므로 **비용이 조금 오를 수 있다.** OpenRouter 실험에서 6%였다.
+
+다만 내 워크로드는 캐시가 94%이고, 새 라우터의 effective price는 **실제 캐시 적중률을 반영**한다. 즉 캐시를 잘 맞히는 제공자가 가격에서도 유리하게 계산된다. 6%보다 적게 오를 가능성이 있다.
+
+3일 뒤 자동 비교가 판정한다. 기준선은 `$0.0146/1M`이다.
+
+## 정리
+
+- 기본 라우터는 이제 **가격 + 속도 + 신뢰성 + 품질**을 함께 본다
+- `order`는 그 라우터를 우회하고 sticky routing까지 끈다
+- `only`는 필터로만 쓰고, 선택은 알고리즘에 맡기는 게 맞다
+- `require_parameters`를 켜면 후보가 크게 줄어든다 — 이건 정확성의 대가다
+- 429는 장애가 아니라 라우터가 처리할 신호다
