@@ -263,8 +263,8 @@ models: {
     openrouter: {
       params: {
         provider: {
-          order: ["PrimeIntellect", "Morph", "DeepInfra", "Cloudflare", "Together"],
-          only:  ["PrimeIntellect", "Morph", "DeepInfra", "Cloudflare", "Together"],
+          order: ["Morph", "PrimeIntellect", "DeepInfra", "Cloudflare", "Together"],
+          only:  ["Morph", "PrimeIntellect", "DeepInfra", "Cloudflare", "Together"],
           allow_fallbacks:   true,
           require_parameters: true,
           data_collection:   "deny",
@@ -279,14 +279,26 @@ models: {
 
 `only`를 추가한 이유는 따로 있다. `order`는 "시도할 순서"일 뿐이라 목록을 다 소진하면 **자격을 만족하는 다른 제공자로 넘어간다.** `only`를 걸어야 후보 풀이 그 목록으로 제한된다. 대신 넷 다 죽으면 503이다 — 모르는 제공자로 새는 것보다 낫다고 판단했다.
 
-순서는 실측으로 정했다. 같은 조건에서 세 번씩 재보니 PrimeIntellect가 Morph보다 빨랐다.
+순서를 바꿨다가 **되돌린 적**이 있다. PrimeIntellect가 프로브에서 더 빨랐기 때문이다.
 
-| | TTFT | 생성 속도 | 캐시 적중 |
+| | TTFT | 생성 속도 | 캐시 |
 |---|---|---|---|
 | PrimeIntellect | 0.7–0.9s | 164–200 tok/s | 3/3 |
 | Morph | 1.1–3.2s | 44–64 tok/s | 2/3 |
 
-가격도 PrimeIntellect가 40% 쌈다. 그래서 1순위를 바꿨고, Morph는 2순위 폴백으로 남겼다.
+그런데 실제 트래픽은 계속 Morph로 갔다. 이유는 `require_parameters`였다. 에이전트 요청에는 `presence_penalty`, `seed` 같은 파라미터가 붙는데, PrimeIntellect는 이를 지원하지 않는다. 그래서 요청이 도착하기도 전에 후보에서 제외된 것이다.
+
+내 프로브는 이 파라미터를 빼고 보냈기 때문에 이걸 놓쳤다. **"측정한 조건이 실제 요청 조건과 같은가"** 를 확인하지 않으면 이런 착각이 생긴다.
+
+같은 이유로 탐색에서 걸러지는 후보가 많다.
+
+```
+StepFun     제외(파라미터 미지원: presence_penalty, seed)
+StreamLake  제외(파라미터 미지원: presence_penalty, seed)
+River       제외(파라미터 미지원: presence_penalty)
+```
+
+결국 `require_parameters`를 켠 상태에서는 **파라미터를 전부 지원하는 제공자만 남는다.** 정확성을 얻는 대신 후보가 줄어드는 트레이드오프다. Morph는 20개 파라미터를 모두 지원해서 1순위를 유지한다.
 
 **계정 설정**
 
