@@ -143,7 +143,19 @@ session 고정   DeepInfra → DeepInfra → DeepInfra
 
 **③ 실제 요청과 조건이 달랐다**
 
-프로브는 파라미터를 최소로 보냈는데 실제 요청에는 `presence_penalty`, `seed`가 붙는다. 그래서 "모든 축에서 우위"라고 판정한 제공자가 실트래픽에서는 후보에서 제외됐다.
+프로브는 파라미터를 최소로 보냈는데, 실제 에이전트 요청에는 `presence_penalty`와 `seed`가 붙는다. 그래서 "모든 축에서 우위"라고 판정한 제공자가 실트래픽에서는 후보에서 제외됐다.
+
+**왜 이 두 개가 붙나.** OpenClaw는 OpenAI 호환 요청 경로로 샘플링 파라미터를 함께 보낸다. `seed`는 같은 입력에 같은 출력을 얻기 위한 재현성 파라미터고, `presence_penalty`는 같은 주제를 반복하는 걸 억제하는 파라미터다. 에이전트 런타임은 이런 값들을 기본값으로 채워 넣는다.
+
+문제는 이게 **에러 없이 조용히 일어난다**는 점이다. `require_parameters`가 켜져 있으면 해당 파라미터를 지원하지 않는 제공자는 요청이 도달하기 전에 후보에서 빠진다. 반대로 꺼져 있으면 그 제공자가 요청을 받고 파라미터를 무시한다. 어느 쪽이든 **내가 의도한 라우팅과 다른 결과**가 나온다.
+
+실험으로 확인한 차이다.
+
+```
+tools만 보냄            → PrimeIntellect 응답
++presence_penalty 추가  → Morph로 폴백
++seed 추가              → Morph로 폴백
+```
 
 **측정 조건이 실제 조건과 같은지**를 확인하지 않으면 정밀해 보이는 숫자가 전부 무의미해진다.
 
@@ -197,3 +209,11 @@ EOF
 - 입력가로 정렬하면 단가 눈속임에 걸린다. 캐시 비중을 넣어 실효가로 봐야 한다.
 - 429는 장애가 아니라 라우터가 처리할 신호다.
 - 자동화는 이 판단이 여전히 유효한지 감시한다.
+
+## 참조
+
+- [How we rebuilt provider routing](https://openrouter.ai/blog/announcements/how-we-rebuilt-provider-routing/) — 라우터 재설계 공지. `order`가 새 라우터를 우회한다는 문장이 여기 있다.
+- [Provider Routing](https://openrouter.ai/docs/guides/routing/provider-selection) — `order`·`only`·`ignore`·`require_parameters`·`sort`의 정확한 의미.
+- [Prompt Caching](https://openrouter.ai/docs/guides/best-practices/prompt-caching) — sticky routing과 `session_id`, `cached_tokens` 확인법.
+- [Traffic Routing](https://openrouter.ai/docs/guides/providers/traffic-routing) — effective price 계산 방식.
+- [Models API](https://openrouter.ai/api/v1/models) — 엔드포인트별 가격·양자화·`supported_parameters` 조회.
