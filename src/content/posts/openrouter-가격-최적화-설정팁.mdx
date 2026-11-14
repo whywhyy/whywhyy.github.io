@@ -1,0 +1,159 @@
+---
+title: "오픈라우터 설정 팁 — 개인 사용자 관점"
+pubDatetime: 2026-11-13T10:10:00+09:00
+featured: false
+tags:
+  - openrouter
+  - openclaw
+  - llm
+  - cost
+  - privacy
+description: "자동 충전 15/15, 키 하루 $10 상한, 그리고 ZDR을 켜지 않은 이유. OpenRouter가 보낸 'Five controls' 메일을 개인 사용자 시점에서 다시 정리한다."
+thumbnail: "../../assets/images/openrouter-five-controls.png"
+ogImage: "../../assets/images/openrouter-five-controls.png"
+---
+
+오픈라우터에서 **Five controls to set before production traffic** 이라는 제목의 메일이 왔다. (아래 금액과 단가는 모두 `deepseek/deepseek-v4.1-flash-1017` 기준이다.) 프로덕션 트래픽을 전제로 한 내용인데, 읽어보니 개인용으로도 그대로 적용할 만한 것들이었다.
+
+메일의 문제의식은 이 문장으로 요약된다.
+
+> Default routing is built to keep requests succeeding, which is the right default and the wrong one for a workload with opinions about cost, providers, or data handling. These five are where you state the opinion.
+
+기본값은 "성공"에 최적화되어 있고, 비용·제공자·데이터 처리에 의견이 있는 워크로드에는 그게 틀린 기본값이라는 것. 그래서 아래 다섯 항목마다 **메일 원문을 먼저 인용하고, 내가 그걸 어떻게 해석해서 무엇을 했는지**를 적었다. 원문을 같이 두는 이유는, 나중에 내 판단이 틀렸을 때 무엇을 근거로 그렇게 했는지 되짚기 위해서다.
+
+## 1. 자동 충전은 15달러 / 15달러
+
+> Auto top-up replenishes the balance when it drops below a threshold you set. Beyond avoiding a hard stop, it avoids a latency penalty: OpenRouter runs extra billing checks and expires caches faster once a balance reaches single-digit dollars. The documented working floor is 10 to 20 dollars.
+
+**왜 이렇게 했나**
+
+메일에서 눈에 들어온 건 하드 스톱 얘기가 아니라 **잔액이 한 자릿수로 떨어지면 과금 검사가 추가되고 캐시가 더 빨리 만료된다**는 문장이었다. 캐싱 정책이 잔액에 따라 달라진다는 발상이 재미있어서 ㅎㅎ;; (다만 이건 메일 내용이고, 공식 문서에서 같은 표현을 찾지는 못했다. 그대로 인용해둔다.)
+
+그래서 자동 충전을 **임계값 15달러, 충전액 15달러**로 걸었다. 이러면 잔액이 15–30달러 사이를 오간다.
+
+**왜 10달러가 아니라 15달러인가**
+
+충전에는 수수료가 붙는다. **5.5%, 최소 $0.80**이다.
+
+| 충전액 | 수수료 | 실효 요율 |
+|---|---|---|
+| $10 | $0.80 (최소액) | **8.0%** |
+| $15 | $0.825 | 5.5% |
+| $30 | $1.65 | 5.5% |
+
+최소 수수료가 실효 요율을 눌러앉히는 손익분기점은 **$14.55**(= 0.80 ÷ 0.055)다. 그 아래로 내려가면 매번 손해다. 그래서 15달러. 30달러도 요율은 같지만, 키에 하루 $10 상한을 걸어둔 상태라 잔액을 그 이상 쌓아둘 이유가 없다. 15/15면 하한만 봐도 하루 반나절치는 남는다.
+
+**과청구 방지**
+
+혹시 모르니 결제 카드는 **트래블월렛 체크카드**로 넣었다. 자동 충전은 잔액이 임계값 밑으로 떨어질 때마다 별도 결제가 발생하니, 신용카드 대신 잔액 한도가 명확한 체크카드가 안전하다.
+
+## 2. 키 상한은 하루 10달러
+
+> A per-key credit limit is the blast-radius control. One key per workload means a runaway job exhausts its own budget and returns 402 while everything else keeps serving. GET /api/v1/key exposes limit_remaining and limit_reset so a job can watch its own headroom.
+
+**왜 이렇게 했나**
+
+이건 이미 걸려 있었다. **daily $10.**
+
+메일이 "blast-radius control"이라고 부른 게 정확하다. 이건 비용 절감 장치가 아니라 **피해 범위를 자르는 장치**다. 에이전트가 루프에 빠지거나 잘못된 배치 작업이 돌면, 그 키는 하루 $10에서 402를 뱉고 멈춘다. 잔액 전체를 태우는 것과 하루 $10을 태우는 것의 차이다.
+
+한 가지 아쉬운 점은, 키를 하나만 쓰면 이 $10이 **공유 예산**이 된다는 것이다. 백그라운드 작업이 한도를 다 쓰면 대화형 요청도 같이 죽는다. 메일은 "워크로드마다 키 하나"를 권하지만, 혼자 쓰는 환경에서는 거기까지 갈 이유가 없어서 그대로 뒀다.
+
+## 3. 엔드포인트 자격 — 일부만
+
+> The `provider` object decides which endpoints can serve a request. `order` lists providers to try in sequence, `only` and `ignore` narrow the pool, and `require_parameters` keeps the request away from any provider that would quietly ignore the parameters you sent.
+
+**왜 이렇게 했나**
+
+여기서 유용한 건 두 가지였다.
+
+**`require_parameters: true`**
+
+이건 속도나 가격이 아니라 **정확성** 문제다. 메일 표현대로 "파라미터를 조용히 무시하는 제공자"를 걸러낸다. 어떤 제공자는 `response_format`이나 `tool_choice`를 지원하지 않는데도 요청을 그대로 받아들이고 해당 파라미터를 버린다. 결과는 에러가 아니라 "그럴듯하게 생겼는데 형태가 틀린" 응답이다. 구조화 출력이나 툴 호출을 쓴다면 선택 사항이 아니다.
+
+**`data_collection: "deny"`**
+
+학습에 데이터를 쓰는 제공자를 후보에서 제외한다. 프라이버시 쪽에서 실질적으로 체감되는 유일한 스위치라고 생각한다.
+
+**`order`는 강제가 아니다** — 이건 메일에 없던 얘기인데, 문서를 읽다가 알았다. `order`는 자격 있는 후보 사이의 **선호 순위**일 뿐이라, "A 아니면 안 됨"을 원하면 `allow_fallbacks: false`가 함께 필요하다. 그게 없으면 다음 제공자로 조용히 넘어간다.
+
+**실제로 넣은 값**
+
+```json5
+models: {
+  providers: {
+    openrouter: {
+      params: {
+        provider: {
+          only: ["Morph", "DeepInfra", "Cloudflare"],
+          allow_fallbacks:    true,
+          require_parameters: true,
+          data_collection:    "deny",
+        },
+      },
+    },
+  },
+},
+```
+
+## 4. 폴백은 생략
+
+> A `models` array is a priority list of models; any error moves the request to the next one, including context-length validation, moderation refusals, rate limiting, and downtime. Billing follows the model that actually ran.
+
+**왜 이렇게 했나**
+
+이건 **서비스 가용성**을 위한 장치다. 첫 선택이 실패하면 다음 모델로 넘겨서 사용자 요청이 실패하지 않게 만든다. 개인이 쓰는 환경에서는 실패하면 다시 하면 되므로 넣지 않았다.
+
+대신 이 문장에서 챙긴 건 "Billing follows the model that actually ran" 쪽이다. 폴백을 쓰면 **실제로 실행된 모델로 과금**되므로, 비싼 모델이 섞여 있으면 조용히 비용이 올라간다. 폴백을 안 쓰는 이유이기도 하다.
+
+## 5. ZDR은 켜지 않았다
+
+> Sometimes failing is correct. `allow_fallbacks: false` makes a request fail rather than route somewhere you did not choose. `data_collection: "deny"` and `zdr: true` are the data-handling versions of the same decision, restricting routing to compliant and zero-retention endpoints; a 503 then means no provider met your requirements, which is a policy working rather than an outage.
+
+**왜 이렇게 했나**
+
+이게 제일 고민되는 부분이었다.
+
+ZDR(Zero Data Retention)을 켜면 프롬프트와 응답을 저장하지 않는 엔드포인트만 쓸 수 있게 된다. 문제는 **후보가 줄어든다는 것**이다. 같은 모델이라도 제공자마다 가격이 다르고, 그 편차가 작지 않다.
+
+내가 쓰는 DeepSeek 모델 기준으로 실제 엔드포인트 가격을 뽑아봤다. 입력 $/M 기준이다.
+
+| 제공자 | 입력 | 출력 |
+|---|---|---|
+| Morph | 0.022 | 0.400 |
+| Particle AI | 0.030 | 0.250 |
+| Wafer | 0.038 | 0.500 |
+| DeepSeek (본가) | 0.150 | 0.600 |
+| Together 등 | 0.300 | 1.200 |
+| BaseTen | 0.600 | 2.400 |
+
+**최저와 최고가 입력 기준 27배** 차이다. ZDR을 강제하면 저가 구간이 빠지고 남은 곳으로 라우팅되면서, 저렴한 모델을 쓰는 이유가 상당 부분 사라진다. 실제로 ZDR 준수 여부는 API로 확인할 수 없어서, 어느 제공자가 남는지는 켜보기 전엔 모른다.
+
+그래서 **ZDR은 켜지 않았고, `data_collection: "deny"`만 유지**했다. 학습 이용은 막고, 보관 정책은 감수하는 쪽.
+
+메일이 덧붙인 문장도 짚어둘 만하다. 이 설정을 켜면 **503이 "장애"가 아니라 "방침이 작동한 결과"** 가 된다. 요구사항을 만족하는 제공자가 없었다는 뜻이기 때문이다. 다만 그 503을 아무도 모르면 그냥 장애와 구분되지 않으므로, 알림이 붙어 있어야 방침이 의미를 갖는다.
+
+참고로 ZDR은 계정 전역이 아니라 **요청 단위로도** 켤 수 있다. 평소엔 끄고, 민감한 문서를 다루는 요청에만 `zdr: true`를 붙이는 게 합리적이다.
+
+**덧붙여 — 시간대 할증**
+
+DeepSeek 본가 엔드포인트에는 시간대별 요율이 있다. UTC 01:40–06:40, 10:00–16:40에 요율이 2배가 된다. 한국 시간으로 **10:40–15:40, 19:00–01:40**이다. 본가를 쓴다면 이 시간대를 피하는 것만으로 체감 비용이 달라진다.
+
+## 정리 — 개인 사용자에게 필요한 건 세 개
+
+> Then give the configuration a home. A preset holds the model, provider preferences, system prompt, and parameters under a slug your code calls as `@preset/your-slug`, with versions kept so a change is reviewable without a deploy.
+
+메일은 마지막에 **"설정이 머물 자리를 마련하라"**(Then give the configuration a home)고 말한다. 프리셋은 모델·제공자 선호·시스템 프롬프트·파라미터를 슬러그 하나로 묶어 `@preset/your-slug`로 호출하게 하고, 버전을 남겨 배포 없이 변경을 검토할 수 있게 한다. 워크스페이스는 프로젝트나 환경 단위로 프리셋·키·라우팅 기본값·가드레일을 담는 그릇이다.
+
+**내 경우엔 아직 이걸 쓸 자리가 없다.** 프리셋이 값어치를 하려면 호출하는 코드가 여러 개여야 하는데, 나는 설정 파일 한 곳에서 관리하면 끝이다. 워크스페이스도 마찬가지 — 스테이징과 프로덕션이 없으니 나눌 대상이 없다. 나중에 호출 지점이 늘어나면 그때 도입하면 되고, 지금은 설정 파일 한 곳이 더 투명하다.
+
+대신 메일의 다섯 항목 중 혼자 쓰는 환경에서 실제로 값어치가 있는 건 이 정도로 추렸다.
+
+1. **자동 충전을 걸어라.** 하한은 $14.55 이상, 충전액은 하루 상한의 1.5배 정도.
+2. **키에 하루 상한을 걸어라.** 이건 절약이 아니라 사고 대비다.
+3. **`require_parameters`와 `data_collection: deny`는 켜라.** 비용 없이 정확성과 프라이버시를 얻는다.
+
+ZDR과 다중 프로바이더 폴백은 서비스 운영자용이다. 개인이라면 민감한 요청에만 선택적으로.
+
+한 가지 더 — 잔액과 키 잔여 한도는 API로 조회할 수 있으니(`/api/v1/key`의 `limit_remaining`), 자동화로 감시해두면 402로 죽기 전에 알 수 있다. 나는 30분마다 확인해서 조건에 걸릴 때만 알림이 오게 해뒀다.
+
