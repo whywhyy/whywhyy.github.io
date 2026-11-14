@@ -4,7 +4,7 @@ export default defineAstroPaperConfig({
   site: {
     url: "https://whywhyy.github.io/",
     title: "whywhyy",
-    description: "개발하며 배운 것들을 기록하는 블로그",
+    description: "기록하고, 다시 생각합니다.",
     author: "Kangsan Kim",
     profile: "https://github.com/whywhyy",
     ogImage: "default-og.jpg",
