@@ -1,0 +1,181 @@
+---
+title: "OpenClaw 사용량 이슈 발행 (feat. 기여하기)"
+pubDatetime: 2026-11-14T11:10:00+09:00
+featured: false
+tags:
+  - openclaw
+  - open-source
+  - issue
+  - debugging
+description: "사용량 화면이 unknown으로 뜨는 문제를 추적해 OpenClaw 저장소에 이슈를 올렸다. 템플릿 작성부터 봇의 자동 트리아지까지."
+thumbnail: "../../assets/images/openclaw-usage-issue.png"
+ogImage: "../../assets/images/openclaw-usage-issue.png"
+---
+
+## 증상
+
+OpenClaw의 Control UI에서 `/usage`를 열었더니 이렇게 나왔다.
+
+```
+Tokens   unknown
+Cost     unknown
+sessions 8
+```
+
+토큰도 비용도 표시되지 않는다. 그런데 같은 시점에 CLI로 조회하면 숫자가 나온다.
+
+```
+$ openclaw gateway usage-cost
+Usage cost (30 days)
+Total: unavailable (known subtotal: $5.28 · 287.3m tokens)
+Missing cost: 2 (openclaw/gateway-injected 1, openrouter/deepseek/... 1)
+```
+
+**합계는 계산돼 있는데 "unavailable"로 표시**되고 있었다. 화면만 이상한 게 아니라, 표시 로직이 숫자를 숨기고 있었다.
+
+## 원인 추적
+
+`--json`으로 상세를 보면 원인이 보인다.
+
+```
+.totals.totalCost          = 5.4021393748
+.totals.totalTokens        = 296059881
+.totals.missingCostEntries = 2
+.totals.usageReport.state  = "unavailable"
+```
+
+`missingCostEntries`가 2건. 이게 0이 아니면 리포트 전체가 `unavailable`이 된다. 그 2건을 트랜스크립트에서 찾았다.
+
+**① 실패한 턴**
+
+```json
+{
+  "model": "deepseek/deepseek-v4.1-flash-1017",
+  "stopReason": "error",
+  "content": [],
+  "usage": {
+    "totalTokens": 0,
+    "cost": { "total": 0 },
+    "usageReport": { "state": "unavailable" }
+  }
+}
+```
+
+모델 호출이 에러로 끝나서 사용량이 보고되지 않은 레코드다. 토큰 0, 비용 0.
+
+**② 내부 주입 레코드**
+
+```json
+{ "model": "gateway-injected", "usage": { "totalTokens": 0, "cost": { "total": 0 } } }
+```
+
+게이트웨이가 대화에 끼워 넣는 시스템 레코드다. 가격표에 없는 모델명이라 "가격 미상"으로 잡힌다.
+
+둘 다 **비용을 0으로 정상 기록**하고 있다. 그런데 집계가 `usageReport: unavailable`을 보고 그 0을 버린 뒤, "비용 미상"으로 세는 구조였다.
+
+## 이슈 작성
+
+OpenClaw 저장소는 이슈 템플릿이 필드별로 나뉘어 있다. `bug_report.yml`을 열어 어떤 항목이 필수인지 먼저 확인했다.
+
+```
+Bug type / Beta blocker / Summary / Steps / Expected / Actual
+Version / OS / Install / Model / Provider chain / Provider setup
+Logs / Evidence / Impact / Additional information
+```
+
+**작성에서 신경 쓴 것 세 가지**
+
+1. **재현 조건을 정확히** — "실패한 턴 1건이면 발생"이라고 썼다. 이게 핵심이라 Summary에 넣었다.
+2. **코드 경로를 근거로** — "데이터가 깨졌다"로 보이면 반송된다. 레코드가 OpenClaw 코드에서 생성된다는 걸 짚었다. `buildStreamErrorAssistantMessage`, `chat-transcript-inject`, `stream.runtime` 세 곳이다.
+3. **문서와 코드의 모순** — 문서에는 "기록된 0달러 비용은 유효한 데이터"라고 되어 있는데, 코드는 그 0을 버린다. 이걸 명시했다.
+
+스크린샷도 첨부했다. `unknown / unknown / 8 sessions`가 보이는 화면이 CLI 출력보다 직접적인 증거다.
+
+올린 이슈: [#198060](https://github.com/openclaw/openclaw/issues/198060)
+
+## 봇이 처리하는 과정
+
+올리고 몇 분 뒤 자동 리뷰가 시작됐다.
+
+```
+clawsweeper[bot] — review started
+item 1/1, shard 0/1
+lease_expires_at: 37분 뒤
+labels: bug, bug:behavior, clawsweeper:intake:bug
+```
+
+**내용을 읽고 라벨을 붙였다.** `bug:behavior`는 저장소 자동화가 본문을 분류해 추가한 것이다.
+
+그리고 30여 분 뒤 판정이 왔다.
+
+> Current main fixes the central reporting failure through merged measured-only accounting and numeric UI totals; stable v2026.11.3 still has the reported behavior.
+> So I'm closing this as already implemented rather than keeping a duplicate issue open.
+
+**이미 고쳐져 있었다.** 정확히는 이랬다.
+
+```
+수정 커밋   a8fe857 · 2026-10-29
+PR          #187212 "fix(usage): count only measured turns in usage reports"
+첫 릴리스    v2026.11.5-beta.1 (2026-11-04)
+영향 버전    stable 2026.11.3 ← 내가 쓰던 버전
+```
+
+즉 **안정판이 프리릴리스보다 오래된 코드**를 담고 있어서, 내가 그 문제를 겪은 것이다.
+
+## 결과
+
+- 이슈는 `already implemented`로 종결됐다. 거부가 아니라 "이미 고쳐졌다"는 판정이다.
+- 라벨은 `P2`, `impact:ux-friction`으로 분류됐다. 데이터 손실이 아니라 표시 문제라는 판단과 일치한다.
+- 수정 내용은 **미측정 턴을 카운터에서 제외**하고, UI가 숫자를 그대로 포맷하도록 바꾸는 것이다.
+- 2026.11.5 안정판에서 반영될 예정이다.
+
+## 놀라웠던 부분
+
+**이슈 작성부터 분석, 분류, 종결까지 사람 손이 거의 없었다.**
+
+- 라벨링: 본문을 읽고 `bug:behavior` 판단
+- 원인 분석: 현재 main과 stable 소스를 대조해 어느 커밋에서 고쳐졌는지 특정
+- 근거 제시: PR 번호, 커밋 해시, 파일 경로까지 인용
+- 중복 판단: 같은 문제로 열린 이슈를 유지하지 않겠다고 결정
+
+내가 쓴 건 본문과 스크린샷뿐인데, 돌아온 건 **커밋 해시가 붙은 분석 리포트**였다.
+
+## 배운 것
+
+**① 템플릿을 지키면 대화가 빨라진다.** 필드가 나뉜 이유는 분류 자동화가 읽기 좋게 하기 위해서다. 항목을 비우면 그만큼 왕복이 늘어난다.
+
+**② 근거를 코드로 달아야 한다.** "이상하다"는 감상은 반송된다. 어느 파일의 어느 함수가 그 레코드를 만드는지까지 짚으면 논쟁이 사라진다.
+
+**③ 중복 확인은 필수.** 나는 수정이 이미 병합된 걸 모르고 올렸다. 다행히 봇이 정확히 판정했지만, 올리기 전에 main에서 검색했다면 더 정확한 프레이밍이 가능했다.
+
+**④ 안정판과 프리릴리스는 다르게 움직인다.** "최신"이 항상 고쳐진 코드는 아니다. 내가 쓴 버전이 무엇을 담고 있는지 확인하는 습관이 필요하다.
+
+## 회고 — 사람이 병목이라는 감각
+
+이번 이슈는 **손으로 썼다.** AI에게 시키면 일회성 작업이라 오히려 설명하는 비용이 클 것 같았다. 실제로 해보니 두 가지가 남았다.
+
+**① 템플릿이 잘 잡혀 있으면 작성은 기계적이다**
+
+필드가 16개로 나뉘어 있고, 각 칸에 들어갈 내용은 이미 조사가 끝난 상태였다. 문제는 **칸마다 복붙하는 시간**이었다. 판단이 필요한 구간은 "이게 진짜 버그인가"를 결정하는 앞부분뿐이고, 나머지는 형식 채우기다. 그런 작업은 AI에게 맡기는 게 맞다.
+
+**② 코드 관리에서 사람이 병목이라는 감각**
+
+자동화를 붙이고 나면 남는 건 **판단**이다. 무엇이 문제인지, 어떤 근거가 필요한지, 이 변경이 실제로 개선인지. 이번에도 프로브를 세 번 잘못 설계했고, 그걸 잡아낸 건 자동화가 아니라 "이상하다"는 감각이었다.
+
+다만 **자동화 수준이 실용성에 못 미치면 역효과**가 난다. 검증 없는 AI 산출물을 그대로 올리면 이상한 사람으로 남는다. 이번 이슈가 통한 이유는 문장이 좋아서가 아니라, 코드 경로와 커밋 해시라는 **검증 가능한 근거**가 붙어 있었기 때문이다.
+
+그래서 순서는 이렇게 되는 것 같다.
+
+```
+자동화가 만드는 것   형식, 반복, 수집
+사람이 남기는 것     판단, 검증, 책임
+```
+
+자동화를 늘리는 목적은 사람을 빼는 게 아니라, **사람이 판단에 쓸 시간을 확보하는 것**이다.
+
+## 참조
+
+- 이슈: [#198060 Usage totals render "unavailable" and hide token totals](https://github.com/openclaw/openclaw/issues/198060)
+- 수정 PR: [#187212 fix(usage): count only measured turns](https://github.com/openclaw/openclaw/pull/187212)
+- 커밋: [a8fe857](https://github.com/openclaw/openclaw/commit/a8fe857038f62b209d7ef0b81e62b4a49fdfdbee)
+- 첫 수정 릴리스: [v2026.11.5-beta.1](https://github.com/openclaw/openclaw/releases/tag/v2026.11.5-beta.1)
